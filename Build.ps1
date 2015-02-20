@@ -43,9 +43,13 @@ function Invoke-NuGetPackSpec($nuspec, $version)
 
 function Invoke-NuGetPack($version)
 {
-    ls src/**/*.csproj |
-        Where-Object { -not ($_.Name -like "*net40*") } |
-        ForEach-Object { Invoke-NuGetPackProj $_ }
+   # ls src/**/*.csproj |
+   #     Where-Object { -not ($_.Name -like "*net40*") } |
+   #     ForEach-Object { Invoke-NuGetPackProj $_ }
+    
+    pushd .\src\Serilog.Sinks.Seq
+    Invoke-NuGetPackSpec "Serilog.Sinks.Seq.nuspec" $version
+    popd
 }
 
 function Invoke-Build($majorMinor, $patch, $customLogger, $notouch)
