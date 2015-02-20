@@ -47,8 +47,8 @@ function Invoke-NuGetPack($version)
    #     Where-Object { -not ($_.Name -like "*net40*") } |
    #     ForEach-Object { Invoke-NuGetPackProj $_ }
     
-    pushd .\src\Serilog.Sinks.Seq
-    Invoke-NuGetPackSpec "Serilog.Sinks.Seq.nuspec" $version
+    pushd .\src\Serilog.Sinks.Splunk
+    Invoke-NuGetPackSpec "Serilog.Sinks.Splunk.nuspec" $version
     popd
 }
 
