@@ -1,4 +1,4 @@
-# serilog-sinks-applicationinsights
+# serilog-sinks-splunk
 
 ![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al?svg=true)
 
