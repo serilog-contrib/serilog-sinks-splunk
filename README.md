@@ -11,7 +11,7 @@ A sink for Serilog that writes events to [Splunk](https://splunk.com). Moved fro
 
 ## Getting started
 
-To get started install the *Serilog.Sinks.Seq* package from Visual Studio's *NuGet* console:
+To get started install the *Serilog.Sinks.Splunk* package from Visual Studio's *NuGet* console:
 
 ```powershell
 PM> Install-Package Serilog.Sinks.Splunk
