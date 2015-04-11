@@ -40,19 +40,21 @@
     <AssemblyOriginatorKeyFile>..\..\assets\Serilog.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Serilog, Version=1.4.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Serilog.1.4.168\lib\net45\Serilog.dll</HintPath>
+      <HintPath>..\..\packages\Serilog.1.5.1\lib\net45\Serilog.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog.FullNetFx">
-      <HintPath>..\..\packages\Serilog.1.4.168\lib\net45\Serilog.FullNetFx.dll</HintPath>
-    </Reference>
-    <Reference Include="Splunk.Client, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Splunk.Client.2.0.0\lib\portable-net45+win+wpa81\Splunk.Client.dll</HintPath>
+      <HintPath>..\..\packages\Serilog.1.5.1\lib\net45\Serilog.FullNetFx.dll</HintPath>
     </Reference>
-    <Reference Include="Splunk.Logging.Common">
-      <HintPath>..\..\packages\Splunk.Logging.Common.1.0.0\lib\net45\Splunk.Logging.Common.dll</HintPath>
+    <Reference Include="Splunk.Client, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Splunk.Client.2.1.2\lib\portable-net45+win+wpa81\Splunk.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Splunk.Logging.Common, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Splunk.Logging.Common.1.1.0\lib\net45\Splunk.Logging.Common.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
