@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{B9B133
 		assets\Serilog.snk = assets\Serilog.snk
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{EBB6CE48-09B0-4789-9627-45A1D4D377F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.Sample", "sample\Serilog.Sinks.Splunk.Sample\Serilog.Sinks.Splunk.Sample.csproj", "{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,10 @@ Global
 		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,5 +46,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1493ABC3-811C-46C7-92ED-CEB7567FB588} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
 		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
+		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238} = {EBB6CE48-09B0-4789-9627-45A1D4D377F7}
 	EndGlobalSection
 EndGlobal
