@@ -42,11 +42,7 @@ function Invoke-NuGetPackSpec($nuspec, $version)
 }
 
 function Invoke-NuGetPack($version)
-{
-   # ls src/**/*.csproj |
-   #     Where-Object { -not ($_.Name -like "*net40*") } |
-   #     ForEach-Object { Invoke-NuGetPackProj $_ }
-    
+{ 
     pushd .\src\Serilog.Sinks.Splunk
     Invoke-NuGetPackSpec "Serilog.Sinks.Splunk.nuspec" $version
     popd

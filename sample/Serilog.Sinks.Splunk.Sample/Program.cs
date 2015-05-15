@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Serilog.Sinks.Splunk.Sample
 {
@@ -12,9 +10,12 @@ namespace Serilog.Sinks.Splunk.Sample
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.LiterateConsole()
-                .WriteTo.SplunkViaTcp("localhost", 8089)
+                .WriteTo.SplunkViaTcp("127.0.0.1", 10001)
                 .CreateLogger();
 
+            Log.Information("Just another test");
+
+            Console.ReadLine();
         }
     }
 }
