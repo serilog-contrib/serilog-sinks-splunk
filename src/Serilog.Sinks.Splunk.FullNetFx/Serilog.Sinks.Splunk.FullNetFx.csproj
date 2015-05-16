@@ -65,6 +65,9 @@
     <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\SplunkContext.cs">
       <Link>Sinks\Splunk\SplunkContext.cs</Link>
     </Compile>
+    <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\SplunkJsonFormatter.cs">
+      <Link>Sinks\Splunk\SplunkJsonFormatter.cs</Link>
+    </Compile>
     <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\SplunkViaHttpSink.cs">
       <Link>Sinks\Splunk\SplunkViaHttpSink.cs</Link>
     </Compile>

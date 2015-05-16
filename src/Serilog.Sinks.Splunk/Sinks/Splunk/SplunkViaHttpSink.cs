@@ -49,12 +49,14 @@ namespace Serilog.Sinks.Splunk
         /// <param name="batchSizeLimit">The size of the batch prior to logging</param>
         /// <param name="batchInterval">The interval on which to log via http</param>
         /// <param name="formatProvider">The format provider to use when rendering the message</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         public SplunkViaHttpSink(
             SplunkContext context,
             int batchSizeLimit,
             TimeSpan batchInterval,
-            IFormatProvider formatProvider = null)
-            : this(context, context.Index, context.Username, context.Password, batchSizeLimit, batchInterval, context.ResourceNamespace, context.TransmitterArgs, formatProvider)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
+            : this(context, context.Index, context.Username, context.Password, batchSizeLimit, batchInterval, context.ResourceNamespace, context.TransmitterArgs, formatProvider, renderTemplate: renderTemplate)
         {
         }
 
@@ -70,6 +72,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="resourceNamespace">The resource namespaces</param>
         /// <param name="transmitterArgs">The </param>
         /// <param name="formatProvider">The format provider to be used when rendering the message</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         public SplunkViaHttpSink(
             SplunkClient.Context context,
             string index,
@@ -79,7 +82,8 @@ namespace Serilog.Sinks.Splunk
             TimeSpan batchInterval,
             SplunkClient.Namespace resourceNamespace = null,
             SplunkClient.TransmitterArgs transmitterArgs = null,
-            IFormatProvider formatProvider = null
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true
             )
         {
             _index = index;
@@ -90,12 +94,11 @@ namespace Serilog.Sinks.Splunk
 
             _queue = new ConcurrentQueue<LogEvent>();
 
-            _jsonFormatter = new JsonFormatter(renderMessage: true, formatProvider: formatProvider);
+            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
 
             _service = resourceNamespace == null
                 ? new SplunkClient.Service(context, new SplunkClient.Namespace("nobody", "search"))
                 : new SplunkClient.Service(context, resourceNamespace);
-      
 
             RepeatAction.OnInterval(batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
         }

@@ -38,16 +38,19 @@ namespace Serilog.Sinks.Splunk
         /// <param name="hostAddress">The Splunk Host</param>
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
+
         public SplunkViaTcpSink(
             IPAddress hostAddress,
             int port,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
         {
             var reconnectionPolicy = new ExponentialBackoffTcpReconnectionPolicy();
 
             _writer = new TcpSocketWriter(hostAddress, port, reconnectionPolicy, 10000);
 
-            _jsonFormatter = new JsonFormatter(renderMessage: true, formatProvider: formatProvider);
+            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
         }
 
         /// <summary>
@@ -56,17 +59,19 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The Splunk Host</param>
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         public SplunkViaTcpSink(
             string host,
             int port,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
         {
             var reconnectionPolicy = new ExponentialBackoffTcpReconnectionPolicy();
             var ipAddress = IPAddress.Parse(host);
 
             _writer = new TcpSocketWriter(ipAddress, port, reconnectionPolicy, 10000);
 
-            _jsonFormatter = new JsonFormatter(renderMessage: true, formatProvider: formatProvider);
+            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
         }
 
         /// <inheritdoc/>
