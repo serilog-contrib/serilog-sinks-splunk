@@ -33,11 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Serilog">
-      <HintPath>..\..\packages\Serilog.1.5.5\lib\net45\Serilog.dll</HintPath>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.1.5.6\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Serilog.FullNetFx">
-      <HintPath>..\..\packages\Serilog.1.5.5\lib\net45\Serilog.FullNetFx.dll</HintPath>
+    <Reference Include="serilog-generator">
+      <HintPath>..\..\packages\serilog-generator.1.0.7\tools\serilog-generator.exe</HintPath>
+    </Reference>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.1.5.6\lib\net45\Serilog.FullNetFx.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Serilog.Sinks.Literate">
       <HintPath>..\..\packages\Serilog.Sinks.Literate.1.0.6\lib\net45\Serilog.Sinks.Literate.dll</HintPath>
@@ -49,13 +54,19 @@
       <HintPath>..\..\packages\Splunk.Logging.Common.1.1.0\lib\net45\Splunk.Logging.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Sprache, Version=2.0.0.45, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sprache.2.0.0.45\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IConfigure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -65,10 +76,6 @@
     <ProjectReference Include="..\..\src\Serilog.Sinks.Splunk.FullNetFx\Serilog.Sinks.Splunk.FullNetFx.csproj">
       <Project>{17deed0f-f9cb-48fb-b4dc-53fb6aee64d7}</Project>
       <Name>Serilog.Sinks.Splunk.FullNetFx</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj">
-      <Project>{1493abc3-811c-46c7-92ed-ceb7567fb588}</Project>
-      <Name>Serilog.Sinks.Splunk</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

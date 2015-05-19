@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
+using Splunk.Client;
+
 
 namespace Serilog.Sinks.Splunk.Sample
 {
@@ -8,25 +8,86 @@ namespace Serilog.Sinks.Splunk.Sample
     {
         static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.LiterateConsole()
-                .WriteTo.SplunkViaTcp("127.0.0.1", 10001, renderTemplate:true)
-                .CreateLogger();
+            var stub = new Stub();
 
-            var person = new Person() {DateOfBirth = DateTime.Now.AddYears(-30), FirstName = "Joe", Surname = "Bloggs"};
+            var http = new ViaHttp();
+            var tcp = new ViaTcp();
+            var udp = new ViaHttp();
 
-            Log.Information("Just another test {@person}", person);
+            http.Configure();
+            udp.Configure();
+            tcp.Configure();
+
+            Log.Information("Simulation running, press any key to exit.");
+
+            stub.Run();
 
             Console.ReadLine();
         }
     }
 
-    internal class Person
+    class ViaTcp : IConfigure
     {
-        public string FirstName { get; set; }
-        public string Surname { get; set; }
-        public DateTime DateOfBirth { get; set; }
-
+        public void Configure()
+        {
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.LiterateConsole()
+            .WriteTo.SplunkViaTcp("127.0.0.1", 10001, renderTemplate: false)
+            .Enrich.WithThreadId()
+            .Enrich.WithProperty("SplunkSample", "ViaTCP")
+            .MinimumLevel.Debug()
+            .CreateLogger();
+        }
     }
+
+    class ViaHttp : IConfigure
+    {
+        public void Configure()
+        {
+            var generalSplunkContext = new global::Splunk.Client.Context(Scheme.Https, "127.0.0.1", 8089);
+
+            var transmitterArgs = new TransmitterArgs
+            {
+                Source = "Splunk.Sample",
+                SourceType = "Splunk Sample Source"
+            };
+
+            const string username = "my splunk user";
+            const string password = "my splunk password";
+            const string splunkIndex = "mysplunktest";
+
+            var serilogContext = new SplunkContext(
+                generalSplunkContext, 
+                splunkIndex, 
+                username,
+                password, 
+                null, 
+                transmitterArgs);
+
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.LiterateConsole()
+            .WriteTo.SplunkViaHttp(serilogContext, 100, TimeSpan.FromSeconds(10))
+            .Enrich.WithThreadId()
+            .Enrich.WithProperty("SplunkSample", "ViaHttp")
+            .MinimumLevel.Debug()
+            .CreateLogger();
+        }
+    }
+
+
+    class ViaUdp : IConfigure
+    {
+        public void Configure()
+        {
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.LiterateConsole()
+            .WriteTo.SplunkViaUdp("127.0.0.1", 10002, renderTemplate: false)
+            .Enrich.WithThreadId()
+            .Enrich.WithProperty("SplunkSample", "ViaUDP")
+            .MinimumLevel.Debug()
+            .CreateLogger();
+        }
+    }
+
 
 }
