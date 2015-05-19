@@ -34,7 +34,8 @@ namespace Serilog
         /// <param name="batchInterval"></param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-        /// <param name="batchSizeLimit"></param>
+        /// <param name="batchSizeLimit">The size of the batch prior to writing</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
@@ -44,9 +45,10 @@ namespace Serilog
             int batchSizeLimit,
             TimeSpan batchInterval,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+             bool renderTemplate = true)
         {
-            var sink = new SplunkViaHttpSink(context, batchSizeLimit, batchInterval, formatProvider);
+            var sink = new SplunkViaHttpSink(context, batchSizeLimit, batchInterval, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -56,15 +58,16 @@ namespace Serilog
         /// </summary>
         /// <param name="loggerConfiguration">The logger configuration.</param>
         /// <param name="context">The Splunk context to log to</param>
-        /// <param name="password"></param>
+        /// <param name="password">The password of the Splunk user</param>
         /// <param name="resourceNameSpace"></param>
         /// <param name="transmitterArgs"></param>
         /// <param name="batchSizeLimit">The size of the batch prior to logging</param>
         /// <param name="batchInterval">The interval on which to log via http</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-        /// <param name="index"></param>
-        /// <param name="userName"></param>
+        /// <param name="index">The name of the Splunk index</param>
+        /// <param name="userName">The name of the Splunk user</param>
+        /// <param name="renderTemplate">If ture, the message template is rendered</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
@@ -79,7 +82,8 @@ namespace Serilog
             Namespace resourceNameSpace,
             TransmitterArgs transmitterArgs,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+             bool renderTemplate = true)
         {
             var sink = new SplunkViaHttpSink(new SplunkContext(context, index, userName, password, resourceNameSpace, transmitterArgs), batchSizeLimit,batchInterval, formatProvider);
 
@@ -94,6 +98,7 @@ namespace Serilog
         /// <param name="port">The UDP port</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If ture, the message template will be rendered</param>
         /// <returns></returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
         public static LoggerConfiguration SplunkViaUdp(
@@ -101,9 +106,10 @@ namespace Serilog
             string host,
             int port,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
         {
-            var sink = new SplunkViaUdpSink(host, port, formatProvider);
+            var sink = new SplunkViaUdpSink(host, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -117,16 +123,18 @@ namespace Serilog
         /// <param name="port">The UDP port</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-        /// <returns></returns>
+        /// <param name="renderTemplate">If ture, the message template is rendered</param>
+        /// <returns>The logger configuration</returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
         public static LoggerConfiguration SplunkViaUdp(
             this LoggerSinkConfiguration loggerConfiguration,
             IPAddress hostAddresss,
             int port,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
         {
-            var sink = new SplunkViaUdpSink(hostAddresss, port, formatProvider);
+            var sink = new SplunkViaUdpSink(hostAddresss, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -139,6 +147,7 @@ namespace Serilog
         /// <param name="port">The TCP port</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If true, the message template is rendered</param>
         /// <returns></returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
         public static LoggerConfiguration SplunkViaTcp(
@@ -146,9 +155,10 @@ namespace Serilog
             IPAddress hostAddresss,
             int port,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+             bool renderTemplate = true)
         {
-            var sink = new SplunkViaTcpSink(hostAddresss, port, formatProvider);
+            var sink = new SplunkViaTcpSink(hostAddresss, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -161,6 +171,7 @@ namespace Serilog
         /// <param name="port">The TCP port</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If ture, the message template is rendered</param>
         /// <returns></returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
         public static LoggerConfiguration SplunkViaTcp(
@@ -168,9 +179,10 @@ namespace Serilog
             string host,
             int port,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+             bool renderTemplate = true)
         {
-            var sink = new SplunkViaTcpSink(host, port, formatProvider);
+            var sink = new SplunkViaTcpSink(host, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }

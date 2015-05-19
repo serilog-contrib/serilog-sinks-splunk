@@ -34,6 +34,7 @@ namespace Serilog
         /// <param name="batchInterval">The interval on which to log via http</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
@@ -43,9 +44,10 @@ namespace Serilog
             int batchSizeLimit,
             TimeSpan batchInterval,
             LogEventLevel restrictedToMinimumLevel = LogEventLevel.Debug,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
         {
-            var sink = new SplunkViaHttpSink(context, batchSizeLimit, batchInterval, formatProvider);
+            var sink = new SplunkViaHttpSink(context, batchSizeLimit, batchInterval, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink);
         }
@@ -64,13 +66,13 @@ namespace Serilog
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="index"></param>
         /// <param name="userName"></param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
         public static LoggerConfiguration SplunkViaHttp(
             this LoggerSinkConfiguration loggerConfiguration,
             Context context,
-
             string index,
             string userName,
             string password,
@@ -79,9 +81,10 @@ namespace Serilog
             int batchSizeLimit,
             TimeSpan batchInterval,
             LogEventLevel restrictedToMinimumLevel = LogEventLevel.Debug,
-            IFormatProvider formatProvider = null)
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
         {
-            var sink = new SplunkViaHttpSink(new SplunkContext(context, index, userName, password, resourceNameSpace, transmitterArgs), batchSizeLimit, batchInterval, formatProvider);
+            var sink = new SplunkViaHttpSink(new SplunkContext(context, index, userName, password, resourceNameSpace, transmitterArgs), batchSizeLimit, batchInterval, formatProvider,renderTemplate);
 
             return loggerConfiguration.Sink(sink);
         }

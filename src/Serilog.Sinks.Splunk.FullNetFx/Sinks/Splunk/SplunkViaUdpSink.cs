@@ -28,8 +28,8 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class SplunkViaUdpSink : ILogEventSink, IDisposable
     {
-        Socket _socket;
-        JsonFormatter _jsonFormatter;
+        readonly Socket _socket;
+        readonly JsonFormatter _jsonFormatter;
 
         /// <summary>
         /// Creates an instance of the Splunk UDP Sink
@@ -37,12 +37,13 @@ namespace Serilog.Sinks.Splunk
         /// <param name="hostAddress">The Splunk Host</param>
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
-        public SplunkViaUdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null)
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        public SplunkViaUdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
         {
             _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
             _socket.Connect(hostAddress, port);
 
-            _jsonFormatter = new JsonFormatter(renderMessage: true, formatProvider: formatProvider);            
+            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
         }
 
         /// <summary>
@@ -51,12 +52,14 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The Splunk Host</param>
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
-        public SplunkViaUdpSink(string host, int port, IFormatProvider formatProvider = null)
+        /// <param name="renderTemplate">If true, the message template is rendered</param>
+        public SplunkViaUdpSink(string host, int port, IFormatProvider formatProvider = null,
+             bool renderTemplate = true)
         {
             _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
             _socket.Connect(host, port);
 
-            _jsonFormatter = new JsonFormatter(renderMessage: true, formatProvider: formatProvider);
+            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate:renderTemplate);
         }
 
         /// <inheritdoc/>
