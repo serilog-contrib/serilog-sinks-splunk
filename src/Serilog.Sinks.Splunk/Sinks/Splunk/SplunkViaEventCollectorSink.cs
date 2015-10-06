@@ -21,19 +21,31 @@ namespace Serilog.Sinks.Splunk
     {
         private  string _splunkHost;
         private  string _eventCollectorToken;
-        private  int _batchSizeLimit;
+        private  int _batchSizeLimitLimit;
         private  JsonFormatter _jsonFormatter;
         private  ConcurrentQueue<LogEvent> _queue;
+        private TimeSpan _batchInterval;
+
+
+        //public const int DefaultBatchInterval = 10 * 1000; // 10 seconds
+        //public const int DefaultBatchSize = 10 * 1024; // 10KB
+        //public const int DefaultBatchCount = 10;
+
 
         /// <summary>
         /// Creates a new instance of the sink
         /// </summary>
         /// <param name="splunkHost"></param>
         /// <param name="eventCollectorToken"></param>
+        /// <param name="batchSizeLimit"></param>
         /// <param name="formatProvider"></param>
         /// <param name="renderTemplate"></param>
-        public SplunkViaEventCollectorSink(string splunkHost,
+        /// <param name="batchIntervalInSeconds"></param>
+        public SplunkViaEventCollectorSink(
+            string splunkHost,
             string eventCollectorToken,
+            int batchIntervalInSeconds = 10,
+            int batchSizeLimit = 10,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true
             )
@@ -42,11 +54,11 @@ namespace Serilog.Sinks.Splunk
             _eventCollectorToken = eventCollectorToken;
             _queue = new ConcurrentQueue<LogEvent>();
 
-            _jsonFormatter = new JsonFormatter(renderMessage: true, formatProvider: formatProvider);
-            _batchSizeLimit = 1;
-            var batchInterval = TimeSpan.FromSeconds(5);
+            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate:renderTemplate);
+            _batchSizeLimitLimit = batchSizeLimit;
+            _batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
 
-            RepeatAction.OnInterval(batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
+            RepeatAction.OnInterval(_batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
         }
 
         /// <summary>
@@ -70,7 +82,7 @@ namespace Serilog.Sinks.Splunk
                     var events = new Queue<LogEvent>();
                     LogEvent next;
 
-                    while (count < _batchSizeLimit && _queue.TryDequeue(out next))
+                    while (count < _batchSizeLimitLimit && _queue.TryDequeue(out next))
                     {
                         count++;
                         events.Enqueue(next);
@@ -80,10 +92,14 @@ namespace Serilog.Sinks.Splunk
                         return;
 
                     var sw = new StringWriter();
+                    
+                    //TODO: Check status code against defaults
+                    //TODO: Put items back in queue if matching use case
+                    //TODO: Change to use retry methods
 
+      
                     foreach (var logEvent in events)
-                    {
-                        
+                    {   
                         _jsonFormatter.Format(logEvent, sw);
 
                         var logEventAsAString = sw.ToString();

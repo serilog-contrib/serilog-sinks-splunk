@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Splunk.Client;
 
 
@@ -13,8 +14,9 @@ namespace Serilog.Sinks.Splunk.Sample
             var tcp = new ViaTcp();
             var udp = new ViaUdp();
             var eventCollector = new ViaEventCollector();
-            udp.Configure();
-            tcp.Configure();
+            eventCollector.Configure();
+            //udp.Configure();
+            //tcp.Configure();
 
             Log.Information("Simulation running, press any key to exit.");
 
@@ -28,9 +30,12 @@ namespace Serilog.Sinks.Splunk.Sample
     {
          public void Configure()
          {
-             Log.Logger = new LoggerConfiguration()
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+
+
+            Log.Logger = new LoggerConfiguration()
                  .WriteTo.LiterateConsole()
-                 .WriteTo.SplunkViaEventCollector("https://mysplunk", "685546AE-0278-4786-97C4-5971676D5D70")
+                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70")
                  .Enrich.WithThreadId()
                  .Enrich.WithProperty("SplunkSample", "ViaEventCollector")
                  .MinimumLevel.Debug()

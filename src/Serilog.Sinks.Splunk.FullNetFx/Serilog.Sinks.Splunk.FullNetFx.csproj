@@ -62,15 +62,23 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\EventCollectorExtensions.cs">
+      <Link>Sinks\Splunk\EventCollectorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\RepeatAction.cs">
+      <Link>Sinks\Splunk\RepeatAction.cs</Link>
+    </Compile>
     <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\SplunkJsonFormatter.cs">
       <Link>Sinks\Splunk\SplunkJsonFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\SplunkViaEventCollectorSink.cs">
+      <Link>Sinks\Splunk\SplunkViaEventCollectorSink.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\assets\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="LoggerConfigurationSplunkExtensions.cs" />
-    <Compile Include="Sinks\Splunk\SplunkViaEventCollector.cs" />
     <Compile Include="Sinks\Splunk\SplunkViaTcpSink.cs" />
     <Compile Include="Sinks\Splunk\SplunkViaUdpSink.cs" />
   </ItemGroup>
