@@ -17,7 +17,6 @@ using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting.Display;
 using Serilog.Sinks.Splunk;
-using Splunk.Client;
 
 namespace Serilog
 {

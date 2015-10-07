@@ -2,6 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -10,27 +12,51 @@ using System.Threading.Tasks;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
-using Serilog.Formatting.Json;
 
 namespace Serilog.Sinks.Splunk
 {
+    internal class EventCollectorClient : HttpClient
+    {
+        public EventCollectorClient(string eventCollectorToken) : base()
+        {
+            DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Splunk", eventCollectorToken);
+        }
+    }
+
+    internal class EventCollectorRequest : HttpRequestMessage
+    {
+        public EventCollectorRequest(string splunkHost, string logEvent)
+        {
+            var jsonPayLoad = @"{""event"":" + logEvent + "}"
+                .Replace("\r\n", string.Empty);
+
+            var stringContent = new StringContent(jsonPayLoad, Encoding.UTF8, "application/json");
+            RequestUri = new Uri(splunkHost);
+            Content = stringContent;
+            Method = HttpMethod.Post;
+        }
+    }
+
+
+
     /// <summary>
     /// A sink to log to the Event Collector available in Splunk 6.3
     /// </summary>
     public class SplunkViaEventCollectorSink : ILogEventSink
     {
-        private  string _splunkHost;
-        private  string _eventCollectorToken;
-        private  int _batchSizeLimitLimit;
-        private  JsonFormatter _jsonFormatter;
-        private  ConcurrentQueue<LogEvent> _queue;
-        private TimeSpan _batchInterval;
+        private readonly string _splunkHost;
+        private readonly string _eventCollectorToken;
+        private readonly int _batchSizeLimitLimit;
+        private readonly SplunkJsonFormatter _jsonFormatter;
+        private readonly ConcurrentQueue<LogEvent> _queue;
+        private readonly TimeSpan _batchInterval;
 
-
-        //public const int DefaultBatchInterval = 10 * 1000; // 10 seconds
-        //public const int DefaultBatchSize = 10 * 1024; // 10KB
-        //public const int DefaultBatchCount = 10;
-
+        private static readonly HttpStatusCode[] HttpEventCollectorApplicationErrors =
+       {
+            HttpStatusCode.Forbidden,
+            HttpStatusCode.MethodNotAllowed,
+            HttpStatusCode.BadRequest
+        };
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -53,7 +79,6 @@ namespace Serilog.Sinks.Splunk
             _splunkHost = splunkHost;
             _eventCollectorToken = eventCollectorToken;
             _queue = new ConcurrentQueue<LogEvent>();
-
             _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate:renderTemplate);
             _batchSizeLimitLimit = batchSizeLimit;
             _batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
@@ -91,53 +116,39 @@ namespace Serilog.Sinks.Splunk
                     if (events.Count == 0)
                         return;
 
-                    var sw = new StringWriter();
-                    
-                    //TODO: Check status code against defaults
-                    //TODO: Put items back in queue if matching use case
-                    //TODO: Change to use retry methods
+                    //TODO: Add streaming capability for performance
 
-      
-                    foreach (var logEvent in events)
-                    {   
-                        _jsonFormatter.Format(logEvent, sw);
-
-                        var logEventAsAString = sw.ToString();
-
-                        
-                        var plainPayload2 = @"{""event"":" + logEventAsAString + "}";
-                        
-
-                        using (var client = new HttpClient())
+                    using (var client = new EventCollectorClient(_eventCollectorToken))
+                    {
+                        foreach (var logEvent in events)
                         {
+                            var sw = new StringWriter();
 
-
-                            var stringContent = new StringContent(plainPayload2, Encoding.UTF8, "application/json");
-                           
-                            plainPayload2 = plainPayload2.Replace("\r\n", string.Empty);
-
- 
-
-                            var request = new HttpRequestMessage
-                            {
-                                RequestUri = new Uri(_splunkHost),
-                                Content = stringContent
-                            };
-
-                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Splunk", _eventCollectorToken);
-
-                            request.Method = HttpMethod.Post;
-
+                            _jsonFormatter.Format(logEvent, sw);
+                            var le = sw.ToString();
+                            var request = new EventCollectorRequest(_splunkHost, le);
                             var response = await client.SendAsync(request);
 
-                            if (response.IsSuccessStatusCode)
-                            {
+                            if (response.IsSuccessStatusCode) {
+                                //Do Nothing?
                             }
                             else
                             {
+                                //Application Errors sent via HTTP Event Collector
+                                if (HttpEventCollectorApplicationErrors.Any(x => x == response.StatusCode))
+                                {
+                                    SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been discarded", response.StatusCode.ToString(), _splunkHost);
+                                }
+                                else
+                                {
+                                    //Put the item back in the queue & retry on next go
+                                    SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been placed back in the queue", response.StatusCode.ToString(), _splunkHost);
+
+                                    _queue.Enqueue(logEvent);
+                                }
                             }
                         }
-                    } 
+                    }
                 } while (true);
             }
             catch (Exception ex)
