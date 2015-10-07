@@ -27,7 +27,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// A sink that logs to Splunk over TCP
     /// </summary>
-    public class SplunkViaTcpSink : ILogEventSink, IDisposable
+    public class TcpSink : ILogEventSink, IDisposable
     {
         readonly JsonFormatter _jsonFormatter;
         private TcpSocketWriter _writer;
@@ -40,7 +40,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
 
-        public SplunkViaTcpSink(
+        public TcpSink(
             IPAddress hostAddress,
             int port,
             IFormatProvider formatProvider = null,
@@ -60,7 +60,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        public SplunkViaTcpSink(
+        public TcpSink(
             string host,
             int port,
             IFormatProvider formatProvider = null,

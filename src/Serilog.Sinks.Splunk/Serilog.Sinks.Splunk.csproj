@@ -57,7 +57,7 @@
     <Compile Include="Sinks\Splunk\RepeatAction.cs" />
     <Compile Include="Sinks\Splunk\SplunkJsonFormatter.cs" />
     <Compile Include="Sinks\Splunk\EventCollectorExtensions.cs" />
-    <Compile Include="Sinks\Splunk\SplunkViaEventCollectorSink.cs" />
+    <Compile Include="Sinks\Splunk\EventCollectorSink.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">

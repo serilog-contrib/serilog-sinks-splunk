@@ -1,3 +1,17 @@
+// Copyright 2014 Serilog Contributors
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -37,12 +51,10 @@ namespace Serilog.Sinks.Splunk
         }
     }
 
-
-
     /// <summary>
     /// A sink to log to the Event Collector available in Splunk 6.3
     /// </summary>
-    public class SplunkViaEventCollectorSink : ILogEventSink
+    public class EventCollectorSink : ILogEventSink
     {
         private readonly string _splunkHost;
         private readonly string _eventCollectorToken;
@@ -51,8 +63,11 @@ namespace Serilog.Sinks.Splunk
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly TimeSpan _batchInterval;
 
+        /// <summary>
+        /// Taken from Splunk.Logging.Common
+        /// </summary>
         private static readonly HttpStatusCode[] HttpEventCollectorApplicationErrors =
-       {
+        {
             HttpStatusCode.Forbidden,
             HttpStatusCode.MethodNotAllowed,
             HttpStatusCode.BadRequest
@@ -61,13 +76,13 @@ namespace Serilog.Sinks.Splunk
         /// <summary>
         /// Creates a new instance of the sink
         /// </summary>
-        /// <param name="splunkHost"></param>
-        /// <param name="eventCollectorToken"></param>
-        /// <param name="batchSizeLimit"></param>
-        /// <param name="formatProvider"></param>
-        /// <param name="renderTemplate"></param>
-        /// <param name="batchIntervalInSeconds"></param>
-        public SplunkViaEventCollectorSink(
+        /// <param name="splunkHost">The host of the Splunk instance with the Event collector configured</param>
+        /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
+        /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
+        /// <param name="formatProvider">The format provider used when rendering the message</param>
+        /// <param name="renderTemplate">Whether to render the message template</param>
+        /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
+        public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
             int batchIntervalInSeconds = 10,
@@ -83,11 +98,12 @@ namespace Serilog.Sinks.Splunk
             _batchSizeLimitLimit = batchSizeLimit;
             _batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
 
+            //TODO: Implement handling similar to the Seq HTTP sink
             RepeatAction.OnInterval(_batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
         }
 
         /// <summary>
-        /// 
+        /// Emits the provided log event from a sink 
         /// </summary>
         /// <param name="logEvent"></param>
         public void Emit(LogEvent logEvent)

@@ -53,7 +53,7 @@ namespace Serilog
             if (sinkConfiguration == null) throw new ArgumentNullException(nameof(sinkConfiguration));
             if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
             var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
-            return sinkConfiguration.Sink(new SplunkViaEventCollectorSink(splunkHost, eventCollectorToken), restrictedToMinimumLevel);
+            return sinkConfiguration.Sink(new EventCollectorSink(splunkHost, eventCollectorToken), restrictedToMinimumLevel);
         }
 
 
@@ -76,7 +76,7 @@ namespace Serilog
             IFormatProvider formatProvider = null,
             bool renderTemplate = true)
         {
-            var sink = new SplunkViaUdpSink(host, port, formatProvider, renderTemplate);
+            var sink = new UdpSink(host, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -101,7 +101,7 @@ namespace Serilog
             IFormatProvider formatProvider = null,
             bool renderTemplate = true)
         {
-            var sink = new SplunkViaUdpSink(hostAddresss, port, formatProvider, renderTemplate);
+            var sink = new UdpSink(hostAddresss, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -125,7 +125,7 @@ namespace Serilog
             IFormatProvider formatProvider = null,
              bool renderTemplate = true)
         {
-            var sink = new SplunkViaTcpSink(hostAddresss, port, formatProvider, renderTemplate);
+            var sink = new TcpSink(hostAddresss, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
@@ -149,7 +149,7 @@ namespace Serilog
             IFormatProvider formatProvider = null,
              bool renderTemplate = true)
         {
-            var sink = new SplunkViaTcpSink(host, port, formatProvider, renderTemplate);
+            var sink = new TcpSink(host, port, formatProvider, renderTemplate);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }

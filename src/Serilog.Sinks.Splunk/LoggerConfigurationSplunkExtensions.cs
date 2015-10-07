@@ -51,7 +51,7 @@ namespace Serilog
             if (sinkConfiguration == null) throw new ArgumentNullException(nameof(sinkConfiguration));
             if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
             var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
-            return sinkConfiguration.Sink(new SplunkViaEventCollectorSink(splunkHost, eventCollectorToken), restrictedToMinimumLevel);
+            return sinkConfiguration.Sink(new EventCollectorSink(splunkHost, eventCollectorToken), restrictedToMinimumLevel);
         }
     }
 }

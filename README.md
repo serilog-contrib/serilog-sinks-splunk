@@ -17,6 +17,14 @@ To get started install the *Serilog.Sinks.Splunk* package from Visual Studio's *
 PM> Install-Package Serilog.Sinks.Splunk
 ```
 
+Using the new Event Collector in Splunk 6.3
+
+```csharp 
+var log = new LoggerConfiguration()
+     .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
+    .CreateLogger();
+```
+
 Set up to log via TCP
 
 ```csharp
@@ -33,24 +41,3 @@ var log = new LoggerConfiguration()
     .CreateLogger();
 ```
 
-Or maybe HTTP
-
-```csharp
-var generalSplunkContext = new Context(Scheme.Https, "127.0.0.1", 8089);
-
-var transmitterArgs = new TransmitterArgs
-{
-    Source = "Splunk.Sample",
-    SourceType = "Splunk Sample Source"
-};
-
-const string username = "my splunk user";
-const string password = "my splunk password";
-const string splunkIndex = "mysplunktest";
-
-var serilogContext = new SplunkContext(generalSplunkContext, splunkIndex, username, password, null, transmitterArgs);
-
-var log = new LoggerConfiguration()
-     .WriteTo.SplunkViaHttp(serilogContext, 10, TimeSpan.FromSeconds(5))
-    .CreateLogger();
-```
