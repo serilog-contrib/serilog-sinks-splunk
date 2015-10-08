@@ -22,43 +22,12 @@ using Serilog.Sinks.Splunk;
 namespace Serilog
 {
     /// <summary>
-    /// Adds the WriteTo.SplunkViaHttp() extension method to <see cref="LoggerConfiguration"/>.
+    /// Adds the WriteTo.SplunkViaEventCollector() extension method to <see cref="LoggerConfiguration"/>.
     /// </summary>
     public static class LoggerConfigurationSplunkExtensions
     {
-
-
-        internal const string DefaultOutputTemplate =
-            "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
-
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sinkConfiguration"></param>
-        /// <param name="splunkHost"></param>
-        /// <param name="eventCollectorToken"></param>
-        /// <param name="restrictedToMinimumLevel"></param>
-        /// <param name="outputTemplate"></param>
-        /// <param name="formatProvider"></param>
-        /// <param name="renderTemplate"></param>
-        /// <returns></returns>
-        public static LoggerConfiguration SplunkViaEventCollector(
-            this LoggerSinkConfiguration sinkConfiguration,
-            string splunkHost,
-            string eventCollectorToken,
-            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            string outputTemplate = DefaultOutputTemplate,
-            IFormatProvider formatProvider = null, bool renderTemplate = true)
-        {
-            if (sinkConfiguration == null) throw new ArgumentNullException(nameof(sinkConfiguration));
-            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
-            var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
-            return sinkConfiguration.Sink(new EventCollectorSink(splunkHost, eventCollectorToken), restrictedToMinimumLevel);
-        }
-
-
-        /// <summary>
-        /// Adds a sink that writes log events as to a Splunk instance via http.
+        /// Adds a sink that writes log events as to a Splunk instance via UDP.
         /// </summary>
         /// <param name="loggerConfiguration">The logger config</param>
         /// <param name="host">The Splunk host that is configured for UDP logging</param>

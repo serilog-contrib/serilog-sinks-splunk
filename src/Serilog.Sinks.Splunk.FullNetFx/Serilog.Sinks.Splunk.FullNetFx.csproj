@@ -62,6 +62,9 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Serilog.Sinks.Splunk\LoggerConfigurationSplunkPCLExtensions.cs">
+      <Link>LoggerConfigurationSplunkPCLExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\EventCollectorExtensions.cs">
       <Link>Sinks\Splunk\EventCollectorExtensions.cs</Link>
     </Compile>

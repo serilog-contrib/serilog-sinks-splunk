@@ -85,7 +85,7 @@ namespace Serilog.Sinks.Splunk
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
-            int batchIntervalInSeconds = 10,
+            int batchIntervalInSeconds = 2,
             int batchSizeLimit = 10,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true

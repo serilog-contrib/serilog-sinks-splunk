@@ -34,7 +34,7 @@ namespace Serilog.Sinks.Splunk.Sample
 
             Log.Logger = new LoggerConfiguration()
                  .WriteTo.LiterateConsole()
-                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70")
+                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70",renderTemplate:false)
                  .Enrich.WithThreadId()
                  .Enrich.WithProperty("SplunkSample", "ViaEventCollector")
                  .MinimumLevel.Debug()
