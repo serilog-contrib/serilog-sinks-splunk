@@ -153,8 +153,11 @@ namespace Serilog.Sinks.Splunk
                     if (events.Count == 0)
                         return;
 
-                    //TODO: Add streaming capability for performance.  This should b
-                    
+                    //TODO: Add streaming capability for performance.  
+                    // - Stream writer needs to move to outer scope.
+                    // - Change Event Collector Request to only take string (or stream) of events and host
+                    // - New object to stream many events as collection
+
                     foreach (var logEvent in events)
                     {
                         var sw = new StringWriter();
