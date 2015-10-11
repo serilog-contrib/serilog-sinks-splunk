@@ -54,9 +54,10 @@
     <Compile Include="..\..\assets\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Sinks\Splunk\EventCollectorClient.cs" />
+    <Compile Include="Sinks\Splunk\EventCollectorRequest.cs" />
     <Compile Include="Sinks\Splunk\RepeatAction.cs" />
     <Compile Include="Sinks\Splunk\SplunkJsonFormatter.cs" />
-    <Compile Include="Sinks\Splunk\EventCollectorExtensions.cs" />
     <Compile Include="Sinks\Splunk\EventCollectorSink.cs" />
   </ItemGroup>
   <ItemGroup>

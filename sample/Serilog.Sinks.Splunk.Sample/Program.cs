@@ -13,8 +13,13 @@ namespace Serilog.Sinks.Splunk.Sample
 ;
             var tcp = new ViaTcp();
             var udp = new ViaUdp();
-            var eventCollector = new ViaEventCollector();
-            eventCollector.Configure();
+            var ec = new ViaEventCollector();
+            var eco = new ViaEventCollectorWithExtendedOptions();
+
+            eco.Configure();
+
+            //ec.Configure();
+       
             //udp.Configure();
             //tcp.Configure();
 
@@ -26,7 +31,7 @@ namespace Serilog.Sinks.Splunk.Sample
         }
     }
 
-     class ViaEventCollector : IConfigure
+    class ViaEventCollector : IConfigure
     {
          public void Configure()
          {
@@ -36,11 +41,34 @@ namespace Serilog.Sinks.Splunk.Sample
                  .WriteTo.LiterateConsole()
                  .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70",renderTemplate:false)
                  .Enrich.WithThreadId()
-                 .Enrich.WithProperty("SplunkSample", "ViaEventCollector")
+                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                  .MinimumLevel.Debug()
                  .CreateLogger();
          }
     }
+
+    class ViaEventCollectorWithExtendedOptions : IConfigure
+    {
+        public void Configure()
+        {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+
+            Log.Logger = new LoggerConfiguration()
+                 .WriteTo.LiterateConsole()
+                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", 
+                    "685546AE-0278-4786-97C4-5971676D5D70",
+                    "Serilog",
+                    "",
+                   Environment.MachineName,
+                    "" ,
+                    renderTemplate: false)
+                 .Enrich.WithThreadId()
+                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                 .MinimumLevel.Debug()
+                 .CreateLogger();
+        }
+    }
+
 
     class ViaTcp : IConfigure
     {
@@ -50,7 +78,7 @@ namespace Serilog.Sinks.Splunk.Sample
             .WriteTo.LiterateConsole()
             .WriteTo.SplunkViaTcp("127.0.0.1", 10001, renderTemplate: false)
             .Enrich.WithThreadId()
-            .Enrich.WithProperty("SplunkSample", "ViaTCP")
+            .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaTCP")
             .MinimumLevel.Debug()
             .CreateLogger();
         }

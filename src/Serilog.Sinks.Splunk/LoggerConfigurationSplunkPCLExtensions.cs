@@ -67,6 +67,54 @@ namespace Serilog
             return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
         }
 
-        
+        /// <summary>
+        /// Adds a sink that writes log events as to a Splunk instance via UDP.
+        /// </summary>
+        /// <param name="configuration">The logger config</param>
+        /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
+        /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <param name="outputTemplate">The output template to be used when logging</param>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If ture, the message template will be rendered</param>
+        /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
+        /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <param name="index">The Splunk index to log to</param>
+        /// <param name="source">The source of the event</param>
+        /// <param name="sourceType">The source type of the event</param>
+        /// <param name="host">The host of the event</param>
+        /// <returns></returns>
+        public static LoggerConfiguration SplunkViaEventCollector(
+            this LoggerSinkConfiguration configuration,
+            string splunkHost,
+            string eventCollectorToken,
+            string source,
+            string sourceType,
+            string host,
+            string index,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            string outputTemplate = DefaultOutputTemplate,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true,
+            int batchIntervalInSeconds = 2,
+            int batchSizeLimit = 10)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
+
+            var eventCollectorSink = new EventCollectorSink(
+                splunkHost,
+                eventCollectorToken,
+                source,
+                sourceType,
+                host,
+                index,
+                batchIntervalInSeconds,
+                batchSizeLimit,
+                formatProvider,
+                renderTemplate);
+
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
+        }
     }
 }
