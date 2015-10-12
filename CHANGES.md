@@ -7,3 +7,6 @@
 ##1.6
  - Added support for Splunk 6.3 Event Collector
  - Deprecated Splunk HTTP Sink using Management Port/API
+
+##1.6.1 
+ - Streaming support for Event Collector
