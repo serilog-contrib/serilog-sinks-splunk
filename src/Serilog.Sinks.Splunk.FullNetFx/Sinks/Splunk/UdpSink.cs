@@ -26,7 +26,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// A sink that logs to Splunk over Udp
     /// </summary>
-    public class SplunkViaUdpSink : ILogEventSink, IDisposable
+    public class UdpSink : ILogEventSink, IDisposable
     {
         readonly Socket _socket;
         readonly JsonFormatter _jsonFormatter;
@@ -38,7 +38,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        public SplunkViaUdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
+        public UdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
         {
             _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
             _socket.Connect(hostAddress, port);
@@ -53,7 +53,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template is rendered</param>
-        public SplunkViaUdpSink(string host, int port, IFormatProvider formatProvider = null,
+        public UdpSink(string host, int port, IFormatProvider formatProvider = null,
              bool renderTemplate = true)
         {
             _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);

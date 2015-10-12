@@ -51,7 +51,7 @@ namespace Serilog.Sinks.Splunk
 
 
         /// <summary>
-        /// 
+        /// Writes the message with or without the message template
         /// </summary>
         /// <param name="template"></param>
         /// <param name="delim"></param>
