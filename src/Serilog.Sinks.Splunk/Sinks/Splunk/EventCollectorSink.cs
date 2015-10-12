@@ -80,7 +80,7 @@ namespace Serilog.Sinks.Splunk
 
             _httpClient = new EventCollectorClient(_eventCollectorToken);
 
-            //TODO: Implement handling similar to the Seq HTTP sink
+            //TODO: Implement handling similar to the Seq HTTP sink, including dispose flush
 
             RepeatAction.OnInterval(_batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
 
@@ -163,11 +163,12 @@ namespace Serilog.Sinks.Splunk
                         var sw = new StringWriter();
 
                         _jsonFormatter.Format(logEvent, sw);
-                        var le = sw.ToString();
-                        var request = new EventCollectorRequest(_splunkHost, le, _source, _sourceType, _host, _index);
+                        var evt = sw.ToString();
+
+                        var request = new EventCollectorRequest(_splunkHost, evt, _source, _sourceType, _host, _index);
                         var response = await _httpClient.SendAsync(request);
 
-                            if (response.IsSuccessStatusCode) {  //Do Nothing?
+                        if (response.IsSuccessStatusCode) {  //Do Nothing?
                         }
                         else
                         {

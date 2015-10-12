@@ -51,7 +51,7 @@ namespace Serilog
             IFormatProvider formatProvider = null, 
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
-            int batchSizeLimit = 10)
+            int batchSizeLimit = 100)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
