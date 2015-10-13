@@ -4,6 +4,9 @@
 ##1.5.30
  - Added switch for template rendering
 
-##1.6
+##1.6.42
  - Added support for Splunk 6.3 Event Collector
  - Deprecated Splunk HTTP Sink using Management Port/API
+
+##1.6.50
+ - Streaming support for Event Collector

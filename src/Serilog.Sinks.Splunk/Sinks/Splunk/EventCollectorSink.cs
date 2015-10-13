@@ -1,3 +1,4 @@
+
 // Copyright 2014 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +30,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// A sink to log to the Event Collector available in Splunk 6.3
     /// </summary>
-    public class EventCollectorSink : ILogEventSink
+    public class EventCollectorSink : ILogEventSink, IDisposable
     {
         private readonly string _splunkHost;
         private readonly string _eventCollectorToken;
@@ -40,9 +41,8 @@ namespace Serilog.Sinks.Splunk
         private readonly int _batchSizeLimitLimit;
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
-        private readonly TimeSpan _batchInterval;
-        private readonly EventCollectorClient _httpClient;
-        
+        private readonly EventCollectorClient _httpClient; 
+
         /// <summary>
         /// Taken from Splunk.Logging.Common
         /// </summary>
@@ -76,13 +76,13 @@ namespace Serilog.Sinks.Splunk
             _queue = new ConcurrentQueue<LogEvent>();
             _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
             _batchSizeLimitLimit = batchSizeLimit;
-            _batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
+            var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
 
             _httpClient = new EventCollectorClient(_eventCollectorToken);
 
             //TODO: Implement handling similar to the Seq HTTP sink, including dispose flush
 
-            RepeatAction.OnInterval(_batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
+            RepeatAction.OnInterval(batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
 
         }
 
@@ -153,39 +153,44 @@ namespace Serilog.Sinks.Splunk
                     if (events.Count == 0)
                         return;
 
-                    //TODO: Add streaming capability for performance.  
-                    // - Stream writer needs to move to outer scope.
-                    // - Change Event Collector Request to only take string (or stream) of events and host
-                    // - New object to stream many events as collection
+                    string allEvents = string.Empty;
 
                     foreach (var logEvent in events)
                     {
                         var sw = new StringWriter();
-
                         _jsonFormatter.Format(logEvent, sw);
-                        var evt = sw.ToString();
 
-                        var request = new EventCollectorRequest(_splunkHost, evt, _source, _sourceType, _host, _index);
-                        var response = await _httpClient.SendAsync(request);
+                        var serialisedEvent = sw.ToString();
+                        
+                        var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index);
 
-                        if (response.IsSuccessStatusCode) {  //Do Nothing?
+                        allEvents = $"{allEvents}{splunkEvent.Payload}";
+
+                    }
+                    var request = new EventCollectorRequest(_splunkHost, allEvents);
+                    
+                    var response = await _httpClient.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {  //Do Nothing?
+                    }
+                    else
+                    {
+                        //Application Errors sent via HTTP Event Collector
+                        if (HttpEventCollectorApplicationErrors.Any(x => x == response.StatusCode))
+                        {
+                            SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been discarded and will not be placed back in the queue.", response.StatusCode.ToString(), _splunkHost);
                         }
                         else
                         {
-                            //Application Errors sent via HTTP Event Collector
-                            if (HttpEventCollectorApplicationErrors.Any(x => x == response.StatusCode))
-                            {
-                                SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been discarded and will not be placed back in the queue.", response.StatusCode.ToString(), _splunkHost);
-                            }
-                            else
-                            {
-                                //Put the item back in the queue & retry on next go
-                                SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been placed back in the queue", response.StatusCode.ToString(), _splunkHost);
+                            //Put the item back in the queue & retry on next go
+                            SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been placed back in the queue", response.StatusCode.ToString(), _splunkHost);
 
+                            foreach (var logEvent in events)
+                            {
                                 _queue.Enqueue(logEvent);
                             }
                         }
-                        
                     }
                 } while (true);
             }

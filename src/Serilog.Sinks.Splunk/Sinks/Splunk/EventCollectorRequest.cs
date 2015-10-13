@@ -4,28 +4,16 @@ using System.Text;
 
 namespace Serilog.Sinks.Splunk
 {
-    internal class EventCollectorRequest : HttpRequestMessage
+    internal class SplunkEvent
     {
-        internal EventCollectorRequest(string splunkHost, string jsonPayLoad) 
+        private string _payload;
+
+        internal SplunkEvent(string logEvent, string source, string sourceType, string host, string index)
         {
+            _payload = string.Empty;
 
-            var stringContent = new StringContent(jsonPayLoad, Encoding.UTF8, "application/json");
-            RequestUri = new Uri(splunkHost);
-            Content = stringContent;
-            Method = HttpMethod.Post;
-        }
-
-        internal EventCollectorRequest(
-            string splunkHost, 
-            string logEvent, 
-            string source,
-            string sourceType, 
-            string host, 
-            string index)
-        {
-
-            var jsonPayLoad = @"{""event"":" + logEvent 
-              .Replace("\r\n", string.Empty);
+            var jsonPayLoad = @"{""event"":" + logEvent
+            .Replace("\r\n", string.Empty);
 
             if (!string.IsNullOrWhiteSpace(source))
             {
@@ -33,7 +21,7 @@ namespace Serilog.Sinks.Splunk
             }
             if (!string.IsNullOrWhiteSpace(sourceType))
             {
-                  jsonPayLoad = jsonPayLoad + @",""sourceType"":""" + sourceType + @"""";
+                jsonPayLoad = jsonPayLoad + @",""sourceType"":""" + sourceType + @"""";
             }
             if (!string.IsNullOrWhiteSpace(host))
             {
@@ -44,7 +32,20 @@ namespace Serilog.Sinks.Splunk
                 jsonPayLoad = jsonPayLoad + @",""index"":""" + index + @"""";
             }
 
-            jsonPayLoad = jsonPayLoad + "}"; 
+            jsonPayLoad = jsonPayLoad + "}";
+            _payload = jsonPayLoad;
+        }
+
+        public string Payload
+        {
+            get { return _payload; }
+        }
+    }
+
+    internal class EventCollectorRequest : HttpRequestMessage
+    {
+        internal EventCollectorRequest(string splunkHost, string jsonPayLoad)
+        {
 
             var stringContent = new StringContent(jsonPayLoad, Encoding.UTF8, "application/json");
             RequestUri = new Uri(splunkHost);
