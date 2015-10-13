@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using Splunk.Client;
 
@@ -17,15 +18,20 @@ namespace Serilog.Sinks.Splunk.Sample
             var eco = new ViaEventCollectorWithExtendedOptions();
 
             eco.Configure();
-
             //ec.Configure();
-       
             //udp.Configure();
             //tcp.Configure();
 
             Log.Information("Simulation running, press any key to exit.");
 
             stub.Run();
+
+            var range = Enumerable.Range(0, 10000);
+
+            foreach (var i in range)
+            {
+                Log.Information("Say hello to {0}", i);
+            }
 
             Console.ReadLine();
         }
@@ -39,7 +45,10 @@ namespace Serilog.Sinks.Splunk.Sample
 
             Log.Logger = new LoggerConfiguration()
                  .WriteTo.LiterateConsole()
-                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70",renderTemplate:false)
+                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70",
+                    renderTemplate:false,
+                    batchSizeLimit:150,
+                    batchIntervalInSeconds:5)
                  .Enrich.WithThreadId()
                  .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                  .MinimumLevel.Debug()
