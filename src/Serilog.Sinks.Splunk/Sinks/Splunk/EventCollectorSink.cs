@@ -41,7 +41,7 @@ namespace Serilog.Sinks.Splunk
         private readonly int _batchSizeLimitLimit;
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
-        private readonly EventCollectorClient _httpClient; 
+        private readonly EventCollectorClient _httpClient;
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -69,21 +69,24 @@ namespace Serilog.Sinks.Splunk
             int batchSizeLimit = 100,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true
-            ) 
+            )
         {
             _splunkHost = splunkHost;
             _eventCollectorToken = eventCollectorToken;
             _queue = new ConcurrentQueue<LogEvent>();
             _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
             _batchSizeLimitLimit = batchSizeLimit;
+
             var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
 
             _httpClient = new EventCollectorClient(_eventCollectorToken);
 
-            //TODO: Implement handling similar to the Seq HTTP sink, including dispose flush
+            var cancellationToken = new CancellationToken();
 
-            RepeatAction.OnInterval(batchInterval, () => ProcessQueue().Wait(), new CancellationToken());
-
+            RepeatAction.OnInterval(
+                batchInterval,
+                async () => await ProcessQueue(),
+                cancellationToken);
         }
 
         /// <summary>
@@ -153,45 +156,8 @@ namespace Serilog.Sinks.Splunk
                     if (events.Count == 0)
                         return;
 
-                    string allEvents = string.Empty;
+                    await Send(events);
 
-                    foreach (var logEvent in events)
-                    {
-                        var sw = new StringWriter();
-                        _jsonFormatter.Format(logEvent, sw);
-
-                        var serialisedEvent = sw.ToString();
-                        
-                        var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index);
-
-                        allEvents = $"{allEvents}{splunkEvent.Payload}";
-
-                    }
-                    var request = new EventCollectorRequest(_splunkHost, allEvents);
-                    
-                    var response = await _httpClient.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {  //Do Nothing?
-                    }
-                    else
-                    {
-                        //Application Errors sent via HTTP Event Collector
-                        if (HttpEventCollectorApplicationErrors.Any(x => x == response.StatusCode))
-                        {
-                            SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been discarded and will not be placed back in the queue.", response.StatusCode.ToString(), _splunkHost);
-                        }
-                        else
-                        {
-                            //Put the item back in the queue & retry on next go
-                            SelfLog.WriteLine("A status code of {0} was received when attempting to send to {1}.  The event has been placed back in the queue", response.StatusCode.ToString(), _splunkHost);
-
-                            foreach (var logEvent in events)
-                            {
-                                _queue.Enqueue(logEvent);
-                            }
-                        }
-                    }
                 } while (true);
             }
             catch (Exception ex)
@@ -200,9 +166,74 @@ namespace Serilog.Sinks.Splunk
             }
         }
 
+        private async Task Send(IEnumerable<LogEvent> events)
+        {
+            string allEvents = string.Empty;
+
+            foreach (var logEvent in events)
+            {
+                var sw = new StringWriter();
+                _jsonFormatter.Format(logEvent, sw);
+
+                var serialisedEvent = sw.ToString();
+
+                var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index);
+
+                allEvents = $"{allEvents}{splunkEvent.Payload}";
+            }
+            var request = new EventCollectorRequest(_splunkHost, allEvents);
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                //Do Nothing?
+            }
+            else
+            {
+                //Application Errors sent via HTTP Event Collector
+                if (HttpEventCollectorApplicationErrors.Any(x => x == response.StatusCode))
+                {
+                    SelfLog.WriteLine(
+                        "A status code of {0} was received when attempting to send to {1}.  The event has been discarded and will not be placed back in the queue.",
+                        response.StatusCode.ToString(), _splunkHost);
+                }
+                else
+                {
+                    //Put the item back in the queue & retry on next go
+                    SelfLog.WriteLine(
+                        "A status code of {0} was received when attempting to send to {1}.  The event has been placed back in the queue",
+                        response.StatusCode.ToString(), _splunkHost);
+
+                    foreach (var logEvent in events)
+                    {
+                        _queue.Enqueue(logEvent);
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
+            Dispose(true);
+        }
+
+        /// <inheritdoc/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing) return;
+
+            var remainingEvents = new List<LogEvent>();
+
+            while (!_queue.IsEmpty)
+            {
+                LogEvent next;
+                _queue.TryDequeue(out next);
+                remainingEvents.Add(next);
+            }
+
+            Send(remainingEvents).Wait();
             _httpClient.Dispose();
         }
     }
