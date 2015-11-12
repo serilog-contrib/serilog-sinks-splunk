@@ -108,7 +108,7 @@ namespace Serilog.Sinks.Splunk
         {
             var sb = new StringBuilder();
 
-            using (var sw = new StringWriter())
+            using (var sw = new StringWriter(sb))
                 _formatter.Format(logEvent, sw);
 
             _writer.Enqueue(sb.ToString());
