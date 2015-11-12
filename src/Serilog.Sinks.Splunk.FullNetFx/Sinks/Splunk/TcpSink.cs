@@ -15,11 +15,10 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using Serilog.Core;
 using Serilog.Events;
-using Serilog.Formatting.Json;
+using Serilog.Formatting;
 using Splunk.Logging;
 
 namespace Serilog.Sinks.Splunk
@@ -29,29 +28,8 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class TcpSink : ILogEventSink, IDisposable
     {
-        readonly JsonFormatter _jsonFormatter;
+        readonly ITextFormatter _formatter;
         private TcpSocketWriter _writer;
-
-        /// <summary>
-        /// Creates an instance of the Splunk TCP Sink
-        /// </summary>
-        /// <param name="hostAddress">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
-        /// <param name="formatProvider">Optional format provider</param>
-        /// <param name="renderTemplate">If true, the message template will be rendered</param>
-
-        public TcpSink(
-            IPAddress hostAddress,
-            int port,
-            IFormatProvider formatProvider = null,
-            bool renderTemplate = true)
-        {
-            var reconnectionPolicy = new ExponentialBackoffTcpReconnectionPolicy();
-
-            _writer = new TcpSocketWriter(hostAddress, port, reconnectionPolicy, 10000);
-
-            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
-        }
 
         /// <summary>
         /// Creates an instance of the Splunk TCP Sink
@@ -64,32 +42,65 @@ namespace Serilog.Sinks.Splunk
             string host,
             int port,
             IFormatProvider formatProvider = null,
+            bool renderTemplate = true) : this(IPAddress.Parse(host), port, formatProvider, renderTemplate)
+        {
+        }
+
+        /// <summary>
+        /// Creates an instance of the Splunk TCP Sink
+        /// </summary>
+        /// <param name="hostAddress">The Splunk Host</param>
+        /// <param name="port">The UDP port configured in Splunk</param>
+        /// <param name="formatProvider">Optional format provider</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        public TcpSink(
+            IPAddress hostAddress,
+            int port,
+            IFormatProvider formatProvider = null,
             bool renderTemplate = true)
         {
+            _writer = CreateSocketWriter(hostAddress, port);
+            _formatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
+        }
+
+        /// <summary>
+        /// Creates an instance of the Splunk TCP sink.
+        /// </summary>
+        /// <param name="host">The Splunk Host</param>
+        /// <param name="port">The UDP port configured in Splunk</param>
+        /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
+        public TcpSink(
+            string host,
+            int port,
+            ITextFormatter formatter)
+        {
+            _writer = CreateSocketWriter(IPAddress.Parse(host), port);
+            _formatter = formatter;
+        }
+
+        private static TcpSocketWriter CreateSocketWriter(IPAddress hostAddress, int port)
+        {
             var reconnectionPolicy = new ExponentialBackoffTcpReconnectionPolicy();
-            var ipAddress = IPAddress.Parse(host);
 
-            _writer = new TcpSocketWriter(ipAddress, port, reconnectionPolicy, 10000);
-
-            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
+            return new TcpSocketWriter(hostAddress, port, reconnectionPolicy, 10000);
         }
 
         /// <inheritdoc/>
         public void Emit(LogEvent logEvent)
         {
-            var sw = new StringWriter();
+            var sb = new StringBuilder();
 
-            _jsonFormatter.Format(logEvent, sw);
+            using (var sw = new StringWriter())
+                _formatter.Format(logEvent, sw);
 
-            var message = sw.ToString();
-
-            _writer.Enqueue(message);
+            _writer.Enqueue(sb.ToString());
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            _writer.Dispose();
+            _writer?.Dispose();
+            _writer = null;
         }
     }
 }
