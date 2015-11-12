@@ -32,17 +32,46 @@ namespace Serilog.Sinks.Splunk
         private TcpSocketWriter _writer;
 
         /// <summary>
+        /// Creates an instance of the Splunk TCP Sink.
+        /// </summary>
+        /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
+        /// <param name="formatProvider">Optional format provider</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        public TcpSink(
+            SplunkTcpSinkConnectionInfo connectionInfo,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
+        {
+            _writer = CreateSocketWriter(connectionInfo);
+            _formatter = CreateDefaultFormatter(formatProvider, renderTemplate);
+        }
+
+        /// <summary>
+        /// Creates an instance of the Splunk TCP Sink.
+        /// </summary>
+        /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
+        /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
+        public TcpSink(
+            SplunkTcpSinkConnectionInfo connectionInfo,
+            ITextFormatter formatter)
+        {
+            _writer = CreateSocketWriter(connectionInfo);
+            _formatter = formatter;
+        }
+
+        /// <summary>
         /// Creates an instance of the Splunk TCP Sink
         /// </summary>
         /// <param name="host">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
+        /// <param name="port">The TCP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
         public TcpSink(
             string host,
             int port,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true) : this(IPAddress.Parse(host), port, formatProvider, renderTemplate)
+            bool renderTemplate = true) : this(new SplunkTcpSinkConnectionInfo(host, port), formatProvider, renderTemplate)
         {
         }
 
@@ -50,39 +79,28 @@ namespace Serilog.Sinks.Splunk
         /// Creates an instance of the Splunk TCP Sink
         /// </summary>
         /// <param name="hostAddress">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
+        /// <param name="port">The TCP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
         public TcpSink(
             IPAddress hostAddress,
             int port,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true)
+            bool renderTemplate = true) : this(new SplunkTcpSinkConnectionInfo(hostAddress, port), formatProvider, renderTemplate)
         {
-            _writer = CreateSocketWriter(hostAddress, port);
-            _formatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
         }
 
-        /// <summary>
-        /// Creates an instance of the Splunk TCP sink.
-        /// </summary>
-        /// <param name="host">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
-        /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
-        public TcpSink(
-            string host,
-            int port,
-            ITextFormatter formatter)
-        {
-            _writer = CreateSocketWriter(IPAddress.Parse(host), port);
-            _formatter = formatter;
-        }
-
-        private static TcpSocketWriter CreateSocketWriter(IPAddress hostAddress, int port)
+        private static TcpSocketWriter CreateSocketWriter(SplunkTcpSinkConnectionInfo connectionInfo)
         {
             var reconnectionPolicy = new ExponentialBackoffTcpReconnectionPolicy();
 
-            return new TcpSocketWriter(hostAddress, port, reconnectionPolicy, 10000);
+            return new TcpSocketWriter(connectionInfo.Host, connectionInfo.Port, reconnectionPolicy, connectionInfo.MaxQueueSize);
+        }
+
+        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
+        {
+            return new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
         }
 
         /// <inheritdoc/>
@@ -104,4 +122,3 @@ namespace Serilog.Sinks.Splunk
         }
     }
 }
-
