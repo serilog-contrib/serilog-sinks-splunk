@@ -19,7 +19,7 @@ using System.Net.Sockets;
 using System.Text;
 using Serilog.Core;
 using Serilog.Events;
-using Serilog.Formatting.Json;
+using Serilog.Formatting;
 
 namespace Serilog.Sinks.Splunk
 {
@@ -28,22 +28,41 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class UdpSink : ILogEventSink, IDisposable
     {
-        readonly Socket _socket;
-        readonly JsonFormatter _jsonFormatter;
+        Socket _socket;
+        readonly ITextFormatter _formatter;
 
         /// <summary>
-        /// Creates an instance of the Splunk UDP Sink
+        /// Creates an instance of the Splunk TCP Sink.
         /// </summary>
-        /// <param name="hostAddress">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
+        /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        public UdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
+        public UdpSink(
+            SplunkUdpSinkConnectionInfo connectionInfo,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
+        {
+            Connect(connectionInfo);
+            _formatter = CreateDefaultFormatter(formatProvider, renderTemplate);
+        }
+
+        /// <summary>
+        /// Creates an instance of the Splunk TCP Sink.
+        /// </summary>
+        /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
+        /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
+        public UdpSink(
+            SplunkUdpSinkConnectionInfo connectionInfo,
+            ITextFormatter formatter)
+        {
+            Connect(connectionInfo);
+            _formatter = formatter;
+        }
+
+        private void Connect(SplunkUdpSinkConnectionInfo connectionInfo)
         {
             _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
-            _socket.Connect(hostAddress, port);
-
-            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
+            _socket.Connect(connectionInfo.Host, connectionInfo.Port);
         }
 
         /// <summary>
@@ -53,34 +72,47 @@ namespace Serilog.Sinks.Splunk
         /// <param name="port">The UDP port configured in Splunk</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template is rendered</param>
-        public UdpSink(string host, int port, IFormatProvider formatProvider = null,
-             bool renderTemplate = true)
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
+        public UdpSink(string host, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
+            : this(new SplunkUdpSinkConnectionInfo(host, port), formatProvider, renderTemplate)
         {
-            _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
-            _socket.Connect(host, port);
+        }
 
-            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate:renderTemplate);
+        /// <summary>
+        /// Creates an instance of the Splunk UDP Sink
+        /// </summary>
+        /// <param name="hostAddress">The Splunk Host</param>
+        /// <param name="port">The UDP port configured in Splunk</param>
+        /// <param name="formatProvider">Optional format provider</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
+        public UdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
+            : this(new SplunkUdpSinkConnectionInfo(hostAddress, port),formatProvider, renderTemplate)
+        {
+        }
+
+        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
+        {
+            return new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
         }
 
         /// <inheritdoc/>
         public void Emit(LogEvent logEvent)
         {
-            var sw = new StringWriter();
+            var sb = new StringBuilder();
 
-            _jsonFormatter.Format(logEvent, sw);
+            using (var sw = new StringWriter(sb))
+                _formatter.Format(logEvent, sw);
 
-            var message = sw.ToString();
-
-            _socket.Send(Encoding.UTF8.GetBytes(message));
+            _socket.Send(Encoding.UTF8.GetBytes(sb.ToString()));
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            _socket.Close();
-            _socket.Dispose();
+            _socket?.Close();
+            _socket?.Dispose();
+            _socket = null;
         }
     }
 }
-
-

@@ -8,6 +8,8 @@ namespace Serilog.Sinks.Splunk.Sample
 {
     class Program
     {
+        public static string EventCollectorToken = "DC279305-1816-44D6-9D7A-6CBB70F0A049";
+
         static void Main(string[] args)
         {
             var stub = new Stub();
@@ -26,7 +28,7 @@ namespace Serilog.Sinks.Splunk.Sample
 
             stub.Run();
 
-            var range = Enumerable.Range(0, 10000);
+            var range = Enumerable.Range(0, 100);
 
             foreach (var i in range)
             {
@@ -45,7 +47,7 @@ namespace Serilog.Sinks.Splunk.Sample
 
             Log.Logger = new LoggerConfiguration()
                  .WriteTo.LiterateConsole()
-                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "685546AE-0278-4786-97C4-5971676D5D70",
+                 .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", Program.EventCollectorToken,
                     renderTemplate:false,
                     batchSizeLimit:150,
                     batchIntervalInSeconds:5)
@@ -65,7 +67,7 @@ namespace Serilog.Sinks.Splunk.Sample
             Log.Logger = new LoggerConfiguration()
                  .WriteTo.LiterateConsole()
                  .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", 
-                    "685546AE-0278-4786-97C4-5971676D5D70",
+                    Program.EventCollectorToken,
                     "Serilog",
                     "",
                    Environment.MachineName,

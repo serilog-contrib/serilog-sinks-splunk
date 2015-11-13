@@ -85,6 +85,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="LoggerConfigurationSplunkExtensions.cs" />
+    <Compile Include="Sinks\Splunk\SplunkTcpSinkConnectionInfo.cs" />
+    <Compile Include="Sinks\Splunk\SplunkUdpSinkConnectionInfo.cs" />
     <Compile Include="Sinks\Splunk\TcpSink.cs" />
     <Compile Include="Sinks\Splunk\UdpSink.cs" />
   </ItemGroup>

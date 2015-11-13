@@ -16,6 +16,7 @@ using System;
 using System.Net;
 using Serilog.Configuration;
 using Serilog.Events;
+using Serilog.Formatting;
 using Serilog.Formatting.Display;
 using Serilog.Sinks.Splunk; 
 
@@ -30,6 +31,46 @@ namespace Serilog
         /// Adds a sink that writes log events as to a Splunk instance via UDP.
         /// </summary>
         /// <param name="loggerConfiguration">The logger config</param>
+        /// <param name="connectionInfo"></param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If true, the message template is rendered</param>
+        /// <returns></returns>
+        public static LoggerConfiguration SplunkViaUdp(
+            this LoggerSinkConfiguration loggerConfiguration,
+            SplunkUdpSinkConnectionInfo connectionInfo,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
+        {
+            var sink = new UdpSink(connectionInfo, formatProvider, renderTemplate);
+
+            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
+        }
+
+        /// <summary>
+        /// Adds a sink that writes log events as to a Splunk instance via UDP.
+        /// </summary>
+        /// <param name="loggerConfiguration">The logger config</param>
+        /// <param name="connectionInfo"></param>
+        /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <returns></returns>
+        public static LoggerConfiguration SplunkViaUdp(
+            this LoggerSinkConfiguration loggerConfiguration,
+            SplunkUdpSinkConnectionInfo connectionInfo,
+            ITextFormatter formatter,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum)
+        {
+            var sink = new UdpSink(connectionInfo, formatter);
+
+            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
+        }
+
+        /// <summary>
+        /// Adds a sink that writes log events as to a Splunk instance via UDP.
+        /// </summary>
+        /// <param name="loggerConfiguration">The logger config</param>
         /// <param name="host">The Splunk host that is configured for UDP logging</param>
         /// <param name="port">The UDP port</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
@@ -37,6 +78,7 @@ namespace Serilog
         /// <param name="renderTemplate">If ture, the message template will be rendered</param>
         /// <returns></returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
         public static LoggerConfiguration SplunkViaUdp(
             this LoggerSinkConfiguration loggerConfiguration,
             string host,
@@ -62,6 +104,7 @@ namespace Serilog
         /// <param name="renderTemplate">If ture, the message template is rendered</param>
         /// <returns>The logger configuration</returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
         public static LoggerConfiguration SplunkViaUdp(
             this LoggerSinkConfiguration loggerConfiguration,
             IPAddress hostAddresss,
@@ -79,6 +122,46 @@ namespace Serilog
         /// Adds a sink that writes log events as to a Splunk instance via TCP.
         /// </summary>
         /// <param name="loggerConfiguration">The logger config</param>
+        /// <param name="connectionInfo"></param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If true, the message template is rendered</param>
+        /// <returns></returns>
+        public static LoggerConfiguration SplunkViaTcp(
+            this LoggerSinkConfiguration loggerConfiguration,
+            SplunkTcpSinkConnectionInfo connectionInfo,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true)
+        {
+            var sink = new TcpSink(connectionInfo, formatProvider, renderTemplate);
+
+            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
+        }
+
+        /// <summary>
+        /// Adds a sink that writes log events as to a Splunk instance via TCP.
+        /// </summary>
+        /// <param name="loggerConfiguration">The logger config</param>
+        /// <param name="connectionInfo"></param>
+        /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <returns></returns>
+        public static LoggerConfiguration SplunkViaTcp(
+            this LoggerSinkConfiguration loggerConfiguration,
+            SplunkTcpSinkConnectionInfo connectionInfo,
+            ITextFormatter formatter,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum)
+        {
+            var sink = new TcpSink(connectionInfo, formatter);
+
+            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
+        }
+
+        /// <summary>
+        /// Adds a sink that writes log events as to a Splunk instance via TCP.
+        /// </summary>
+        /// <param name="loggerConfiguration">The logger config</param>
         /// <param name="hostAddresss">The Splunk host that is configured for UDP logging</param>
         /// <param name="port">The TCP port</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
@@ -86,6 +169,7 @@ namespace Serilog
         /// <param name="renderTemplate">If true, the message template is rendered</param>
         /// <returns></returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
         public static LoggerConfiguration SplunkViaTcp(
             this LoggerSinkConfiguration loggerConfiguration,
             IPAddress hostAddresss,
@@ -110,6 +194,7 @@ namespace Serilog
         /// <param name="renderTemplate">If ture, the message template is rendered</param>
         /// <returns></returns>
         /// <remarks>TODO: Add link to splunk configuration and wiki</remarks>
+        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
         public static LoggerConfiguration SplunkViaTcp(
             this LoggerSinkConfiguration loggerConfiguration,
             string host,
@@ -122,6 +207,5 @@ namespace Serilog
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
-
     }
 }

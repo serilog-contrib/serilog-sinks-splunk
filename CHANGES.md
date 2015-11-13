@@ -10,3 +10,7 @@
 
 ##1.6.50
  - Streaming support for Event Collector
+
+##1.7
+ - Better support for formatting including [#578](https://github.com/serilog/serilog/issues/578)
+ - Cleanup on Event Collector
