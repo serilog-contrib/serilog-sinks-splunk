@@ -1,0 +1,162 @@
+{
+  "locked": false,
+  "version": 2,
+  "targets": {
+    ".NETFramework,Version=v4.5": {
+      "Microsoft.Net.Http/2.0.20710": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Net.Http",
+          "System.Net.Http.WebRequest"
+        ],
+        "compile": {
+          "lib/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "Serilog/2.0.0-beta-507": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Serilog.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Serilog.dll": {}
+        }
+      },
+      "System.Net.Http/2.0.20710": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Net.Http": "[2.0.20710, 2.1.0)"
+        }
+      }
+    },
+    ".NETFramework,Version=v4.5/win7-x86": {
+      "Microsoft.Net.Http/2.0.20710": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Net.Http",
+          "System.Net.Http.WebRequest"
+        ],
+        "compile": {
+          "lib/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "Serilog/2.0.0-beta-507": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Serilog.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Serilog.dll": {}
+        }
+      },
+      "System.Net.Http/2.0.20710": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Net.Http": "[2.0.20710, 2.1.0)"
+        }
+      }
+    },
+    ".NETFramework,Version=v4.5/win7-x64": {
+      "Microsoft.Net.Http/2.0.20710": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Net.Http",
+          "System.Net.Http.WebRequest"
+        ],
+        "compile": {
+          "lib/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "Serilog/2.0.0-beta-507": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Serilog.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Serilog.dll": {}
+        }
+      },
+      "System.Net.Http/2.0.20710": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Net.Http": "[2.0.20710, 2.1.0)"
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Net.Http/2.0.20710": {
+      "type": "package",
+      "sha512": "OsB/5QO9tYJRLYIgBOhRl4Tssh3pw7+UAO9tMGMBg63f98GfjsniVIwLWRC0vcRr/F6HLP/NvRlHyGBhtD7Bmw==",
+      "files": [
+        "lib/net40/System.Net.Http.dll",
+        "lib/net40/System.Net.Http.WebRequest.dll",
+        "lib/net40/System.Net.Http.WebRequest.xml",
+        "lib/net40/System.Net.Http.xml",
+        "lib/net45/_._",
+        "Microsoft.Net.Http.2.0.20710.nupkg",
+        "Microsoft.Net.Http.2.0.20710.nupkg.sha512",
+        "Microsoft.Net.Http.nuspec"
+      ]
+    },
+    "Serilog/2.0.0-beta-507": {
+      "type": "package",
+      "sha512": "m3KFBE0okVrFAu5GUKylBpauCnx0RZ+Si0bTYCsouAfEy72MkKDk0Y9FOf0thlmdC3hTUK2ePbEPI/iXwGZRew==",
+      "files": [
+        "lib/dotnet5.1/Serilog.dll",
+        "lib/dotnet5.1/Serilog.xml",
+        "lib/dotnet5.4/Serilog.dll",
+        "lib/dotnet5.4/Serilog.xml",
+        "lib/net45/Serilog.dll",
+        "lib/net45/Serilog.xml",
+        "Serilog.2.0.0-beta-507.nupkg",
+        "Serilog.2.0.0-beta-507.nupkg.sha512",
+        "Serilog.nuspec"
+      ]
+    },
+    "System.Net.Http/2.0.20710": {
+      "type": "package",
+      "sha512": "z422hv7gmZnShP1raVV0dHD+0a3+Num2yOUmHjyp/fCkppykIp4uA+gQx6dagRxmpDuCquBivN+lMaVe8Z/gLw==",
+      "files": [
+        "System.Net.Http.2.0.20710.nupkg",
+        "System.Net.Http.2.0.20710.nupkg.sha512",
+        "System.Net.Http.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [
+      "Serilog >= 2.0.0-beta-507"
+    ],
+    ".NETFramework,Version=v4.5": [
+      "System.Net.Http >= 2.0.20710"
+    ]
+  }
+}
