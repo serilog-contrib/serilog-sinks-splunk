@@ -21,23 +21,6 @@ Using the new Event Collector in Splunk 6.3
 
 ```csharp 
 var log = new LoggerConfiguration()
-     .WriteTo.SplunkViaEventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
+     .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
     .CreateLogger();
 ```
-
-Set up to log via TCP
-
-```csharp
-var log = new LoggerConfiguration()
-    .WriteTo.SplunkViaTcp("127.0.0.1", 10001)
-    .CreateLogger();
-```
-
-Or maybe UDP
-
-```csharp
-var log = new LoggerConfiguration()
-    .WriteTo.SplunkViaUdp("127.0.0.1", 10000)
-    .CreateLogger();
-```
-
