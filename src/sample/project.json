@@ -16,11 +16,17 @@
   },
 
   "commands": {
-    "Sample": "Sample"
+    "Sample": "run"
   },
 
   "frameworks": {
-    "dnx451": { },
+    "dnx451": {
+      "dependencies": {
+      },
+      "frameworkAssemblies": {
+        "System.Net": "4.0.0.0"
+      }
+    },
     "dnxcore50": {
       "dependencies": {
         "Microsoft.CSharp": "4.0.1-beta-23516",

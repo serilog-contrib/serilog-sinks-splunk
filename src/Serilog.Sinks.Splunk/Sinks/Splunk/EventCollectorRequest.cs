@@ -46,7 +46,6 @@ namespace Serilog.Sinks.Splunk
     {
         internal EventCollectorRequest(string splunkHost, string jsonPayLoad)
         {
-
             var stringContent = new StringContent(jsonPayLoad, Encoding.UTF8, "application/json");
             RequestUri = new Uri(splunkHost);
             Content = stringContent;

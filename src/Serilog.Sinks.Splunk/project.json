@@ -11,6 +11,9 @@
   },
   "frameworks": {
     "net45": {
+      "compilationOptions": {
+        "define": ["TCP", "UDP"]
+      },
       "dependencies": {
         "System.Net.Http": "2.0.20710"
       }
