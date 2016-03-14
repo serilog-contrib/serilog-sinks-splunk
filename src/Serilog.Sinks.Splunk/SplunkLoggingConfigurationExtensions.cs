@@ -14,7 +14,7 @@
 
 
 using System;
-using System.Runtime.CompilerServices;
+using System.Net.Http;
 using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Sinks.Splunk;
@@ -22,80 +22,77 @@ using Serilog.Sinks.Splunk;
 namespace Serilog
 {
     /// <summary>
-    /// Fluent configuration methods for Logger configuration
+    ///     Fluent configuration methods for Logger configuration
     /// </summary>
     public static class SplunkLoggingConfigurationExtensions
-    { 
+    {
+        internal const string DefaultOutputTemplate =
+            "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
 
-            internal const string DefaultOutputTemplate =
-                "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
+        /// <summary>
+        ///     Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
+        /// </summary>
+        /// <param name="configuration">The logger config</param>
+        /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
+        /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <param name="outputTemplate">The output template to be used when logging</param>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If ture, the message template will be rendered</param>
+        /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
+        /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <returns></returns>
+        public static LoggerConfiguration EventCollector(
+            this LoggerSinkConfiguration configuration,
+            string splunkHost,
+            string eventCollectorToken,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            string outputTemplate = DefaultOutputTemplate,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true,
+            int batchIntervalInSeconds = 2,
+            int batchSizeLimit = 100)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
 
-            /// <summary>
-            /// Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
-            /// </summary>
-            /// <param name="configuration">The logger config</param>
-            /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
-            /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
-            /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-            /// <param name="outputTemplate">The output template to be used when logging</param>
-            /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-            /// <param name="renderTemplate">If ture, the message template will be rendered</param>
-            /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
-            /// <param name="batchSizeLimit">The size of the batch</param>
-            /// <returns></returns>
-            public static LoggerConfiguration EventCollector(
-                this LoggerSinkConfiguration configuration,
-                string splunkHost,
-                string eventCollectorToken,
-                LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-                string outputTemplate = DefaultOutputTemplate,
-                IFormatProvider formatProvider = null,
-                bool renderTemplate = true,
-                int batchIntervalInSeconds = 2,
-                int batchSizeLimit = 100)
-            {
-                if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-                if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
+            var eventCollectorSink = new EventCollectorSink(
+                splunkHost,
+                eventCollectorToken,
+                batchIntervalInSeconds,
+                batchSizeLimit,
+                formatProvider,
+                renderTemplate);
 
-                var eventCollectorSink = new EventCollectorSink(
-                    splunkHost,
-                    eventCollectorToken,
-                    batchIntervalInSeconds,
-                    batchSizeLimit,
-                    formatProvider,
-                    renderTemplate);
-
-                return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
-            }
-
-
-            /// <summary>
-            /// Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
-            /// </summary>
-            /// <param name="configuration">The logger config</param>
-            /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
-            /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
-            /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-            /// <param name="outputTemplate">The output template to be used when logging</param>
-            /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-            /// <param name="renderTemplate">If ture, the message template will be rendered</param>
-            /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
-            /// <param name="batchSizeLimit">The size of the batch</param>
-            /// <returns></returns>
-            public static LoggerConfiguration SplunkViaEventCollector(
-                this LoggerSinkConfiguration configuration,
-                string splunkHost,
-                string eventCollectorToken,
-                LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-                string outputTemplate = DefaultOutputTemplate,
-                IFormatProvider formatProvider = null,
-                bool renderTemplate = true,
-                int batchIntervalInSeconds = 2,
-                int batchSizeLimit = 100)
-            {
-                return EventCollector(configuration, splunkHost, eventCollectorToken, restrictedToMinimumLevel,
-                    outputTemplate, formatProvider, renderTemplate, batchIntervalInSeconds, batchSizeLimit);
-            }
-
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
         }
+
+        /// <summary>
+        ///     Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
+        /// </summary>
+        /// <param name="configuration">The logger config</param>
+        /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
+        /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <param name="outputTemplate">The output template to be used when logging</param>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If ture, the message template will be rendered</param>
+        /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
+        /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <returns></returns>
+        public static LoggerConfiguration SplunkViaEventCollector(
+            this LoggerSinkConfiguration configuration,
+            string splunkHost,
+            string eventCollectorToken,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            string outputTemplate = DefaultOutputTemplate,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true,
+            int batchIntervalInSeconds = 2,
+            int batchSizeLimit = 100)
+        {
+            return EventCollector(configuration, splunkHost, eventCollectorToken, restrictedToMinimumLevel,
+                outputTemplate, formatProvider, renderTemplate, batchIntervalInSeconds, batchSizeLimit);
+        }
+    }
 }

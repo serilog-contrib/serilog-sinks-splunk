@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Core;
@@ -52,8 +53,7 @@ namespace Serilog.Sinks.Splunk
             HttpStatusCode.Forbidden,
             HttpStatusCode.MethodNotAllowed,
             HttpStatusCode.BadRequest
-        };
-
+        }; 
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -86,14 +86,12 @@ namespace Serilog.Sinks.Splunk
             var cancellationToken = new CancellationToken();
 
           //  _timer = new PortableTimer(async c => await ProcessQueue());
-
-
-
+           
             RepeatAction.OnInterval(
                 batchInterval,
                 async () => await ProcessQueue(),
                 cancellationToken);
-        }
+        } 
 
         /// <summary>
         /// Creates a new instance of the sink

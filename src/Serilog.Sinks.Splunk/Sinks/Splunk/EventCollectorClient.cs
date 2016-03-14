@@ -10,5 +10,10 @@ namespace Serilog.Sinks.Splunk
         {
             DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Splunk", eventCollectorToken);
         }
+
+        public EventCollectorClient(string eventCollectorToken, HttpMessageHandler messageHandler) : base(messageHandler)
+        {
+            DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Splunk", eventCollectorToken);
+        }
     }
 }

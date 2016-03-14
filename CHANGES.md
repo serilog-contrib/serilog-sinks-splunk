@@ -1,6 +1,8 @@
-##2.0 Support for DotNet Core
+##2.0 
+ - Support for DotNet Core
  - Event Collector Sink targeting core
  - TCP/UDP Sinks targeting 4.5
+ - Changed HTTP Client to include URI endpoint to host: "services/collector/event"
 
 ##1.7
  - Better support for formatting including [#578](https://github.com/serilog/serilog/issues/578)
