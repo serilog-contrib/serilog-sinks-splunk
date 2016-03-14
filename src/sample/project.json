@@ -13,6 +13,7 @@
   "dependencies": {
     "Serilog.Sinks.Literate": "2.0.0-beta-21",
     "Serilog.Sinks.Splunk": { "target": "project" }
+    
   },
 
   "commands": {
@@ -20,11 +21,12 @@
   },
 
   "frameworks": {
+
     "dnx451": {
-      "dependencies": {
-      },
+      "compilationOptions": {"define": ["ServiceManager"]},
       "frameworkAssemblies": {
-        "System.Net": "4.0.0.0"
+        "System.Net": "4.0.0.0",
+        "System.Net.Http": "4.0.0.0"
       }
     },
     "dnxcore50": {
@@ -33,7 +35,9 @@
         "System.Collections": "4.0.11-beta-23516",
         "System.Console": "4.0.0-beta-23516",
         "System.Linq": "4.0.1-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
+        "System.Threading": "4.0.11-beta-23516",
+        "System.Net.Http": "4.0.1-beta-23516",
+        "System.Net.Http.WinHttpHandler": "4.0.0-beta-23516"
       }
     }
   }
