@@ -16,6 +16,15 @@
           "lib/net45/_._": {}
         }
       },
+      "Newtonsoft.Json/8.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
       "Serilog/2.0.0-beta-507": {
         "type": "package",
         "frameworkAssemblies": [
@@ -29,6 +38,18 @@
         },
         "runtime": {
           "lib/net45/Serilog.dll": {}
+        }
+      },
+      "Splunk.Logging.Common/1.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.8"
+        },
+        "compile": {
+          "lib/net45/Splunk.Logging.Common.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Splunk.Logging.Common.dll": {}
         }
       },
       "System.Net.Http/2.0.20710": {
@@ -461,6 +482,15 @@
           "lib/net45/_._": {}
         }
       },
+      "Newtonsoft.Json/8.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
       "Serilog/2.0.0-beta-507": {
         "type": "package",
         "frameworkAssemblies": [
@@ -474,6 +504,18 @@
         },
         "runtime": {
           "lib/net45/Serilog.dll": {}
+        }
+      },
+      "Splunk.Logging.Common/1.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.8"
+        },
+        "compile": {
+          "lib/net45/Splunk.Logging.Common.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Splunk.Logging.Common.dll": {}
         }
       },
       "System.Net.Http/2.0.20710": {
@@ -497,6 +539,15 @@
           "lib/net45/_._": {}
         }
       },
+      "Newtonsoft.Json/8.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
       "Serilog/2.0.0-beta-507": {
         "type": "package",
         "frameworkAssemblies": [
@@ -510,6 +561,18 @@
         },
         "runtime": {
           "lib/net45/Serilog.dll": {}
+        }
+      },
+      "Splunk.Logging.Common/1.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.8"
+        },
+        "compile": {
+          "lib/net45/Splunk.Logging.Common.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Splunk.Logging.Common.dll": {}
         }
       },
       "System.Net.Http/2.0.20710": {
@@ -1615,6 +1678,28 @@
         "Microsoft.Net.Http.nuspec"
       ]
     },
+    "Newtonsoft.Json/8.0.2": {
+      "type": "package",
+      "sha512": "e5yWmEfu68rmtG431zl9N/7PlNKQDIuiDW5MHlEFAZcecakcxrIGnKqrPAtWNILzK2oNanRB5cD150MYhECK3g==",
+      "files": [
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
+        "Newtonsoft.Json.8.0.2.nupkg",
+        "Newtonsoft.Json.8.0.2.nupkg.sha512",
+        "Newtonsoft.Json.nuspec",
+        "tools/install.ps1"
+      ]
+    },
     "runtime.win7.System.Console/4.0.0-beta-23516": {
       "type": "package",
       "serviceable": true,
@@ -1733,6 +1818,16 @@
         "Serilog.2.0.0-beta-507.nupkg",
         "Serilog.2.0.0-beta-507.nupkg.sha512",
         "Serilog.nuspec"
+      ]
+    },
+    "Splunk.Logging.Common/1.5.0": {
+      "type": "package",
+      "sha512": "vhnYeJWlAvoG7+VYYal9E1J1fmfJ6RRFQycGaokY7NcUIounXYJ2KDFlX/ygpf31HqKNnOqpbtq5qreyiHJIyA==",
+      "files": [
+        "lib/net45/Splunk.Logging.Common.dll",
+        "Splunk.Logging.Common.1.5.0.nupkg",
+        "Splunk.Logging.Common.1.5.0.nupkg.sha512",
+        "Splunk.Logging.Common.nuspec"
       ]
     },
     "System.Collections/4.0.11-beta-23516": {
@@ -3257,7 +3352,9 @@
       "Serilog >= 2.0.0-beta-507"
     ],
     ".NETFramework,Version=v4.5": [
-      "System.Net.Http >= 2.0.20710"
+      "System.Net.Http >= 2.0.20710",
+      "Newtonsoft.Json >= 8.0.2",
+      "Splunk.Logging.Common >= 1.5.0"
     ],
     ".NETPlatform,Version=v5.4": [
       "Microsoft.CSharp >= 4.0.1-beta-23516",

@@ -2,7 +2,7 @@
   "version": "2.0.0-*",
   "description": "The Splunk Sink for Serilog",
   "authors": [ "Matthew Erbs, Serilog Contributors" ],
-  "tags": [ "serilog", "splunk", "logging", "event" ],
+  "tags": [ "serilog", "splunk", "logging", "event", "collector" ],
   "projectUrl": "https://github.com/serilog/serilog-sinks-splunk",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "iconUrl": "http://serilog.net/images/serilog-sink-nuget.png",
@@ -15,7 +15,11 @@
         "define": ["TCP", "UDP"]
       },
       "dependencies": {
-        "System.Net.Http": "2.0.20710"
+        "System.Net.Http": "2.0.20710",
+        "Newtonsoft.Json": "8.0.2",
+        "Splunk.Logging.Common": "1.5.0"
+
+
       }
     },
     "dotnet5.4": {
