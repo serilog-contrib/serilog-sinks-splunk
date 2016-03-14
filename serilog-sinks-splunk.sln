@@ -1,31 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk", "src\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj", "{1493ABC3-811C-46C7-92ED-CEB7567FB588}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.FullNetFx", "src\Serilog.Sinks.Splunk.FullNetFx\Serilog.Sinks.Splunk.FullNetFx.csproj", "{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{B9B13339-749C-4098-8845-780ED4FA488A}"
 	ProjectSection(SolutionItems) = preProject
 		Build.ps1 = Build.ps1
 		CHANGES.md = CHANGES.md
-		assets\CommonAssemblyInfo.cs = assets\CommonAssemblyInfo.cs
+		global.json = global.json
 		README.md = README.md
 		assets\Serilog.snk = assets\Serilog.snk
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{EBB6CE48-09B0-4789-9627-45A1D4D377F7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.Sample", "sample\Serilog.Sinks.Splunk.Sample\Serilog.Sinks.Splunk.Sample.csproj", "{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B16AD407-36C8-4286-A3E9-CACEBF359731}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Serilog.Sinks.Splunk", "src\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.xproj", "{32CF915C-3ECD-496C-8FDB-1214581274A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{1C75E4A9-4CB1-497C-AD17-B438882051A1}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample", "src\sample\Sample.xproj", "{17497155-5D94-45DF-81D9-BD960E8CF217}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,25 +31,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1493ABC3-811C-46C7-92ED-CEB7567FB588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1493ABC3-811C-46C7-92ED-CEB7567FB588}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1493ABC3-811C-46C7-92ED-CEB7567FB588}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1493ABC3-811C-46C7-92ED-CEB7567FB588}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32CF915C-3ECD-496C-8FDB-1214581274A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32CF915C-3ECD-496C-8FDB-1214581274A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32CF915C-3ECD-496C-8FDB-1214581274A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32CF915C-3ECD-496C-8FDB-1214581274A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17497155-5D94-45DF-81D9-BD960E8CF217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17497155-5D94-45DF-81D9-BD960E8CF217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17497155-5D94-45DF-81D9-BD960E8CF217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17497155-5D94-45DF-81D9-BD960E8CF217}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1493ABC3-811C-46C7-92ED-CEB7567FB588} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
-		{17DEED0F-F9CB-48FB-B4DC-53FB6AEE64D7} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
-		{F0B0E4EF-CF01-46FC-A64C-FE3528F14238} = {EBB6CE48-09B0-4789-9627-45A1D4D377F7}
+		{32CF915C-3ECD-496C-8FDB-1214581274A6} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
+		{17497155-5D94-45DF-81D9-BD960E8CF217} = {1C75E4A9-4CB1-497C-AD17-B438882051A1}
 	EndGlobalSection
 EndGlobal

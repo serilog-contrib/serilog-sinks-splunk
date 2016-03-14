@@ -1,5 +1,5 @@
 
-// Copyright 2014 Serilog Contributors
+// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Core;
@@ -42,6 +43,7 @@ namespace Serilog.Sinks.Splunk
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
+        private readonly PortableTimer _timer;
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -51,7 +53,7 @@ namespace Serilog.Sinks.Splunk
             HttpStatusCode.Forbidden,
             HttpStatusCode.MethodNotAllowed,
             HttpStatusCode.BadRequest
-        };
+        }; 
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -80,14 +82,16 @@ namespace Serilog.Sinks.Splunk
             var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
 
             _httpClient = new EventCollectorClient(_eventCollectorToken);
-
+            
             var cancellationToken = new CancellationToken();
 
+          //  _timer = new PortableTimer(async c => await ProcessQueue());
+           
             RepeatAction.OnInterval(
                 batchInterval,
                 async () => await ProcessQueue(),
                 cancellationToken);
-        }
+        } 
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -181,8 +185,8 @@ namespace Serilog.Sinks.Splunk
 
                 allEvents = $"{allEvents}{splunkEvent.Payload}";
             }
-            var request = new EventCollectorRequest(_splunkHost, allEvents);
 
+            var request = new EventCollectorRequest(_splunkHost, allEvents);
             var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
