@@ -43,7 +43,6 @@ namespace Serilog.Sinks.Splunk
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
-        private readonly PortableTimer _timer;
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
