@@ -1,44 +1,24 @@
 ﻿{
+  "authors": [
+    "merbla"
+  ],
   "version": "1.0.0-*",
-  "description": "Sample Console Application",
-  "authors": [ "merbla" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
-
-  "compilationOptions": {
+  "buildOptions": {
     "emitEntryPoint": true
   },
-
   "dependencies": {
-    "Serilog.Sinks.Literate": "2.0.0-beta-21",
-    "Serilog.Sinks.Splunk": { "target": "project" }
-    
-  },
-
-  "commands": {
-    "Sample": "run"
-  },
-
-  "frameworks": {
-
-    "dnx451": {
-      "compilationOptions": {"define": ["ServiceManager"]},
-      "frameworkAssemblies": {
-        "System.Net": "4.0.0.0",
-        "System.Net.Http": "4.0.0.0"
-      }
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0-rc2-3002702"
     },
-    "dnxcore50": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Console": "4.0.0-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Threading": "4.0.11-beta-23516",
-        "System.Net.Http": "4.0.1-beta-23516",
-        "System.Net.Http.WinHttpHandler": "4.0.0-beta-23516"
-      }
+    "Serilog.Sinks.Splunk": {
+      "target": "project"
+    },
+    "Serilog.Sinks.Literate": "2.0.0-rc-25"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
     }
   }
 }
