@@ -2,57 +2,6 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5": {
-      "Microsoft.Net.Http/2.0.20710": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.Net.Http",
-          "System.Net.Http.WebRequest"
-        ],
-        "compile": {
-          "lib/net45/_._": {}
-        },
-        "runtime": {
-          "lib/net45/_._": {}
-        }
-      },
-      "Newtonsoft.Json/8.0.2": {
-        "type": "package",
-        "compile": {
-          "lib/net45/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {}
-        }
-      },
-      "Serilog/2.0.0-rc-556": {
-        "type": "package",
-        "compile": {
-          "lib/net45/Serilog.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Serilog.dll": {}
-        }
-      },
-      "Splunk.Logging.Common/1.5.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "6.0.8"
-        },
-        "compile": {
-          "lib/net45/Splunk.Logging.Common.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Splunk.Logging.Common.dll": {}
-        }
-      },
-      "System.Net.Http/2.0.20710": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Net.Http": "[2.0.20710, 2.1.0)"
-        }
-      }
-    },
     ".NETStandard,Version=v1.1": {
       "Microsoft.CSharp/4.0.1-rc2-24027": {
         "type": "package",
@@ -342,42 +291,6 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "Microsoft.Net.Http/2.0.20710": {
-      "sha512": "OsB/5QO9tYJRLYIgBOhRl4Tssh3pw7+UAO9tMGMBg63f98GfjsniVIwLWRC0vcRr/F6HLP/NvRlHyGBhtD7Bmw==",
-      "type": "package",
-      "files": [
-        "Microsoft.Net.Http.2.0.20710.nupkg",
-        "Microsoft.Net.Http.2.0.20710.nupkg.sha512",
-        "Microsoft.Net.Http.nuspec",
-        "lib/net40/System.Net.Http.WebRequest.dll",
-        "lib/net40/System.Net.Http.WebRequest.xml",
-        "lib/net40/System.Net.Http.dll",
-        "lib/net40/System.Net.Http.xml",
-        "lib/net45/_._"
-      ]
-    },
-    "Newtonsoft.Json/8.0.2": {
-      "sha512": "e5yWmEfu68rmtG431zl9N/7PlNKQDIuiDW5MHlEFAZcecakcxrIGnKqrPAtWNILzK2oNanRB5cD150MYhECK3g==",
-      "type": "package",
-      "files": [
-        "Newtonsoft.Json.8.0.2.nupkg",
-        "Newtonsoft.Json.8.0.2.nupkg.sha512",
-        "Newtonsoft.Json.nuspec",
-        "lib/net20/Newtonsoft.Json.dll",
-        "lib/net20/Newtonsoft.Json.xml",
-        "lib/net35/Newtonsoft.Json.dll",
-        "lib/net35/Newtonsoft.Json.xml",
-        "lib/net40/Newtonsoft.Json.dll",
-        "lib/net40/Newtonsoft.Json.xml",
-        "lib/net45/Newtonsoft.Json.dll",
-        "lib/net45/Newtonsoft.Json.xml",
-        "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll",
-        "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
-        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
-        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
-        "tools/install.ps1"
-      ]
-    },
     "runtime.native.System/4.0.0-rc2-24027": {
       "sha512": "bC0GLcJTry9N+ra9qb+zYSQHnBpy4ZMVJXRRSuu7aD/cQoZPQtySql110ec9REOKsE6tf2ZoolczpCOmzwKW8g==",
       "type": "package",
@@ -420,16 +333,6 @@
         "lib/netstandard1.0/Serilog.xml",
         "lib/netstandard1.3/Serilog.dll",
         "lib/netstandard1.3/Serilog.xml"
-      ]
-    },
-    "Splunk.Logging.Common/1.5.0": {
-      "sha512": "vhnYeJWlAvoG7+VYYal9E1J1fmfJ6RRFQycGaokY7NcUIounXYJ2KDFlX/ygpf31HqKNnOqpbtq5qreyiHJIyA==",
-      "type": "package",
-      "files": [
-        "Splunk.Logging.Common.1.5.0.nupkg",
-        "Splunk.Logging.Common.1.5.0.nupkg.sha512",
-        "Splunk.Logging.Common.nuspec",
-        "lib/net45/Splunk.Logging.Common.dll"
       ]
     },
     "System.Collections/4.0.11-rc2-24027": {
@@ -908,15 +811,6 @@
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._",
         "runtimes/aot/lib/netcore50/System.Linq.Expressions.dll"
-      ]
-    },
-    "System.Net.Http/2.0.20710": {
-      "sha512": "z422hv7gmZnShP1raVV0dHD+0a3+Num2yOUmHjyp/fCkppykIp4uA+gQx6dagRxmpDuCquBivN+lMaVe8Z/gLw==",
-      "type": "package",
-      "files": [
-        "System.Net.Http.2.0.20710.nupkg",
-        "System.Net.Http.2.0.20710.nupkg.sha512",
-        "System.Net.Http.nuspec"
       ]
     },
     "System.Net.Http/4.0.1-rc2-24027": {
@@ -1742,11 +1636,6 @@
   "projectFileDependencyGroups": {
     "": [
       "Serilog >= 2.0.0-rc-556"
-    ],
-    ".NETFramework,Version=v4.5": [
-      "Newtonsoft.Json >= 8.0.2",
-      "Splunk.Logging.Common >= 1.5.0",
-      "System.Net.Http >= 2.0.20710"
     ],
     ".NETStandard,Version=v1.1": [
       "System.Collections >= 4.0.11-rc2-24027",
