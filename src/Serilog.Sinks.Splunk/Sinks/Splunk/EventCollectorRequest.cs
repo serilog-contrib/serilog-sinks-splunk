@@ -8,7 +8,7 @@ namespace Serilog.Sinks.Splunk
     {
         private string _payload;
 
-        internal SplunkEvent(string logEvent, string source, string sourceType, string host, string index)
+        internal SplunkEvent(string logEvent, string source, string sourceType, string host, string index, double time)
         {
             _payload = string.Empty;
 
@@ -30,6 +30,11 @@ namespace Serilog.Sinks.Splunk
             if (!string.IsNullOrWhiteSpace(index))
             {
                 jsonPayLoad = jsonPayLoad + @",""index"":""" + index + @"""";
+            }
+
+            if (time > 0)
+            {
+                jsonPayLoad = jsonPayLoad + @",""time"":" + time;
             }
 
             jsonPayLoad = jsonPayLoad + "}";

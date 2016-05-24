@@ -65,6 +65,9 @@
     <Compile Include="..\Serilog.Sinks.Splunk\LoggerConfigurationSplunkPCLExtensions.cs">
       <Link>LoggerConfigurationSplunkPCLExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\Epoch.cs">
+      <Link>Sinks\Splunk\Epoch.cs</Link>
+    </Compile>
     <Compile Include="..\Serilog.Sinks.Splunk\Sinks\Splunk\EventCollectorClient.cs">
       <Link>Sinks\Splunk\EventCollectorClient.cs</Link>
     </Compile>

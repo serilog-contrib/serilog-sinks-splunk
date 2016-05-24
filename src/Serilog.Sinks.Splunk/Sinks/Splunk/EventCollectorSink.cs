@@ -176,8 +176,8 @@ namespace Serilog.Sinks.Splunk
                 _jsonFormatter.Format(logEvent, sw);
 
                 var serialisedEvent = sw.ToString();
-
-                var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index);
+                
+                var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index, logEvent.Timestamp.ToEpoch());
 
                 allEvents = $"{allEvents}{splunkEvent.Payload}";
             }
