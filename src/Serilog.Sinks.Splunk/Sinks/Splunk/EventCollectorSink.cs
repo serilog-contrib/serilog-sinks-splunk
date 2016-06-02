@@ -42,6 +42,10 @@ namespace Serilog.Sinks.Splunk
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
+        private const string DefaultSource = "";
+        private const string DefaultSourceType = "";
+        private const string DefaultHost = "";
+        private const string DefaultIndex = "";
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -78,13 +82,10 @@ namespace Serilog.Sinks.Splunk
             _batchSizeLimitLimit = batchSizeLimit;
 
             var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
-
             _httpClient = new EventCollectorClient(_eventCollectorToken);
             
             var cancellationToken = new CancellationToken();
-
-          //  _timer = new PortableTimer(async c => await ProcessQueue());
-           
+            
             RepeatAction.OnInterval(
                 batchInterval,
                 async () => await ProcessQueue(),
@@ -111,8 +112,8 @@ namespace Serilog.Sinks.Splunk
             string sourceType,
             string host,
             string index,
-            int batchIntervalInSeconds = 5,
-            int batchSizeLimit = 100,
+            int batchIntervalInSeconds,
+            int batchSizeLimit,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true
             ) : this(splunkHost,

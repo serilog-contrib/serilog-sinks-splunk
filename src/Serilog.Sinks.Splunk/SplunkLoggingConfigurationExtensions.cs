@@ -28,6 +28,11 @@ namespace Serilog
     {
         internal const string DefaultOutputTemplate =
             "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
+            
+        internal const string DefaultSource = "";
+        internal const string DefaultSourceType = "";
+        internal const string DefaultHost = "";
+        internal const string DefaultIndex = "";
 
         /// <summary>
         ///     Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
@@ -73,6 +78,10 @@ namespace Serilog
         /// <param name="configuration">The logger config</param>
         /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
         /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
+        /// <param name="index">The Splunk index to log to</param>
+        /// <param name="source">The source of the event</param>
+        /// <param name="sourceType">The source type of the event</param>
+        /// <param name="host">The host of the event</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="outputTemplate">The output template to be used when logging</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
@@ -84,6 +93,10 @@ namespace Serilog
             this LoggerSinkConfiguration configuration,
             string splunkHost,
             string eventCollectorToken,
+            string source = DefaultSource,
+            string sourceType = DefaultSourceType,
+            string host = DefaultHost,
+            string index = DefaultIndex,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             string outputTemplate = DefaultOutputTemplate,
             IFormatProvider formatProvider = null,
@@ -91,8 +104,22 @@ namespace Serilog
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100)
         {
-            return EventCollector(configuration, splunkHost, eventCollectorToken, restrictedToMinimumLevel,
-                outputTemplate, formatProvider, renderTemplate, batchIntervalInSeconds, batchSizeLimit);
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
+
+            var eventCollectorSink = new EventCollectorSink(
+                splunkHost,
+                eventCollectorToken, 
+                source, 
+                sourceType, 
+                host, 
+                index,
+                batchIntervalInSeconds,
+                batchSizeLimit,
+                formatProvider,
+                renderTemplate);
+
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
         }
     }
 }
