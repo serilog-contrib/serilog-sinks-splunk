@@ -1,4 +1,3 @@
-
 // Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -180,7 +179,7 @@ namespace Serilog.Sinks.Splunk
 
                 var serialisedEvent = sw.ToString();
 
-                var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index);
+                var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index, logEvent.Timestamp.ToEpoch());
 
                 allEvents = $"{allEvents}{splunkEvent.Payload}";
             }
