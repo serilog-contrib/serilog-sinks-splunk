@@ -12,4 +12,11 @@ Push-Location src/Serilog.Sinks.Splunk
 if($LASTEXITCODE -ne 0) { exit 1 }    
 
 Pop-Location
+Push-Location test/sample
+
+& dotnet build -c Release
+if($LASTEXITCODE -ne 0) { exit 2 }
+
+
+Pop-Location
 Pop-Location

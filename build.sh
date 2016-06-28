@@ -7,5 +7,5 @@ done
 
 for path in sample/project.json; do
     dirname="$(dirname "${path}")"
-    dotnet build ${dirname} -c Release
+    # dotnet build ${dirname} -c Release
 done 
