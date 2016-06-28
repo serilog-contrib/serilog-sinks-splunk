@@ -17,7 +17,7 @@
     "iconUrl": "http://serilog.net/images/serilog-sink-nuget.png"
   },
   "buildOptions": {
-    "keyFile": "../../assets/Serilog.snk",
+    
     "xmlDoc": true
   },
   "dependencies": {

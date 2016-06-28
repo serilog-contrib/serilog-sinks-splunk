@@ -11,12 +11,6 @@ Push-Location src/Serilog.Sinks.Splunk
 & dotnet pack -c Release -o ..\..\.\artifacts --version-suffix=$revision
 if($LASTEXITCODE -ne 0) { exit 1 }    
 
-Pop-Location
-Push-Location test/sample
-
-& dotnet build -c Release
-if($LASTEXITCODE -ne 0) { exit 2 }
-
 
 Pop-Location
 Pop-Location
