@@ -14,6 +14,7 @@
 
 
 using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Text;
 
@@ -49,7 +50,7 @@ namespace Serilog.Sinks.Splunk
 
             if (time > 0)
             {
-                jsonPayLoad = jsonPayLoad + @",""time"":" + time;
+                jsonPayLoad = jsonPayLoad + @",""time"":" +  time.ToString(CultureInfo.InvariantCulture);
             }
 
             jsonPayLoad = jsonPayLoad + "}";
