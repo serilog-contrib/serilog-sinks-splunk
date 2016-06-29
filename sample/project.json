@@ -1,15 +1,15 @@
 {
-  "version": "2.0.0-rc-*",
+  "version": "2.0.0",
   "buildOptions": {
     "emitEntryPoint": true
   },
   "dependencies": {
     "Microsoft.NETCore.App": {
       "type": "platform",
-      "version": "1.0.0-rc2-3002702"
+      "version": "1.0.0"
     },
     "Serilog.Sinks.Splunk": {"target": "project"},
-    "Serilog.Sinks.Literate": "2.0.0-rc-25"
+    "Serilog.Sinks.Literate": "2.0.0"
   },
   "frameworks": {
     "netcoreapp1.0": {

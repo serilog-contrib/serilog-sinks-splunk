@@ -1,5 +1,5 @@
 ﻿{
-  "version": "2.0.0-rc-*",
+  "version": "2.0.0",
   "description": "The Splunk Sink for Serilog",
   "authors": [
     "Matthew Erbs, Serilog Contributors"
@@ -17,20 +17,31 @@
     "iconUrl": "http://serilog.net/images/serilog-sink-nuget.png"
   },
   "buildOptions": {
-    "keyFile": "../../assets/Serilog.snk",
+    
     "xmlDoc": true
   },
   "dependencies": {
-    "Serilog": "2.0.0-rc-556"
+    "Serilog": "2.0.0"
   },
   "frameworks": { 
+    "net4.5": {
+        "buildOptions": {
+        "define": [ "TCP", "UDP" ]
+      },
+      "frameworkAssemblies": {
+        "System.Net.Http": ""
+      },
+      "dependencies": {
+        "Splunk.Logging.Common": "1.6.0"
+      }
+    },
     "netstandard1.1": {
       "dependencies": {
-        "System.Collections": "4.0.11-rc2-24027",
-        "System.Collections.Concurrent": "4.0.12-rc2-24027",
-        "System.Runtime": "4.1.0-rc2-24027",
-        "System.Threading": "4.0.11-rc2-24027",
-        "System.Net.Http": "4.0.1-rc2-24027"
+        "System.Collections": "4.0.11",
+        "System.Collections.Concurrent": "4.0.12",
+        "System.Runtime": "4.1.0",
+        "System.Threading": "4.0.11",
+        "System.Net.Http": "4.1.0"
       }
     }
   }
