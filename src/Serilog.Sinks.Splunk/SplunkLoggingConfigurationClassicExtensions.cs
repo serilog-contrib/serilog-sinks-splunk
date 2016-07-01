@@ -1,4 +1,6 @@
-﻿// Copyright 2014 Serilog Contributors
+﻿#if TCP
+
+// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +20,7 @@ using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using Serilog.Sinks.Splunk; 
+using Serilog.Sinks.Splunk;
 
 namespace Serilog
 {
@@ -209,3 +211,5 @@ namespace Serilog
         }
     }
 }
+
+#endif

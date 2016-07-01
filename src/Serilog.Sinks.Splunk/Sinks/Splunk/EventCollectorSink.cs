@@ -1,5 +1,4 @@
-
-// Copyright 2014 Serilog Contributors
+// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Core;
@@ -38,10 +38,15 @@ namespace Serilog.Sinks.Splunk
         private readonly string _sourceType;
         private readonly string _host;
         private readonly string _index;
+        private readonly string _uriPath;
         private readonly int _batchSizeLimitLimit;
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
+        private const string DefaultSource = "";
+        private const string DefaultSourceType = "";
+        private const string DefaultHost = "";
+        private const string DefaultIndex = "";
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -51,7 +56,7 @@ namespace Serilog.Sinks.Splunk
             HttpStatusCode.Forbidden,
             HttpStatusCode.MethodNotAllowed,
             HttpStatusCode.BadRequest
-        };
+        }; 
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -78,22 +83,22 @@ namespace Serilog.Sinks.Splunk
             _batchSizeLimitLimit = batchSizeLimit;
 
             var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
-
             _httpClient = new EventCollectorClient(_eventCollectorToken);
-
+            
             var cancellationToken = new CancellationToken();
-
+            
             RepeatAction.OnInterval(
                 batchInterval,
                 async () => await ProcessQueue(),
                 cancellationToken);
-        }
+        } 
 
         /// <summary>
         /// Creates a new instance of the sink
         /// </summary>
         /// <param name="splunkHost">The host of the Splunk instance with the Event collector configured</param>
         /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
+        /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
@@ -105,12 +110,13 @@ namespace Serilog.Sinks.Splunk
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
+            string uriPath,
             string source,
             string sourceType,
             string host,
             string index,
-            int batchIntervalInSeconds = 5,
-            int batchSizeLimit = 100,
+            int batchIntervalInSeconds,
+            int batchSizeLimit,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true
             ) : this(splunkHost,
@@ -124,6 +130,7 @@ namespace Serilog.Sinks.Splunk
             _sourceType = sourceType;
             _host = host;
             _index = index;
+            _uriPath = uriPath;
         }
 
         /// <summary>
@@ -176,13 +183,13 @@ namespace Serilog.Sinks.Splunk
                 _jsonFormatter.Format(logEvent, sw);
 
                 var serialisedEvent = sw.ToString();
-                
+
                 var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index, logEvent.Timestamp.ToEpoch());
 
                 allEvents = $"{allEvents}{splunkEvent.Payload}";
             }
-            var request = new EventCollectorRequest(_splunkHost, allEvents);
 
+            var request = new EventCollectorRequest(_splunkHost, allEvents, _uriPath);
             var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
