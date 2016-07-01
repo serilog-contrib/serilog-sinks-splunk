@@ -65,11 +65,17 @@ namespace Serilog.Sinks.Splunk
 
     internal class EventCollectorRequest : HttpRequestMessage
     {
-        internal EventCollectorRequest(string splunkHost, string jsonPayLoad)
+        internal EventCollectorRequest(string splunkHost, string jsonPayLoad, string uri ="services/collector")
         {
+            var hostUrl = $@"{splunkHost}/{uri}";
 
+            if(splunkHost.Contains("services/collector"))
+            {
+                hostUrl = $@"{splunkHost}";
+            }
+            
             var stringContent = new StringContent(jsonPayLoad, Encoding.UTF8, "application/json");
-            RequestUri = new Uri(splunkHost);
+            RequestUri = new Uri(hostUrl);
             Content = stringContent;
             Method = HttpMethod.Post;
         }

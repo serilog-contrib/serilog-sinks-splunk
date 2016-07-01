@@ -24,3 +24,5 @@ var log = new LoggerConfiguration()
      .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
     .CreateLogger();
 ```
+
+More information is available [here](https://github.com/serilog/serilog-sinks-splunk/wiki).
