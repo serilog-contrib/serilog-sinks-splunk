@@ -38,6 +38,7 @@ namespace Serilog.Sinks.Splunk
         private readonly string _sourceType;
         private readonly string _host;
         private readonly string _index;
+        private readonly string _uriPath;
         private readonly int _batchSizeLimitLimit;
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
@@ -97,6 +98,7 @@ namespace Serilog.Sinks.Splunk
         /// </summary>
         /// <param name="splunkHost">The host of the Splunk instance with the Event collector configured</param>
         /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
+        /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
@@ -108,6 +110,7 @@ namespace Serilog.Sinks.Splunk
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
+            string uriPath,
             string source,
             string sourceType,
             string host,
@@ -127,6 +130,7 @@ namespace Serilog.Sinks.Splunk
             _sourceType = sourceType;
             _host = host;
             _index = index;
+            _uriPath = uriPath;
         }
 
         /// <summary>
@@ -185,7 +189,7 @@ namespace Serilog.Sinks.Splunk
                 allEvents = $"{allEvents}{splunkEvent.Payload}";
             }
 
-            var request = new EventCollectorRequest(_splunkHost, allEvents);
+            var request = new EventCollectorRequest(_splunkHost, allEvents, _uriPath);
             var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)

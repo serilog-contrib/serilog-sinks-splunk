@@ -7,7 +7,7 @@ namespace Sample
 {
     public class Program
     {
-        public static string EventCollectorToken = "D7E04CDB-71A8-4266-90A1-90EF1620AA4B";
+        public static string EventCollectorToken = "04B42E81-100E-4BED-8AE9-FC5EE4E08602";
         
         public static void Main(string[] args)
         {
@@ -17,16 +17,34 @@ namespace Sample
                 eventsToCreate = int.Parse(args[0]); 
             
             Log.Information("Sample starting up");
+            Serilog.Debugging.SelfLog.Out = System.Console.Out;
 
-            // Vanilla Tests
+            // Vanilla Tests just host
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole() 
-                .WriteTo.SplunkViaEventCollector(
+                .WriteTo.EventCollector(
+                    "http://localhost:8088",
+                    Program.EventCollectorToken)
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla No services/collector")
+                .CreateLogger(); 
+
+            foreach (var i in Enumerable.Range(0, eventsToCreate))
+            {
+                Log.Information("Running vanilla without extended endpoint loop {Counter}", i); 
+                Thread.Sleep(5); 
+            }
+
+            // Vanilla Test with full uri specified
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.LiterateConsole() 
+                .WriteTo.EventCollector(
                     "http://localhost:8088/services/collector",
                     Program.EventCollectorToken)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
-                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestCase", "Vanilla")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla with full uri specified")
                 .CreateLogger(); 
 
             foreach (var i in Enumerable.Range(0, eventsToCreate))
@@ -34,13 +52,13 @@ namespace Sample
                 Log.Information("Running vanilla loop {Counter}", i); 
                 Thread.Sleep(5); 
             }
-            
+
             // Override Source
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole() 
-                .WriteTo.SplunkViaEventCollector(
-                    "http://localhost:8088/services/collector", 
+                .WriteTo.EventCollector(
+                    "http://localhost:8088", 
                     Program.EventCollectorToken,
                     source: "Serilog.Sinks.Splunk.Sample")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
@@ -57,8 +75,8 @@ namespace Sample
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole() 
-                .WriteTo.SplunkViaEventCollector(
-                    "http://localhost:8088/services/collector", 
+                .WriteTo.EventCollector(
+                    "http://localhost:8088", 
                     Program.EventCollectorToken,
                     host: "myamazingmachine")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
@@ -75,8 +93,8 @@ namespace Sample
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole() 
-                .WriteTo.SplunkViaEventCollector(
-                    "http://localhost:8088/services/collector", 
+                .WriteTo.EventCollector(
+                    "http://localhost:8088", 
                     Program.EventCollectorToken,
                     renderTemplate: false)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
@@ -88,6 +106,17 @@ namespace Sample
                 Log.Information("Running no template loop {Counter}", i); 
                 Thread.Sleep(5);
             }
+
+            // SSL
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.LiterateConsole() 
+                .WriteTo.EventCollector(
+                    "https://localhost:8088",
+                    Program.EventCollectorToken)
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "HTTPS")
+                .CreateLogger(); 
             
             Log.Debug("Waiting for Events to Flush");
             Thread.Sleep(5000);

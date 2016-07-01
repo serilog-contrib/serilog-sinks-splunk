@@ -1,8 +1,9 @@
 ##2.0
  - Support for DotNet Core
+ - Event Collector fluent interface changed to `.WriteTo.EventCollector`
  - Event Collector Sink targeting core
  - TCP/UDP Sinks targeting 4.5 *ONLY*
- - Changed HTTP Client to include URI endpoint to host: "services/collector/event"
+ - Updated Event Collector HTTP Client to add URI endpoint to host: "services/collector" if not included.
  - Event Collector changed to use epoch time [#15](https://github.com/serilog/serilog-sinks-splunk/pull/15)
 
 ##1.8
