@@ -24,7 +24,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// Renders log events into a default JSON format for consumption by Splunk.
     /// </summary>
-    class SplunkJsonFormatter : ITextFormatter
+    public class SplunkJsonFormatter : ITextFormatter
     {
         static readonly JsonValueFormatter ValueFormatter = new JsonValueFormatter();
 
