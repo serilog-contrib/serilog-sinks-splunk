@@ -67,7 +67,7 @@ namespace Serilog.Sinks.Splunk
 
             if (_renderMessage)
             {
-                output.Write("\",\"RenderedMessage\":");
+                output.Write(",\"RenderedMessage\":");
                 JsonValueFormatter.WriteQuotedJsonString(logEvent.RenderMessage(_formatProvider), output);
             }
 
