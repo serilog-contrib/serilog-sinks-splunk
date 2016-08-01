@@ -49,6 +49,7 @@ namespace Serilog.Sinks.Splunk
             _formatProvider = formatProvider;
         }
 
+        /// <inheritdoc/>
         public void Format(LogEvent logEvent, TextWriter output)
         {
             if (logEvent == null) throw new ArgumentNullException(nameof(logEvent));
