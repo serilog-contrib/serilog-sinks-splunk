@@ -11,7 +11,7 @@ namespace Serilog.Sinks.Splunk.Tests
         void AssertValidJson(Action<ILogger> act)
         {
             var output = new StringWriter();
-            var formatter = new SplunkJsonFormatter();
+            var formatter = new SplunkJsonFormatter(false, null);
             var log = new LoggerConfiguration()
                 .WriteTo.Sink(new TextWriterSink(output, formatter))
                 .CreateLogger();

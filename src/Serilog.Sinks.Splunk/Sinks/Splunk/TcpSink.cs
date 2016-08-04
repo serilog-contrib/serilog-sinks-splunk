@@ -102,7 +102,7 @@ namespace Serilog.Sinks.Splunk
 
         private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
         {
-            return new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
+            return new SplunkJsonFormatter(renderTemplate, formatProvider);
         }
 
         /// <inheritdoc/>
