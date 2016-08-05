@@ -10,18 +10,17 @@ namespace Serilog.Sinks.Splunk.Tests
     {
         void AssertValidJson(Action<ILogger> act)
         {
-            var output = new StringWriter();
-            var formatter = new SplunkJsonFormatter(false, null);
+            StringWriter outputRendered = new StringWriter(), output = new StringWriter();
             var log = new LoggerConfiguration()
-                .WriteTo.Sink(new TextWriterSink(output, formatter))
+                .WriteTo.Sink(new TextWriterSink(output, new SplunkJsonFormatter(false, null)))
+                .WriteTo.Sink(new TextWriterSink(outputRendered, new SplunkJsonFormatter(true, null)))
                 .CreateLogger();
 
             act(log);
 
-            var json = output.ToString();
-
             // Unfortunately this will not detect all JSON formatting issues; better than nothing however.
-            JObject.Parse(json);
+            JObject.Parse(output.ToString());
+            JObject.Parse(outputRendered.ToString());
         }
 
         [Fact]
