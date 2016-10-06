@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Ensure any exit code exits TravisCI
+set -e
+
 dotnet restore
 for path in src/*/project.json; do
     dirname="$(dirname "${path}")"
