@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Core;
@@ -73,7 +74,7 @@ namespace Serilog.Sinks.Splunk
                 formatProvider,
                 renderTemplate)
         {
-        } 
+        }
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -89,6 +90,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
+        /// <param name="messageHandler">The handler used to send HTTP requests</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -100,7 +102,8 @@ namespace Serilog.Sinks.Splunk
             int batchIntervalInSeconds,
             int batchSizeLimit,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true)
+            bool renderTemplate = true,
+            HttpMessageHandler messageHandler = null)
         {
             _uriPath = uriPath;
             _splunkHost = splunkHost;
@@ -109,7 +112,9 @@ namespace Serilog.Sinks.Splunk
             _batchSizeLimitLimit = batchSizeLimit;
 
             var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
-            _httpClient = new EventCollectorClient(eventCollectorToken);
+            _httpClient = messageHandler != null
+                ? new EventCollectorClient(eventCollectorToken, messageHandler)
+                : new EventCollectorClient(eventCollectorToken);
 
             var cancellationToken = new CancellationToken();
 

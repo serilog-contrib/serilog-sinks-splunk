@@ -51,6 +51,7 @@ namespace Serilog
         /// <param name="renderTemplate">If ture, the message template will be rendered</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -66,7 +67,8 @@ namespace Serilog
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
-            int batchSizeLimit = 100)
+            int batchSizeLimit = 100,
+            HttpMessageHandler messageHandler = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
@@ -82,7 +84,8 @@ namespace Serilog
                 batchIntervalInSeconds,
                 batchSizeLimit,
                 formatProvider,
-                renderTemplate);
+                renderTemplate,
+                messageHandler);
 
             return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
         }
