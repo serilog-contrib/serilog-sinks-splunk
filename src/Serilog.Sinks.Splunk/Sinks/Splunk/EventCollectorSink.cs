@@ -33,20 +33,11 @@ namespace Serilog.Sinks.Splunk
     public class EventCollectorSink : ILogEventSink, IDisposable
     {
         private readonly string _splunkHost;
-        private readonly string _eventCollectorToken;
-        private readonly string _source;
-        private readonly string _sourceType;
-        private readonly string _host;
-        private readonly string _index;
         private readonly string _uriPath;
         private readonly int _batchSizeLimitLimit;
         private readonly SplunkJsonFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
-        private const string DefaultSource = "";
-        private const string DefaultSourceType = "";
-        private const string DefaultHost = "";
-        private const string DefaultIndex = "";
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -56,7 +47,7 @@ namespace Serilog.Sinks.Splunk
             HttpStatusCode.Forbidden,
             HttpStatusCode.MethodNotAllowed,
             HttpStatusCode.BadRequest
-        }; 
+        };
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -73,25 +64,17 @@ namespace Serilog.Sinks.Splunk
             int batchIntervalInSeconds = 5,
             int batchSizeLimit = 100,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true
-            )
+            bool renderTemplate = true)
+            : this(
+                splunkHost,
+                eventCollectorToken,
+                null, null, null, null, null, 
+                batchIntervalInSeconds, 
+                batchSizeLimit,
+                formatProvider,
+                renderTemplate)
         {
-            _splunkHost = splunkHost;
-            _eventCollectorToken = eventCollectorToken;
-            _queue = new ConcurrentQueue<LogEvent>();
-            _jsonFormatter = new SplunkJsonFormatter(renderMessage: true, formatProvider: formatProvider, renderTemplate: renderTemplate);
-            _batchSizeLimitLimit = batchSizeLimit;
-
-            var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
-            _httpClient = new EventCollectorClient(_eventCollectorToken);
-            
-            var cancellationToken = new CancellationToken();
-            
-            RepeatAction.OnInterval(
-                batchInterval,
-                async () => await ProcessQueue(),
-                cancellationToken);
-        } 
+        }
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -107,6 +90,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
+        /// <param name="messageHandler">The handler used to send HTTP requests</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -118,19 +102,26 @@ namespace Serilog.Sinks.Splunk
             int batchIntervalInSeconds,
             int batchSizeLimit,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true
-            ) : this(splunkHost,
-                eventCollectorToken,
-                batchIntervalInSeconds,
-                batchSizeLimit,
-                formatProvider,
-                renderTemplate)
+            bool renderTemplate = true,
+            HttpMessageHandler messageHandler = null)
         {
-            _source = source;
-            _sourceType = sourceType;
-            _host = host;
-            _index = index;
             _uriPath = uriPath;
+            _splunkHost = splunkHost;
+            _queue = new ConcurrentQueue<LogEvent>();
+            _jsonFormatter = new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index);
+            _batchSizeLimitLimit = batchSizeLimit;
+
+            var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
+            _httpClient = messageHandler != null
+                ? new EventCollectorClient(eventCollectorToken, messageHandler)
+                : new EventCollectorClient(eventCollectorToken);
+
+            var cancellationToken = new CancellationToken();
+
+            RepeatAction.OnInterval(
+                batchInterval,
+                async () => await ProcessQueue(),
+                cancellationToken);
         }
 
         /// <summary>
@@ -175,21 +166,14 @@ namespace Serilog.Sinks.Splunk
 
         private async Task Send(IEnumerable<LogEvent> events)
         {
-            string allEvents = string.Empty;
+            var allEvents = new StringWriter();
 
             foreach (var logEvent in events)
             {
-                var sw = new StringWriter();
-                _jsonFormatter.Format(logEvent, sw);
-
-                var serialisedEvent = sw.ToString();
-
-                var splunkEvent = new SplunkEvent(serialisedEvent, _source, _sourceType, _host, _index, logEvent.Timestamp.ToEpoch());
-
-                allEvents = $"{allEvents}{splunkEvent.Payload}";
+                _jsonFormatter.Format(logEvent, allEvents);
             }
 
-            var request = new EventCollectorRequest(_splunkHost, allEvents, _uriPath);
+            var request = new EventCollectorRequest(_splunkHost, allEvents.ToString(), _uriPath);
             var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)

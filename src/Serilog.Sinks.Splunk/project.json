@@ -1,5 +1,5 @@
 ﻿{
-  "version": "2.0.1",
+  "version": "2.1.0-*",
   "description": "The Splunk Sink for Serilog",
   "authors": [
     "Matthew Erbs, Serilog Contributors"
@@ -21,7 +21,7 @@
     "xmlDoc": true
   },
   "dependencies": {
-    "Serilog": "2.0.0"
+    "Serilog": "2.2.0"
   },
   "frameworks": { 
     "net4.5": {
