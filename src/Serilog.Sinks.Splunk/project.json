@@ -21,7 +21,7 @@
     "xmlDoc": true
   },
   "dependencies": {
-    "Serilog": "2.0.0"
+    "Serilog": "2.2.0"
   },
   "frameworks": { 
     "net4.5": {
