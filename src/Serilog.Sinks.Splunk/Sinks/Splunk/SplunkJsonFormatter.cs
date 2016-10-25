@@ -76,7 +76,7 @@ namespace Serilog.Sinks.Splunk
 
             if (!string.IsNullOrWhiteSpace(sourceType))
             {
-                suffixWriter.Write(",\"sourceType\":");
+                suffixWriter.Write(",\"sourcetype\":");
                 JsonValueFormatter.WriteQuotedJsonString(sourceType, suffixWriter);
             }
 
