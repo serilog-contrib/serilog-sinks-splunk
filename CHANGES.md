@@ -1,3 +1,13 @@
+##2.1.1
+- [#38](https://github.com/serilog/serilog-sinks-splunk/issues/38)
+- Clean up of sample app using examples of host, sourcetype, source override
+
+##2.1.0
+
+* Change to use a standalone formatter
+* Resolves #32 & #26 by exposing `HttpMessageHandler`
+* Resolves #30 by ignoring OSX build and including tests in `build.sh` for TravisCI
+
 ##2.0
  - Support for DotNet Core
  - Event Collector fluent interface changed to `.WriteTo.EventCollector`
