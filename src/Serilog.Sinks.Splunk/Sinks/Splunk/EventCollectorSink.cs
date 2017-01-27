@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
+using Serilog.Formatting;
 
 namespace Serilog.Sinks.Splunk
 {
@@ -35,7 +36,7 @@ namespace Serilog.Sinks.Splunk
         private readonly string _splunkHost;
         private readonly string _uriPath;
         private readonly int _batchSizeLimitLimit;
-        private readonly SplunkJsonFormatter _jsonFormatter;
+        private readonly ITextFormatter _jsonFormatter;
         private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
 
@@ -68,8 +69,8 @@ namespace Serilog.Sinks.Splunk
             : this(
                 splunkHost,
                 eventCollectorToken,
-                null, null, null, null, null, 
-                batchIntervalInSeconds, 
+                null, null, null, null, null,
+                batchIntervalInSeconds,
                 batchSizeLimit,
                 formatProvider,
                 renderTemplate)
@@ -104,11 +105,41 @@ namespace Serilog.Sinks.Splunk
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             HttpMessageHandler messageHandler = null)
+            : this(
+                splunkHost,
+                eventCollectorToken,
+                uriPath,
+                batchIntervalInSeconds,
+                batchSizeLimit,
+                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index),
+                messageHandler)
+        {
+        }
+
+
+        /// <summary>
+        /// Creates a new instance of the sink
+        /// </summary>
+        /// <param name="splunkHost">The host of the Splunk instance with the Event collector configured</param>
+        /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
+        /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
+        /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
+        /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
+        /// <param name="jsonFormatter">The text formatter used to render log events into a JSON format for consumption by Splunk</param>
+        /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        public EventCollectorSink(
+            string splunkHost,
+            string eventCollectorToken,
+            string uriPath,
+            int batchIntervalInSeconds,
+            int batchSizeLimit,
+            ITextFormatter jsonFormatter,
+            HttpMessageHandler messageHandler = null)
         {
             _uriPath = uriPath;
             _splunkHost = splunkHost;
             _queue = new ConcurrentQueue<LogEvent>();
-            _jsonFormatter = new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index);
+            _jsonFormatter = jsonFormatter;
             _batchSizeLimitLimit = batchSizeLimit;
 
             var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
