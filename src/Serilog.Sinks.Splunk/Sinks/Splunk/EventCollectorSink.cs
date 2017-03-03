@@ -205,7 +205,7 @@ namespace Serilog.Sinks.Splunk
             }
 
             var request = new EventCollectorRequest(_splunkHost, allEvents.ToString(), _uriPath);
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
