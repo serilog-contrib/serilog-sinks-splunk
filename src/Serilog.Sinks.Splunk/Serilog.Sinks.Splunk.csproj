@@ -13,11 +13,8 @@
     <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <Version>2.2.0</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.3.0" />
-  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <PackageReference Include="Splunk.Logging.Common" Version="1.6.0" />
@@ -36,6 +33,10 @@
     <PackageReference Include="System.Runtime" Version="4.1.0" />
     <PackageReference Include="System.Threading" Version="4.0.11" />
     <PackageReference Include="System.Net.Http" Version="4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.4.0" />
   </ItemGroup>
 
 </Project>
