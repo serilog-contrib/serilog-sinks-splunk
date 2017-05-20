@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop"
 echo "build: Build started"
 
 Push-Location $PSScriptRoot
@@ -11,7 +12,7 @@ if(Test-Path .\artifacts) {
 
 $branch = @{ $true = $env:APPVEYOR_REPO_BRANCH; $false = $(git symbolic-ref --short -q HEAD) }[$env:APPVEYOR_REPO_BRANCH -ne $NULL];
 $revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "local" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
-$suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne "local"]
+$suffix = @{ $true = ""; $false = "-$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne "local"]
 $commitHash = $(git rev-parse --short HEAD)
 $buildSuffix = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""]
 
@@ -41,15 +42,6 @@ foreach ($test in ls test/*.Tests) {
     Pop-Location
 }
 
-foreach ($test in ls sample/Sample) {
-    Push-Location $test
-
-	echo "build: Building performance test project in $test"
-
-    & dotnet build -c Release
-    if($LASTEXITCODE -ne 0) { exit 2 }
-
-    Pop-Location
-}
+dotnet build -c Release .\sample\Sample\Sample.csproj
 
 Pop-Location
