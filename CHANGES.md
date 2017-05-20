@@ -1,3 +1,6 @@
+##2.2.0
+- [#47] Tooling updates to VS2017
+
 ##2.1.2
 - [#43](https://github.com/serilog/serilog-sinks-splunk/pull/43) - Extend sink & static configuration to allow for custom JSON formatter.
 
