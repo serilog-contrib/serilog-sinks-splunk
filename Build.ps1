@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop"
 echo "build: Build started"
 
 Push-Location $PSScriptRoot
@@ -41,15 +42,6 @@ foreach ($test in ls test/*.Tests) {
     Pop-Location
 }
 
-foreach ($test in ls sample/Sample) {
-    Push-Location $test
-
-	echo "build: Building performance test project in $test"
-
-    & dotnet build -c Release
-    if($LASTEXITCODE -ne 0) { exit 2 }
-
-    Pop-Location
-}
+dotnet build -c Release .\sample\Sample\Sample.csproj
 
 Pop-Location
