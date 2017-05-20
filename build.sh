@@ -22,4 +22,4 @@ for path in test/*.Tests/*.csproj; do
     dotnet test -f netcoreapp1.0  -c Release ${path}
 done
 
-dotnet build -f netcoreapp1.0 -c Release sample/Sample.csproj
+dotnet build -f netcoreapp1.0 -c Release sample/Sample/Sample.csproj
