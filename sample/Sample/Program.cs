@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Serilog;
+using Serilog.Sinks.Splunk;
 
 namespace Sample
 {
@@ -27,11 +28,33 @@ namespace Sample
             OverridingSourceType(eventsToCreate);
             OverridingHost(eventsToCreate);
             WithNoTemplate(eventsToCreate);
-
+            WithCompactSplunkFormatter(eventsToCreate);
             if (runSSL)
                 UsingSSL(eventsToCreate);
 
             Log.Debug("Done");
+        }
+
+        private static void WithCompactSplunkFormatter(int eventsToCreate)
+        {
+            // Vanilla Test with full uri specified
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.LiterateConsole()
+                .WriteTo.EventCollector(
+                    "http://localhost:8088/services/collector",
+                    Program.EventCollectorToken,new CompactSplunkJsonFormatter())
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla with CompactSplunkJsonFormatter specified")
+                .CreateLogger();
+
+
+            foreach (var i in Enumerable.Range(0, eventsToCreate))
+            {
+                Log.Information("{Counter}{Message}", i, "Running vanilla loop with CompactSplunkJsonFormatter");
+            }
+
+            Log.CloseAndFlush();
         }
 
         public static void OverridingSource(int eventsToCreate)
