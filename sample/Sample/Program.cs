@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Serilog;
 using Serilog.Sinks.Splunk;
 
@@ -6,7 +7,12 @@ namespace Sample
 {
     public class Program
     {
-        public static string EventCollectorToken = "2B94855F-1184-46F7-BFF1-56A3112F627E";
+        const string SPLUNK_FULL_ENDPOINT = "http://ws2012-devops:8088/services/collector";
+            //  Patrik local vm machine   
+
+        const string SPLUNK_ENDPOINT = "http://ws2012-devops:8088"; //  Patrik local vm machine    
+        const string SPLUNK_HEC_TOKEN = "1AFAC088-BFC6-447F-A358-671FA7465342"; // PATRIK lOCAL VM -MACHINE
+        public static string EventCollectorToken = SPLUNK_HEC_TOKEN; // "2B94855F-1184-46F7-BFF1-56A3112F627E";
 
         public static void Main(string[] args)
         {
@@ -22,15 +28,18 @@ namespace Sample
             Log.Information("Sample starting up");
             Serilog.Debugging.SelfLog.Enable(System.Console.Out);
 
-            UsingHostOnly(eventsToCreate);
+            //UsingHostOnly(eventsToCreate);
             UsingFullUri(eventsToCreate);
-            OverridingSource(eventsToCreate);
-            OverridingSourceType(eventsToCreate);
-            OverridingHost(eventsToCreate);
-            WithNoTemplate(eventsToCreate);
-            WithCompactSplunkFormatter(eventsToCreate);
-            if (runSSL)
-                UsingSSL(eventsToCreate);
+            //OverridingSource(eventsToCreate);
+            //OverridingSourceType(eventsToCreate);
+            //OverridingHost(eventsToCreate);
+            //WithNoTemplate(eventsToCreate);
+            //WithCompactSplunkFormatter(eventsToCreate);
+            //if (runSSL)
+            //{
+            //    UsingSSL(eventsToCreate);
+            //}
+            AddExtraFields(eventsToCreate);
 
             Log.Debug("Done");
         }
@@ -42,10 +51,11 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088/services/collector",
-                    Program.EventCollectorToken,new CompactSplunkJsonFormatter())
+                    SPLUNK_FULL_ENDPOINT,
+                    Program.EventCollectorToken, new CompactSplunkJsonFormatter())
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
-                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla with CompactSplunkJsonFormatter specified")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType",
+                    "Vanilla with CompactSplunkJsonFormatter specified")
                 .CreateLogger();
 
 
@@ -64,7 +74,7 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088",
+                    SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
                     source: "Serilog.Sinks.Splunk.Sample.TestSource")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
@@ -77,7 +87,6 @@ namespace Sample
             }
 
             Log.CloseAndFlush();
-
         }
 
         public static void OverridingSourceType(int eventsToCreate)
@@ -87,9 +96,9 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088",
+                    SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
-                    sourceType: "Serilog.Sinks.Splunk.Sample.TestSourceType")
+                    sourceType: "_json")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Source Type Override")
                 .CreateLogger();
@@ -100,7 +109,6 @@ namespace Sample
             }
 
             Log.CloseAndFlush();
-
         }
 
         public static void OverridingHost(int eventsToCreate)
@@ -110,7 +118,7 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088",
+                    SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
                     host: "myamazingmachine")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
@@ -123,7 +131,6 @@ namespace Sample
             }
 
             Log.CloseAndFlush();
-
         }
 
         public static void UsingFullUri(int eventsToCreate)
@@ -133,7 +140,7 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088/services/collector",
+                    SPLUNK_FULL_ENDPOINT,
                     Program.EventCollectorToken)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla with full uri specified")
@@ -155,7 +162,7 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088",
+                    SPLUNK_ENDPOINT,
                     Program.EventCollectorToken)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla No services/collector in uri")
@@ -176,7 +183,7 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "http://localhost:8088",
+                    SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
                     renderTemplate: false)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
@@ -198,7 +205,7 @@ namespace Sample
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
                 .WriteTo.EventCollector(
-                    "https://localhost:8088",
+                    SPLUNK_ENDPOINT,
                     Program.EventCollectorToken)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "HTTPS")
@@ -210,5 +217,33 @@ namespace Sample
             }
             Log.CloseAndFlush();
         }
+
+        public static void AddExtraFields(int eventsToCreate)
+        {
+            // Override Source
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.LiterateConsole()
+                .WriteTo.EventCollector(
+                    splunkHost: SPLUNK_ENDPOINT
+                    , eventCollectorToken: SPLUNK_HEC_TOKEN
+                    , host: System.Environment.MachineName
+                    , source: "BackPackTestServerChannel"
+                    , sourceType: "_json")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "AddExtraFields")
+                .CreateLogger();
+
+            foreach (var i in Enumerable.Range(0, eventsToCreate))
+            {
+                Log.Information("AddExtraFields {Counter}", i);
+            }
+
+            Log.CloseAndFlush();
+        }
+    }
+
+    public class MetaEventData : Dictionary<string, string>
+    {
     }
 }
