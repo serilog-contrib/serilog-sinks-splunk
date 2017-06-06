@@ -115,6 +115,46 @@ namespace Serilog.Sinks.Splunk
                 messageHandler)
         {
         }
+        /// <summary>
+        /// Creates a new instance of the sink with Customfields
+        /// </summary>
+        /// <param name="splunkHost">The host of the Splunk instance with the Event collector configured</param>
+        /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
+        /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
+        /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
+        /// <param name="formatProvider">The format provider used when rendering the message</param>
+        /// <param name="renderTemplate">Whether to render the message template</param>
+        /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
+        /// <param name="index">The Splunk index to log to</param>
+        /// <param name="fields">Add extra CustomExtraFields for Splunk to index</param>
+        /// <param name="source">The source of the event</param>
+        /// <param name="sourceType">The source type of the event</param>
+        /// <param name="host">The host of the event</param>
+        /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        public EventCollectorSink(
+            string splunkHost,
+            string eventCollectorToken,
+            string uriPath,
+            string source,
+            string sourceType,
+            string host,
+            string index,
+            CustomFields fields,
+            int batchIntervalInSeconds,
+            int batchSizeLimit,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true,
+            HttpMessageHandler messageHandler = null)
+            : this(
+                splunkHost,
+                eventCollectorToken,
+                uriPath,
+                batchIntervalInSeconds,
+                batchSizeLimit,
+                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index),
+                messageHandler)
+        {
+        }
 
 
         /// <summary>
