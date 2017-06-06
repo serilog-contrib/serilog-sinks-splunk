@@ -7,12 +7,12 @@ using Serilog;
 using Serilog.Sinks.Splunk;
 using NUnit;
 using NUnit.Framework;
-using Serilog.Sinks.Splunk.Sinks.Splunk;
+
 
 namespace Serilog.Sinks.Splunk.Tests
 {
     
-    class SplunkExtraFieldsTests
+    class SplunkCustomFieldsTests
     {
         const string SPLUNK_FULL_ENDPOINT = "http://ws2012-devops:8088/services/collector";
         //  Patrik local vm machine   
@@ -23,6 +23,7 @@ namespace Serilog.Sinks.Splunk.Tests
         void Test_Add_Extra_Splunk_Field_()
         {
             //Arrange
+            var releaseChannel = new CustomField("relChan","Test");
             var metaData = new CustomFields();
             var sut = new LoggerConfiguration()
     .MinimumLevel.Debug()
