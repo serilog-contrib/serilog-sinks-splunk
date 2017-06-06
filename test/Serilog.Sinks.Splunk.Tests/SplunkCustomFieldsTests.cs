@@ -23,8 +23,12 @@ namespace Serilog.Sinks.Splunk.Tests
         void Test_Add_Extra_Splunk_Field_()
         {
             //Arrange
-            var releaseChannel = new CustomField("relChan","Test");
             var metaData = new CustomFields();
+            metaData.CustomFieldList.Add(new CustomField("relChan", "Test"));
+            metaData.CustomFieldList.Add(new CustomField("version", "17.8.9.beta"));
+            metaData.CustomFieldList.Add(new CustomField("rel", "REL1706"));
+            metaData.CustomFieldList.Add(new CustomField("role",new List<string>() { "service", "rest", "ESB" }));
+
             var sut = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.EventCollector(
@@ -32,9 +36,10 @@ namespace Serilog.Sinks.Splunk.Tests
         , eventCollectorToken: SPLUNK_HEC_TOKEN
         , host: System.Environment.MachineName
         , source: "BackPackTestServerChannel"
-        , sourceType: "_json")
+        , sourceType: "_json"
+        , fields: metaData)
     .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
-    .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "AddExtraFields")
+    .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "AddCustomFields")
     .CreateLogger();
             //Act
 
