@@ -243,7 +243,5 @@ namespace Sample
         }
     }
 
-    public class MetaEventData : Dictionary<string, string>
-    {
-    }
+   
 }
