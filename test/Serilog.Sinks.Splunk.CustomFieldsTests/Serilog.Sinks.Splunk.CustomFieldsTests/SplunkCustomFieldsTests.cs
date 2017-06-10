@@ -9,8 +9,7 @@ using Serilog.Sinks.Splunk;
 using NUnit;
 using NUnit.Framework;
 
-
-namespace Serilog.Sinks.Splunk.Tests
+namespace Serilog.Sinks.Splunk.CustomFieldsTests
 {
     [TestFixture]
     class SplunkCustomFieldsTests
@@ -21,7 +20,7 @@ namespace Serilog.Sinks.Splunk.Tests
         const string SPLUNK_ENDPOINT = "http://ws2012-devops:8088"; //  Patrik local vm machine    
         const string SPLUNK_HEC_TOKEN = "1AFAC088-BFC6-447F-A358-671FA7465342"; // PATRIK lOCAL VM -MACHINE
         [Test]
-        void Test_Add_CustomFields_for_Splunk_Sink_()
+        public void Test_Add_CustomFields_for_Splunk_Sink_()
         {
             //Arrange
             int a = 1;
@@ -30,7 +29,7 @@ namespace Serilog.Sinks.Splunk.Tests
             metaData.CustomFieldList.Add(new CustomField("relChan", "Test"));
             metaData.CustomFieldList.Add(new CustomField("version", "17.8.9.beta"));
             metaData.CustomFieldList.Add(new CustomField("rel", "REL1706"));
-            metaData.CustomFieldList.Add(new CustomField("role",new List<string>() { "service", "rest", "ESB" }));
+            metaData.CustomFieldList.Add(new CustomField("role", new List<string>() { "service", "rest", "ESB" }));
             Exception testException = null;
             var sut = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -52,7 +51,7 @@ namespace Serilog.Sinks.Splunk.Tests
             catch (Exception e)
             {
                 testException = e;
-             
+
             }
             sut.Debug(testException, "Should be an div by zeroerror");
             //Assert

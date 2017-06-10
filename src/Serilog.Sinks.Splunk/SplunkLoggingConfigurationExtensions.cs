@@ -49,7 +49,7 @@ namespace Serilog
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="outputTemplate">The output template to be used when logging</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-        /// <param name="renderTemplate">If ture, the message template will be rendered</param>
+        /// <param name="renderTemplate">If true, the message template will be rendered</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
