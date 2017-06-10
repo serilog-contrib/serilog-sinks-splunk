@@ -145,13 +145,14 @@ namespace Serilog.Sinks.Splunk
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             HttpMessageHandler messageHandler = null)
+            // TODO here is the jsonformatter creation. We must make way to test output of jsonformatter. 
             : this(
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
                 batchIntervalInSeconds,
                 batchSizeLimit,
-                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index),
+                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index,fields),
                 messageHandler)
         {
         }

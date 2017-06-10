@@ -95,6 +95,61 @@ namespace Serilog.Sinks.Splunk
             _suffix = suffixWriter.ToString();
         }
 
+        /// <summary>
+        /// Construct a <see cref="SplunkJsonFormatter"/>.
+        /// </summary>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If true, the template used will be rendered and written to the output as a property named MessageTemplate</param>
+        /// <param name="index">The Splunk index to log to</param>
+        /// <param name="source">The source of the event</param>
+        /// <param name="sourceType">The source type of the event</param>
+        /// <param name="host">The host of the event</param>
+        public SplunkJsonFormatter(
+            bool renderTemplate,
+            IFormatProvider formatProvider,
+            string source,
+            string sourceType,
+            string host,
+            string index,
+            CustomFields customFields)
+        {
+            _renderTemplate = renderTemplate;
+            _formatProvider = formatProvider;
+
+            var suffixWriter = new StringWriter();
+            suffixWriter.Write("}"); // Terminates "event"
+
+            if (!string.IsNullOrWhiteSpace(source))
+            {
+                suffixWriter.Write(",\"source\":");
+                JsonValueFormatter.WriteQuotedJsonString(source, suffixWriter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(sourceType))
+            {
+                suffixWriter.Write(",\"sourcetype\":");
+                JsonValueFormatter.WriteQuotedJsonString(sourceType, suffixWriter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(host))
+            {
+                suffixWriter.Write(",\"host\":");
+                JsonValueFormatter.WriteQuotedJsonString(host, suffixWriter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(index))
+            {
+                suffixWriter.Write(",\"index\":");
+                JsonValueFormatter.WriteQuotedJsonString(index, suffixWriter);
+            }
+            if (customFields != null)
+            {
+                suffixWriter.Write(",\"fields\":");
+                suffixWriter.Write($"\"{customFields.CustomFieldList[0].Name}\"");
+            }
+            suffixWriter.Write('}'); // Terminates the payload
+            _suffix = suffixWriter.ToString();
+        }
         /// <inheritdoc/>
         public void Format(LogEvent logEvent, TextWriter output)
         {
