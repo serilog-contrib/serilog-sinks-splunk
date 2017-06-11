@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -8,6 +9,10 @@ using Serilog;
 using Serilog.Sinks.Splunk;
 using NUnit;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
+using Serilog.Events;
+using Serilog.Parsing;
 
 namespace Serilog.Sinks.Splunk.CustomFieldsTests
 {
@@ -54,6 +59,41 @@ namespace Serilog.Sinks.Splunk.CustomFieldsTests
 
             }
             sut.Debug(testException, "Should be an div by zeroerror");
+            //Assert
+
+
+        }
+        [Test]
+        public void Test_CustomFields_Jsonformatter_for_Splunk_Sink_()
+        {
+            //Arrange
+            int a = 1;
+            int b = 0;
+            var metaData = new CustomFields();
+            metaData.CustomFieldList.Add(new CustomField("relChan", "Test"));
+            metaData.CustomFieldList.Add(new CustomField("version", "17.8.9.beta"));
+            metaData.CustomFieldList.Add(new CustomField("rel", "REL1706"));
+            metaData.CustomFieldList.Add(new CustomField("role", new List<string>() { "service", "rest", "ESB" }));
+            TextWriter eventtTextWriter = new StringWriter();
+           
+            Exception testException = null;
+            var timeStamp = DateTimeOffset.Now;
+           var sut = new SplunkJsonFormatter(renderTemplate:true,formatProvider:null,source: "BackPackTestServerChannel",sourceType:"_json",host:"Wanda",index:"Main",customFields: metaData);
+            try
+            {
+                var willnotwork = a / b;
+            }
+            catch (Exception e)
+            {
+                testException = e;
+            }
+            var msgTemplate = new MessageTemplate("Should be an div by zeroerror",new List<MessageTemplateToken>());
+            var logEventProp1 = new LogEventProperty("Serilog.Sinks.Splunk.Sample", new ScalarValue("ViaEventCollector"));
+            var logEventProp2 = new LogEventProperty("Serilog.Sinks.Splunk.Sample.TestType", new ScalarValue("AddCustomFields"));
+            var logEventPropDict = new LogEventProperty[] {logEventProp1, logEventProp2};
+            var logEvent = new LogEvent(timestamp: timeStamp,level:LogEventLevel.Debug,exception: testException,messageTemplate: msgTemplate, properties: logEventPropDict);
+            //Act
+            sut.Format(logEvent, eventtTextWriter);
             //Assert
 
 
