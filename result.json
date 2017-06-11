@@ -1,0 +1,19 @@
+{
+	"time": "1497195164.94",
+	"event": {
+		"Level": "Debug",
+		"MessageTemplate": "Should be an div by zero error",
+		"RenderedMessage": "",
+		"Exception":
+			"System.DivideByZeroException: Det gjordes ett försök att dividera med noll.\r\n   vid Serilog.Sinks.Splunk.CustomFieldsTests.SplunkCustomFieldsTests.Test_CustomFields_Jsonformatter_for_Splunk_Sink_() i D:\\patli\\gitrepo\\serilog-sinks-splunk\\test\\Serilog.Sinks.Splunk.CustomFieldsTests\\Serilog.Sinks.Splunk.CustomFieldsTests\\SplunkCustomFieldsTests.cs:rad 91",
+		"Properties": {
+			"Serilog.Sinks.Splunk.Sample": "ViaEventCollector",
+			"Serilog.Sinks.Splunk.Sample.TestType": "AddCustomFields"
+		}
+	},
+	"source": "BackPackTestServerChannel",
+	"sourcetype": "_json",
+	"host": "Wanda",
+	"index": "Main",
+	"fields": "relChan"
+}
