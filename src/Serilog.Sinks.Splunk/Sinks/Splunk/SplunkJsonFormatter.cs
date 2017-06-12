@@ -144,12 +144,37 @@ namespace Serilog.Sinks.Splunk
             }
             if (customFields != null)
             {
-                suffixWriter.Write(",\"fields\":");
-                suffixWriter.Write($"\"{customFields.CustomFieldList[0].Name}\"");
+                // "fields": {"club":"glee", "wins",["regionals","nationals"]}
+                suffixWriter.Write(",\"fields\": {");
+                var lastFieldIndex = customFields.CustomFieldList.Count;
+                foreach (var customField in customFields.CustomFieldList)
+                {
+                    if (customField.ValueList.Count == 1)
+                    {
+                        //only one value e.g "club":"glee",       
+                        suffixWriter.Write($"\"{customField.Name}\":");
+                        suffixWriter.Write($"\"{customField.ValueList[0]}\"");
+                    }
+                    else
+                    {
+                        //array of values e.g "wins",["regionals","nationals"]
+                        suffixWriter.Write($"\"{customField.Name}\":[");
+                        var lastArrIndex = customField.ValueList.Count;
+                        foreach (var cf in customField.ValueList)
+                        {
+                            suffixWriter.Write($"\"{cf}\"");
+                            //Different behaviour if it is the last one
+                            suffixWriter.Write(--lastArrIndex > 0 ? "," : "]");
+                        }
+                    }
+                    suffixWriter.Write(--lastFieldIndex > 0 ? "," : "}");
+                }
+               
             }
             suffixWriter.Write('}'); // Terminates the payload
             _suffix = suffixWriter.ToString();
         }
+
         /// <inheritdoc/>
         public void Format(LogEvent logEvent, TextWriter output)
         {

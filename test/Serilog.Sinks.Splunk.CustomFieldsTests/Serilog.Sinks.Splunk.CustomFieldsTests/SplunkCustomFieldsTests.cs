@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Serilog;
-using Serilog.Sinks.Splunk;
-using NUnit;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 using Serilog.Events;
 using Serilog.Parsing;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Serilog.Sinks.Splunk.CustomFieldsTests
 {
@@ -30,16 +19,21 @@ namespace Serilog.Sinks.Splunk.CustomFieldsTests
         public string RenderedMessage { get; set; }
         public string Exception { get; set; }
     }
-
+    public class  TestCustomFields { 
+        public string  RelChan { get; set; }
+        public string Version { get; set; }
+        public string Rel { get; set; }
+        public List<string> Role { get; set; }
+    }
     public class TestEventResultObject
     {
-        public string time { get; set; }
-        public Event @event { get; set; }
-        public string source { get; set; }
-        public string sourcetype { get; set; }
-        public string host { get; set; }
-        public string index { get; set; }
-        public string fields { get; set; }
+        public string Time { get; set; }
+        public Event @Event { get; set; }
+        public string Source { get; set; }
+        public string Sourcetype { get; set; }
+        public string Host { get; set; }
+        public string Index { get; set; }
+        public TestCustomFields Fields { get; set; }
     }
     [TestFixture]
     class SplunkCustomFieldsTests
@@ -91,16 +85,21 @@ namespace Serilog.Sinks.Splunk.CustomFieldsTests
             var resultJson = eventtTextWriter.ToString();
             TestEventResultObject testEventResult = JsonConvert.DeserializeObject<TestEventResultObject>(resultJson);         
             //Assert
-            StringAssert.AreEqualIgnoringCase(testEventResult.host, "Wanda", "Wanda should be my  host see the movie, else the JsonFormater is wack in test");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Host, "Wanda", "Wanda should be my  host see the movie, else the JsonFormater is wack in test");
             // I do no seem to get the div part right. Something strange with  round or how the json timestamp is calculated. I am practical and only check the whole part for now.
-            StringAssert.AreEqualIgnoringCase(testEventResult.time.Split('.')[0], timeStampUnix.Split('.')[0], "Json Time stamp is off ");
-            StringAssert.AreEqualIgnoringCase(testEventResult.source, "BackPackTestServerChannel", "Jsonformater do not se the Splunk field source to the right value");
-            StringAssert.AreEqualIgnoringCase(testEventResult.sourcetype, "_json", "Jsonformater do not se the Splunk field sourcetype to the right value _json");
-            StringAssert.IsMatch("System\\.DivideByZeroException:", testEventResult.@event.Exception, "Exception Does not seem to be right after JsonFormater no DivideByZeroText ");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Time.Split('.')[0], timeStampUnix.Split('.')[0], "Json Time stamp is off ");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Source, "BackPackTestServerChannel", "Jsonformater do not se the Splunk field source to the right value");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Sourcetype, "_json", "Jsonformater do not se the Splunk field sourcetype to the right value _json");
+            StringAssert.IsMatch("System\\.DivideByZeroException:", testEventResult.@Event.Exception, "Exception Does not seem to be right after JsonFormater no DivideByZeroText ");
            // StringAssert.IsMatch("AddCustomFields", testEventResult.@event.Exception, "Exception Does not seem to be right after JsonFormater no AddCustomField ");
-            StringAssert.AreEqualIgnoringCase(testEventResult.@event.Level , LogEventLevel.Debug.ToString(), "Siri LogEvent should be Debug");
+            StringAssert.AreEqualIgnoringCase(testEventResult.@Event.Level , LogEventLevel.Debug.ToString(), "Siri LogEvent should be Debug");
             //Now finally we start to check the CustomField
-            StringAssert.AreEqualIgnoringCase(testEventResult.fields, "relChan", "CustomField is not correct after format for Splunkjsonformatter");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Fields.RelChan, "Test", "CustomField RelChan is not correct after format for Splunkjsonformatter");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Fields.Version, "17.8.9.beta", "CustomField Version is not correct after format for Splunkjsonformatter");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Fields.Rel, "REL1706", "CustomField rel is not correct after format for Splunkjsonformatter");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Fields.Role[0], "service", "CustomField Role array 0 is not correct after format for Splunkjsonformatter");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Fields.Role[1], "rest", "CustomField Role array 1 correct after format for Splunkjsonformatter");
+            StringAssert.AreEqualIgnoringCase(testEventResult.Fields.Role[2], "ESB", "CustomField Role array 2 correct after format for Splunkjsonformatter");
         }
     }
 }
