@@ -28,18 +28,18 @@ namespace Sample
             Log.Information("Sample starting up");
             Serilog.Debugging.SelfLog.Enable(System.Console.Out);
 
-            //UsingHostOnly(eventsToCreate);
+            UsingHostOnly(eventsToCreate);
             UsingFullUri(eventsToCreate);
-            //OverridingSource(eventsToCreate);
-            //OverridingSourceType(eventsToCreate);
-            //OverridingHost(eventsToCreate);
-            //WithNoTemplate(eventsToCreate);
-            //WithCompactSplunkFormatter(eventsToCreate);
-            //if (runSSL)
-            //{
-            //    UsingSSL(eventsToCreate);
-            //}
-            AddExtraFields(eventsToCreate);
+            OverridingSource(eventsToCreate);
+            OverridingSourceType(eventsToCreate);
+            OverridingHost(eventsToCreate);
+            WithNoTemplate(eventsToCreate);
+            WithCompactSplunkFormatter(eventsToCreate);
+            if (runSSL)
+            {
+                UsingSSL(eventsToCreate);
+            }
+            AddCustomFields(eventsToCreate);
 
             Log.Debug("Done");
         }
@@ -218,8 +218,15 @@ namespace Sample
             Log.CloseAndFlush();
         }
 
-        public static void AddExtraFields(int eventsToCreate)
+        public static void AddCustomFields(int eventsToCreate)
         {
+            var metaData = new CustomFields(new List<CustomField>
+            {
+                new CustomField("relChan", "Test"),
+                new CustomField("version", "17.8.9.beta"),
+                new CustomField("rel", "REL1706"),
+                new CustomField("role", new List<string>() { "service", "rest", "ESB" })
+            });
             // Override Source
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -229,14 +236,15 @@ namespace Sample
                     , eventCollectorToken: SPLUNK_HEC_TOKEN
                     , host: System.Environment.MachineName
                     , source: "BackPackTestServerChannel"
-                    , sourceType: "_json")
+                    , sourceType: "_json"
+                    ,fields: metaData)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
-                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "AddExtraFields")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "AddCustomFields")
                 .CreateLogger();
 
             foreach (var i in Enumerable.Range(0, eventsToCreate))
             {
-                Log.Information("AddExtraFields {Counter}", i);
+                Log.Information("AddCustomFields {Counter}", i);
             }
 
             Log.CloseAndFlush();
