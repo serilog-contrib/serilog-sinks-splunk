@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -12,7 +13,8 @@ namespace Serilog.Sinks.Splunk.Tests
             string source = "",
             string sourceType= "",
             string host= "",
-            string index= "")
+            string index= "",
+            CustomFields fields=null)
         {
             StringWriter outputRendered = new StringWriter(), output = new StringWriter();
             var log = new LoggerConfiguration()
@@ -80,6 +82,18 @@ namespace Serilog.Sinks.Splunk.Tests
         {
             AssertValidJson(log => log.Information("One {Property}", 42), host: "testindex");
         }
-    
+        [Fact]
+        public void EventWithCustomFields()
+        {
+            var metaData = new CustomFields(new List<CustomField>
+            {
+                new CustomField("relChan", "Test"),
+                new CustomField("version", "17.8.9.beta"),
+                new CustomField("rel", "REL1706"),
+                new CustomField("role", new List<string>() { "service", "rest", "ESB" })
+            });
+            AssertValidJson(log => log.Information("One {Property}", 42), fields: metaData);
+        }
+
     }
 }
