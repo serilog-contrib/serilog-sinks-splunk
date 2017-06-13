@@ -47,10 +47,9 @@ namespace Serilog.Sinks.Splunk.CustomFieldsTests
             int b = 0;
             // Here we set up some made up CustomFields that we want splunk to index for every event so we could filter on them
             // Eg could be like in this example releasechannel eg Dev,Test,AccepteanceTest, prod ; version of the code, Release, 
-            // role is an example of when a field property has been set to a multi-value JSON array. See: 
+            // role is an example of when a field property has been set to a multi-value JSON array. See: http://dev.splunk.com/view/event-collector/SP-CAAAFB6
             // Could be used to describe a hierachy in dimension. Here it is a service of type rest for the Enterprise Service Bus
             // these field would of course be different for every Company. But should be conformed over the organisation. Just like ralph kimball conformed dimensions for BI. 
-            // see http://dev.splunk.com/view/event-collector/SP-CAAAFB6
             var metaData = new CustomFields(new List<CustomField>
             {
                 new CustomField("relChan", "Test"),
