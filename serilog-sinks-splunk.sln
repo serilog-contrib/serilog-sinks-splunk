@@ -28,8 +28,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Splunk.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "sample\Sample\Sample.csproj", "{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.CustomFieldsTests", "test\Serilog.Sinks.Splunk.CustomFieldsTests\Serilog.Sinks.Splunk.CustomFieldsTests\Serilog.Sinks.Splunk.CustomFieldsTests.csproj", "{D60B1A2F-10AF-475E-9A67-F0ED5B3E86C6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,10 +46,6 @@ Global
 		{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D60B1A2F-10AF-475E-9A67-F0ED5B3E86C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D60B1A2F-10AF-475E-9A67-F0ED5B3E86C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D60B1A2F-10AF-475E-9A67-F0ED5B3E86C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D60B1A2F-10AF-475E-9A67-F0ED5B3E86C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +54,5 @@ Global
 		{32CF915C-3ECD-496C-8FDB-1214581274A6} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
 		{3C2D8E01-5580-426A-BDD9-EC59CD98E618} = {B9451AD8-09B9-4C09-A152-FBAE24806614}
 		{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B} = {1C75E4A9-4CB1-497C-AD17-B438882051A1}
-		{D60B1A2F-10AF-475E-9A67-F0ED5B3E86C6} = {B9451AD8-09B9-4C09-A152-FBAE24806614}
 	EndGlobalSection
 EndGlobal
