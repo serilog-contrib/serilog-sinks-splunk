@@ -1,5 +1,14 @@
-##2.2.0
+##2.3.0
+- [#59] Added ability to use custom fields with HEC.  See http://dev.splunk.com/view/event-collector/SP-CAAAFB6.
+
+##2.2.1
 - [#47] Tooling updates to VS2017
+- [#48] 
+- [#49]
+- [#52] 
+
+##2.1.3
+- [#45] - Deadlock fix on UI thread.
 
 ##2.1.2
 - [#43](https://github.com/serilog/serilog-sinks-splunk/pull/43) - Extend sink & static configuration to allow for custom JSON formatter.
