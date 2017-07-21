@@ -13,32 +13,29 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting;
+using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.Splunk
 {
     /// <summary>
     /// A sink to log to the Event Collector available in Splunk 6.3
     /// </summary>
-    public class EventCollectorSink : ILogEventSink, IDisposable
+    public class EventCollectorSink : PeriodicBatchingSink
     {
         private readonly string _splunkHost;
         private readonly string _uriPath;
-        private readonly int _batchSizeLimitLimit;
         private readonly ITextFormatter _jsonFormatter;
-        private readonly ConcurrentQueue<LogEvent> _queue;
         private readonly EventCollectorClient _httpClient;
+
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -115,6 +112,7 @@ namespace Serilog.Sinks.Splunk
                 messageHandler)
         {
         }
+
         /// <summary>
         /// Creates a new instance of the sink with Customfields
         /// </summary>
@@ -152,11 +150,10 @@ namespace Serilog.Sinks.Splunk
                 uriPath,
                 batchIntervalInSeconds,
                 batchSizeLimit,
-                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index,fields),
+                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index, fields),
                 messageHandler)
         {
         }
-
 
         /// <summary>
         /// Creates a new instance of the sink
@@ -176,67 +173,25 @@ namespace Serilog.Sinks.Splunk
             int batchSizeLimit,
             ITextFormatter jsonFormatter,
             HttpMessageHandler messageHandler = null)
+            : base(batchSizeLimit, TimeSpan.FromSeconds(batchIntervalInSeconds))
         {
             _uriPath = uriPath;
             _splunkHost = splunkHost;
-            _queue = new ConcurrentQueue<LogEvent>();
             _jsonFormatter = jsonFormatter;
-            _batchSizeLimitLimit = batchSizeLimit;
 
-            var batchInterval = TimeSpan.FromSeconds(batchIntervalInSeconds);
             _httpClient = messageHandler != null
                 ? new EventCollectorClient(eventCollectorToken, messageHandler)
                 : new EventCollectorClient(eventCollectorToken);
-
-            var cancellationToken = new CancellationToken();
-
-            RepeatAction.OnInterval(
-                batchInterval,
-                async () => await ProcessQueue(),
-                cancellationToken);
         }
 
         /// <summary>
-        /// Emits the provided log event from a sink 
+        ///     Emit a batch of log events, running asynchronously.
         /// </summary>
-        /// <param name="logEvent"></param>
-        public void Emit(LogEvent logEvent)
-        {
-            if (logEvent == null) throw new ArgumentNullException(nameof(logEvent));
-
-            _queue.Enqueue(logEvent);
-        }
-
-        private async Task ProcessQueue()
-        {
-            try
-            {
-                do
-                {
-                    var count = 0;
-                    var events = new Queue<LogEvent>();
-                    LogEvent next;
-
-                    while (count < _batchSizeLimitLimit && _queue.TryDequeue(out next))
-                    {
-                        count++;
-                        events.Enqueue(next);
-                    }
-
-                    if (events.Count == 0)
-                        return;
-
-                    await Send(events);
-
-                } while (true);
-            }
-            catch (Exception ex)
-            {
-                SelfLog.WriteLine("Exception while emitting batch from {0}: {1}", this, ex);
-            }
-        }
-
-        private async Task Send(IEnumerable<LogEvent> events)
+        /// <param name="events">The events to emit.</param>
+        /// <remarks>
+        ///     Override either <see cref="PeriodicBatchingSink.EmitBatch" /> or <see cref="PeriodicBatchingSink.EmitBatchAsync" />, not both.
+        /// </remarks>
+        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
             var allEvents = new StringWriter();
 
@@ -248,56 +203,22 @@ namespace Serilog.Sinks.Splunk
             var request = new EventCollectorRequest(_splunkHost, allEvents.ToString(), _uriPath);
             var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
-            if (response.IsSuccessStatusCode)
-            {
-                //Do Nothing?
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 //Application Errors sent via HTTP Event Collector
                 if (HttpEventCollectorApplicationErrors.Any(x => x == response.StatusCode))
                 {
+                    // By not throwing an exception here the PeriodicBatchingSink will assume the batch succeeded and not send it again.
                     SelfLog.WriteLine(
                         "A status code of {0} was received when attempting to send to {1}.  The event has been discarded and will not be placed back in the queue.",
                         response.StatusCode.ToString(), _splunkHost);
                 }
                 else
                 {
-                    //Put the item back in the queue & retry on next go
-                    SelfLog.WriteLine(
-                        "A status code of {0} was received when attempting to send to {1}.  The event has been placed back in the queue",
-                        response.StatusCode.ToString(), _splunkHost);
-
-                    foreach (var logEvent in events)
-                    {
-                        _queue.Enqueue(logEvent);
-                    }
+                    // EnsureSuccessStatusCode will throw an exception and the PeriodicBatchingSink will catch/log the exception and retry the batch.
+                    response.EnsureSuccessStatusCode();
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        /// <inheritdoc/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing) return;
-
-            var remainingEvents = new List<LogEvent>();
-
-            while (!_queue.IsEmpty)
-            {
-                LogEvent next;
-                _queue.TryDequeue(out next);
-                remainingEvents.Add(next);
-            }
-
-            Send(remainingEvents).Wait();
-            _httpClient.Dispose();
         }
     }
 }
