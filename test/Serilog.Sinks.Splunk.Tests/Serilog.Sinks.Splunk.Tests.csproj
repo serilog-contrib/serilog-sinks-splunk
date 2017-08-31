@@ -25,8 +25,12 @@
     <ProjectReference Include="..\..\src\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

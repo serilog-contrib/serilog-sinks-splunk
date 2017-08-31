@@ -47,7 +47,7 @@ namespace Sample
             // Vanilla Test with full uri specified
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_FULL_ENDPOINT,
                     Program.EventCollectorToken, new CompactSplunkJsonFormatter())
@@ -70,7 +70,7 @@ namespace Sample
             // Override Source
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
@@ -92,7 +92,7 @@ namespace Sample
             // Override Source
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
@@ -114,7 +114,7 @@ namespace Sample
             // Override Host
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
@@ -136,7 +136,7 @@ namespace Sample
             // Vanilla Test with full uri specified
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_FULL_ENDPOINT,
                     Program.EventCollectorToken)
@@ -158,7 +158,7 @@ namespace Sample
             // Vanilla Tests just host
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken)
@@ -179,7 +179,7 @@ namespace Sample
             // No Template
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken,
@@ -201,7 +201,7 @@ namespace Sample
             // SSL
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken)
@@ -228,7 +228,7 @@ namespace Sample
             // Override Source
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .WriteTo.EventCollector(
                     splunkHost: SPLUNK_ENDPOINT
                     , eventCollectorToken: SPLUNK_HEC_TOKEN
