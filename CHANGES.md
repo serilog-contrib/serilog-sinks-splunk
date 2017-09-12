@@ -1,24 +1,24 @@
 ## 2.4.0
-- [#62] Default fields added by serilog to splunk
-- [#63] Possible thread leak when ILogger instances are disposed
+- #62 Default fields added by serilog to splunk
+- #63 Possible thread leak when ILogger instances are disposed
 
 ## 2.3.0
-- [#59] Added ability to use custom fields with HEC.  See http://dev.splunk.com/view/event-collector/SP-CAAAFB6.
+- 59 Added ability to use custom fields with HEC.  See http://dev.splunk.com/view/event-collector/SP-CAAAFB6.
 
 ## 2.2.1
-- [#47] Tooling updates to VS2017
-- [#48] 
-- [#49]
-- [#52] 
+- #47 Tooling updates to VS2017
+- #48
+- #49
+- #52
 
 ## 2.1.3
-- [#45] - Deadlock fix on UI thread.
+- #45 - Deadlock fix on UI thread.
 
 ## 2.1.2
-- [#43](https://github.com/serilog/serilog-sinks-splunk/pull/43) - Extend sink & static configuration to allow for custom JSON formatter.
+- #43 - Extend sink & static configuration to allow for custom JSON formatter.
 
 ## 2.1.1
-- [#38](https://github.com/serilog/serilog-sinks-splunk/issues/38) - Fix for HttpEventlogCollector and sourceType
+- #38(https://github.com/serilog/serilog-sinks-splunk/issues/38) - Fix for HttpEventlogCollector and sourceType
 - Clean up of sample app using examples of host, sourcetype, source override
 
 ## 2.1.0
