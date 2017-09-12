@@ -1,20 +1,33 @@
-##2.2.0
-- [#47] Tooling updates to VS2017
+## 2.4.0
+- [#62](https://github.com/serilog/serilog-sinks-splunk/issues/62) Default fields added by serilog to splunk
+- [#63](https://github.com/serilog/serilog-sinks-splunk/issues/63) Possible thread leak when ILogger instances are disposed
 
-##2.1.2
-- [#43](https://github.com/serilog/serilog-sinks-splunk/pull/43) - Extend sink & static configuration to allow for custom JSON formatter.
+## 2.3.0
+- [#59](https://github.com/serilog/serilog-sinks-splunk/issues/59) Added ability to use custom fields with HEC.  See http://dev.splunk.com/view/event-collector/SP-CAAAFB6.
 
-##2.1.1
+## 2.2.1
+- [#47](https://github.com/serilog/serilog-sinks-splunk/issues/47) Tooling updates to VS2017
+- [#48](https://github.com/serilog/serilog-sinks-splunk/issues/48)
+- [#49](https://github.com/serilog/serilog-sinks-splunk/issues/49)
+- [#52](https://github.com/serilog/serilog-sinks-splunk/issues/52)
+
+## 2.1.3
+- [#45](https://github.com/serilog/serilog-sinks-splunk/issues/45) - Deadlock fix on UI thread.
+
+## 2.1.2
+- [#43](https://github.com/serilog/serilog-sinks-splunk/issues/43) - Extend sink & static configuration to allow for custom JSON formatter.
+
+## 2.1.1
 - [#38](https://github.com/serilog/serilog-sinks-splunk/issues/38) - Fix for HttpEventlogCollector and sourceType
 - Clean up of sample app using examples of host, sourcetype, source override
 
-##2.1.0
+## 2.1.0
 
 * Change to use a standalone formatter
-* Resolves #32 & #26 by exposing `HttpMessageHandler`
-* Resolves #30 by ignoring OSX build and including tests in `build.sh` for TravisCI
+* Resolves - [#32](https://github.com/serilog/serilog-sinks-splunk/issues/32) & - [#26](https://github.com/serilog/serilog-sinks-splunk/issues/26) by exposing `HttpMessageHandler`
+* Resolves - [#30](https://github.com/serilog/serilog-sinks-splunk/issues/30) by ignoring OSX build and including tests in `build.sh` for TravisCI
 
-##2.0
+## 2.0
  - Support for DotNet Core
  - Event Collector fluent interface changed to `.WriteTo.EventCollector`
  - Event Collector Sink targeting core
@@ -22,22 +35,22 @@
  - Updated Event Collector HTTP Client to add URI endpoint to host: "services/collector" if not included.
  - Event Collector changed to use epoch time [#15](https://github.com/serilog/serilog-sinks-splunk/pull/15)
 
-##1.8
+## 1.8
  - Event Collector changed to use epoch time [#15](https://github.com/serilog/serilog-sinks-splunk/pull/15)
 
-##1.7
+## 1.7
  - Better support for formatting including [#578](https://github.com/serilog/serilog/issues/578)
  - Cleanup on Event Collector
 
-##1.6.50
+## 1.6.50
  - Streaming support for Event Collector
  
-##1.6.42
+## 1.6.42
  - Added support for Splunk 6.3 Event Collector
  - Deprecated Splunk HTTP Sink using Management Port/API
 
-##1.5.30
+## 1.5.30
  - Added switch for template rendering
  
- ##1.5.0
+## 1.5.0
  - Moved the sink from its [original location](https://github.com/serilog/serilog)

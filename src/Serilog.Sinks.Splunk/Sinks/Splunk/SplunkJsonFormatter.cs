@@ -22,6 +22,7 @@ using Serilog.Formatting.Json;
 
 namespace Serilog.Sinks.Splunk
 {
+    /// <inheritdoc />
     /// <summary>
     /// Renders log events into a default JSON format for consumption by Splunk.
     /// </summary>
@@ -29,12 +30,13 @@ namespace Serilog.Sinks.Splunk
     {
         static readonly JsonValueFormatter ValueFormatter = new JsonValueFormatter();
 
-        readonly bool _renderTemplate;
-        readonly IFormatProvider _formatProvider;
-        readonly string _suffix;
+        private readonly bool _renderTemplate;
+        private readonly IFormatProvider _formatProvider;
+        private readonly string _suffix;
 
+        /// <inheritdoc />
         /// <summary>
-        /// Construct a <see cref="SplunkJsonFormatter"/>.
+        /// Construct a <see cref="T:Serilog.Sinks.Splunk.SplunkJsonFormatter" />.
         /// </summary>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the template used will be rendered and written to the output as a property named MessageTemplate</param>
