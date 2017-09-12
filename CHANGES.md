@@ -1,3 +1,7 @@
+## 2.4.0
+- [#62] Default fields added by serilog to splunk
+- [#63] Possible thread leak when ILogger instances are disposed
+
 ## 2.3.0
 - [#59] Added ability to use custom fields with HEC.  See http://dev.splunk.com/view/event-collector/SP-CAAAFB6.
 
