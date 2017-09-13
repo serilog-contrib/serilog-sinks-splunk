@@ -1,5 +1,5 @@
 ## 2.4.0
-- [#62](https://github.com/serilog/serilog-sinks-splunk/issues/62) Default fields added by serilog to splunk
+- [#62](https://github.com/serilog/serilog-sinks-splunk/issues/62) Default fields added by Serilog to splunk
 - [#63](https://github.com/serilog/serilog-sinks-splunk/issues/63) Possible thread leak when ILogger instances are disposed
 
 ## 2.3.0
