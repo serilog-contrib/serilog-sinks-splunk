@@ -16,6 +16,7 @@
 using System;
 using System.Net.Http;
 using Serilog.Configuration;
+using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Sinks.Splunk;
@@ -53,6 +54,7 @@ namespace Serilog
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -69,7 +71,8 @@ namespace Serilog
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
-            HttpMessageHandler messageHandler = null)
+            HttpMessageHandler messageHandler = null, 
+            LoggingLevelSwitch levelSwitch = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
@@ -88,7 +91,7 @@ namespace Serilog
                 renderTemplate,
                 messageHandler);
 
-            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
         }
 
         /// <summary>
@@ -104,6 +107,7 @@ namespace Serilog
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -115,7 +119,8 @@ namespace Serilog
             string outputTemplate = DefaultOutputTemplate,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
-            HttpMessageHandler messageHandler = null)
+            HttpMessageHandler messageHandler = null,
+            LoggingLevelSwitch levelSwitch = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (jsonFormatter == null) throw new ArgumentNullException(nameof(jsonFormatter));
@@ -130,10 +135,10 @@ namespace Serilog
                 jsonFormatter,
                 messageHandler);
 
-            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
         }
 
-       
+
         /// <summary>
         ///     Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
         /// </summary>
@@ -152,6 +157,7 @@ namespace Serilog
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
@@ -170,7 +176,8 @@ namespace Serilog
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
-            HttpMessageHandler messageHandler = null)
+            HttpMessageHandler messageHandler = null,
+            LoggingLevelSwitch levelSwitch = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
@@ -191,7 +198,7 @@ namespace Serilog
                 messageHandler
                 );
 
-            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel);
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
         }
     }
 }
