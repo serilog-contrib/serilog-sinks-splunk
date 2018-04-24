@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>The Splunk TCP Sink for Serilog</Description>
+    <VersionPrefix>1.6.0</VersionPrefix>
+    <Authors>Matthew Erbs, Serilog Contributors</Authors>
+    <TargetFrameworks>net45;</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Serilog.Sinks.Splunk.TCP</AssemblyName>
+    <PackageId>Serilog.Sinks.Splunk.TCP</PackageId>
+    <PackageTags>serilog;splunk;logging;tcp</PackageTags>
+    <PackageIconUrl>http://serilog.net/images/serilog-sink-nuget.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup >
+    <PackageReference Include="Splunk.Logging.Common" Version="1.6.0" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="Serilog" Version="2.6.0" />
+    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj" />
+  </ItemGroup>
+</Project>
