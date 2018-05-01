@@ -1,3 +1,15 @@
+## 3.0.0
+- [#76](https://github.com/serilog/serilog-sinks-splunk/issues/76) Add strong naming/signing to `Serilog.Sinks.Splunk`.
+- [#88](https://github.com/serilog/serilog-sinks-splunk/issues/88) Split Sinks into separate packages for maintainability.
+- *NOTE* Breaking changes.  TCP & UDP Sinks moved to new packages
+    - Serilog.Sinks.Splunk (3.0.x)
+    - Serilog.Sinks.Splunk.TCP (1.0.x)
+    - Serilog.Sinks.Splunk.UDP (1.0.x)
+
+## 2.5.0
+- [#78](https://github.com/serilog/serilog-sinks-splunk/issues/78) Update `System.Net.Http` references to match other similar sinks.
+- [#79](https://github.com/serilog/serilog-sinks-splunk/issues/79) Addition of optional `LoggingLevelSwitch` param to EventCollector sink.
+
 ## 2.4.0
 - [#62](https://github.com/serilog/serilog-sinks-splunk/issues/62) Default fields added by Serilog to splunk
 - [#63](https://github.com/serilog/serilog-sinks-splunk/issues/63) Possible thread leak when ILogger instances are disposed
