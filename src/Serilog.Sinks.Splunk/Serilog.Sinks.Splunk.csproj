@@ -13,6 +13,10 @@
     <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
+    <PublicSign>true</PublicSign>
+    <SignAssembly>true</SignAssembly>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">

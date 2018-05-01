@@ -16,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{B9B133
 		assets\Serilog.snk = assets\Serilog.snk
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B16AD407-36C8-4286-A3E9-CACEBF359731}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{1C75E4A9-4CB1-497C-AD17-B438882051A1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B9451AD8-09B9-4C09-A152-FBAE24806614}"
