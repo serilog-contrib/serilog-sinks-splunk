@@ -20,19 +20,48 @@ PM> Install-Package Serilog.Sinks.Splunk
 OR
 
 ```bash
-> dotnet add package Serilog.Sinks.Splunk
+$ dotnet add package Serilog.Sinks.Splunk
 ```
 
-Using the Event Collector (Splunk 6.3 and above)
+If using the `TCP` or `UDP` sinks install the following packages
+
+* TCP: `Serilog.Sinks.Splunk.TCP`
+* UDP: `Serilog.Sinks.Splunk.UDP`
+
+To start using the Splunk Event Collector (Splunk 6.3 and above), logging can be setup as follows.
 
 ```csharp
 var log = new LoggerConfiguration()
-     .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
+    .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
     .CreateLogger();
 ```
 
-More information is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
+If using `appsettings.json` for configuration the following example illustrates using the Event Collector and Console sinks.
 
+```javascript
+{
+    "Serilog": {
+        "Using": ["Serilog.Sinks.Console", "Serilog.Sinks.Splunk"],
+        "MinimumLevel": "Information",
+        "WriteTo": [{
+                "Name": "Console"
+            },
+            {
+                "Name": "EventCollector",
+                "Args": {
+                    "splunkHost": "http://splunk:8088",
+                    "eventCollectorToken": "00112233-4455-6677-8899-AABBCCDDEEFF"
+                }
+            }
+        ],
+        "Properties": {
+            "Application": "Serilog Splunk Console Sample"
+        }
+    }
+}
+```
+
+More information about Serilog is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
 ### Build status
 
 Branch  | AppVeyor | Travis
