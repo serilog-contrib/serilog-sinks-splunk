@@ -236,3 +236,5 @@ _Pvt_Extensions
 .fake/
 
 .vscode/
+
+sample/Sample/out/

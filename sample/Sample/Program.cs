@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Serilog;
 using Serilog.Sinks.Splunk;
-
+using Microsoft.Extensions.Configuration;
 namespace Sample
 {
     public class Program
     {
-        const string SPLUNK_FULL_ENDPOINT = "http://localhost:8088/services/collector"; // Full splunk url 
-        const string SPLUNK_ENDPOINT = "http://localhost:8088"; //  Your splunk url  
-        const string SPLUNK_HEC_TOKEN = "1AFAC088-BFC6-447F-A358-671FA7465342"; // Your HEC token. See http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
+        const string SPLUNK_FULL_ENDPOINT = "http://splunk:8088/services/collector"; // Full splunk url 
+        const string SPLUNK_ENDPOINT = "http://splunk:8088"; //  Your splunk url  
+        const string SPLUNK_HEC_TOKEN = "00112233-4455-6677-8899-AABBCCDDEEFF"; // Your HEC token. See http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
         public static string EventCollectorToken = SPLUNK_HEC_TOKEN; 
 
         public static void Main(string[] args)
         {
             var eventsToCreate = 100;
             var runSSL = false;
+            var millisecsToWait = 30000;
 
             if (args.Length > 0)
                 eventsToCreate = int.Parse(args[0]);
@@ -23,9 +25,18 @@ namespace Sample
             if (args.Length == 2)
                 runSSL = bool.Parse(args[1]);
 
-            Log.Information("Sample starting up");
-            Serilog.Debugging.SelfLog.Enable(System.Console.Out);
+            if (args.Length == 3)
+                millisecsToWait = int.Parse(args[2]);
 
+            Serilog.Debugging.SelfLog.Enable(System.Console.Out);
+            Log.Information("Sample app starting up...");
+
+            Log.Information("Waiting {} millisecs...", millisecsToWait);
+
+            System.Threading.Thread.Sleep(millisecsToWait);
+
+            UsingAppSettingsJson(eventsToCreate);
+            UsingHostOnly(eventsToCreate);
             UsingHostOnly(eventsToCreate);
             UsingFullUri(eventsToCreate);
             OverridingSource(eventsToCreate);
@@ -33,13 +44,32 @@ namespace Sample
             OverridingHost(eventsToCreate);
             WithNoTemplate(eventsToCreate);
             WithCompactSplunkFormatter(eventsToCreate);
+
             if (runSSL)
             {
                 UsingSSL(eventsToCreate);
             }
             AddCustomFields(eventsToCreate);
 
-            Log.Debug("Done");
+            Log.Information("Done....");
+        }
+        public static void UsingAppSettingsJson(int eventsToCreate)
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+
+            foreach (var i in Enumerable.Range(0, eventsToCreate))
+            {
+                Log.Information("Running via appsettings.json {Counter}", i);
+            }
+
+            Log.CloseAndFlush();
         }
 
         private static void WithCompactSplunkFormatter(int eventsToCreate)
@@ -59,7 +89,7 @@ namespace Sample
 
             foreach (var i in Enumerable.Range(0, eventsToCreate))
             {
-                Log.Information("{Counter}{Message}", i, "Running vanilla loop with CompactSplunkJsonFormatter");
+                Log.Information("{Counter}{Message}", i, " Running vanilla loop with CompactSplunkJsonFormatter");
             }
 
             Log.CloseAndFlush();
