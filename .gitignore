@@ -238,3 +238,5 @@ _Pvt_Extensions
 .vscode/
 
 sample/Sample/out/
+
+.DS_Store
