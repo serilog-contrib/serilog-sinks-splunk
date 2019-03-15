@@ -1,0 +1,17 @@
+version: '2'
+services:
+  splunk:
+    build: ./sample/splunk 
+    image: serilog-splunk
+    ports:
+      - 8000:8000
+      - 8088:8088
+      - 8089:8089
+    environment:
+      SPLUNK_START_ARGS: "--accept-license --answer-yes --seed-passwd changeme"
+      SPLUNK_USER: "root"
+  sampleconsoleapp:
+    depends_on:
+      - "splunk"
+    build: .
+    image: serilog-console-sample

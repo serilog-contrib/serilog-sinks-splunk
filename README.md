@@ -1,33 +1,67 @@
 # Serilog.Sinks.Splunk
 
-[![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk) 
-[![NuGet Version](http://img.shields.io/nuget/v/Serilog.Sinks.Splunk.svg?style=flat)](https://www.nuget.org/packages/Serilog.Sinks.Splunk/)
+[![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk) ![NuGet Version](https://buildstats.info/nuget/Serilog.Sinks.Splunk) 
  [![Join the chat at https://gitter.im/serilog/serilog](https://img.shields.io/gitter/room/serilog/serilog.svg)](https://gitter.im/serilog/serilog)
  
 A Serilog sink that writes events to the [Splunk](https://splunk.com). Supports .NET 4.5+, .NET Core, and platforms compatible with the [.NET Platform Standard](https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md) 1.1 including Windows 8 & UWP, Windows Phone and Xamarin.
 
-[![Package Logo](http://serilog.net/images/serilog-sink-nuget.png)](http://nuget.org/packages/serilog.sinks.splunk)
+[![Package Logo](https://serilog.net/images/serilog-sink-nuget.png)](https://nuget.org/packages/serilog.sinks.splunk)
 
-**Package** - [Serilog.Sinks.Splunk](http://nuget.org/packages/serilog.sinks.splunk)
+**Package** - [Serilog.Sinks.Splunk](https://nuget.org/packages/serilog.sinks.splunk)
 
 ## Getting started
 
-To get started install the *Serilog.Sinks.Splunk* package from Visual Studio's *NuGet* console:
+To get started install the *Serilog.Sinks.Splunk* package:
 
 ```powershell
 PM> Install-Package Serilog.Sinks.Splunk
 ```
 
-Using the Event Collector (Splunk 6.3 and above)
+OR
 
-```csharp 
+```bash
+$ dotnet add package Serilog.Sinks.Splunk
+```
+
+If using the `TCP` or `UDP` sinks install the following packages
+
+* TCP: `Serilog.Sinks.Splunk.TCP`
+* UDP: `Serilog.Sinks.Splunk.UDP`
+
+To start using the Splunk Event Collector (Splunk 6.3 and above), logging can be setup as follows.
+
+```csharp
 var log = new LoggerConfiguration()
-     .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
+    .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
     .CreateLogger();
 ```
 
-More information is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
+If using `appsettings.json` for configuration the following example illustrates using the Event Collector and Console sinks.
 
+```javascript
+{
+    "Serilog": {
+        "Using": ["Serilog.Sinks.Console", "Serilog.Sinks.Splunk"],
+        "MinimumLevel": "Information",
+        "WriteTo": [{
+                "Name": "Console"
+            },
+            {
+                "Name": "EventCollector",
+                "Args": {
+                    "splunkHost": "http://splunk:8088",
+                    "eventCollectorToken": "00112233-4455-6677-8899-AABBCCDDEEFF"
+                }
+            }
+        ],
+        "Properties": {
+            "Application": "Serilog Splunk Console Sample"
+        }
+    }
+}
+```
+
+More information about Serilog is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
 ### Build status
 
 Branch  | AppVeyor | Travis

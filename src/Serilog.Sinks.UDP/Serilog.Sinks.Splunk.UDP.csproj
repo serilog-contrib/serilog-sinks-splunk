@@ -1,33 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>The Splunk Sink for Serilog</Description>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <Description>The Splunk UDP Sink for Serilog</Description>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
-    <TargetFrameworks>netstandard1.1;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Serilog.Sinks.Splunk</AssemblyName>
-    <PackageId>Serilog.Sinks.Splunk</PackageId>
-    <PackageTags>serilog;splunk;logging;event;collector;hec</PackageTags>
+    <AssemblyName>Serilog.Sinks.Splunk.UDP</AssemblyName>
+    <PackageId>Serilog.Sinks.Splunk.UDP</PackageId>
+    <PackageTags>serilog;splunk;logging;udp</PackageTags>
     <PackageIconUrl>http://serilog.net/images/serilog-sink-nuget.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
-    <SignAssembly>true</SignAssembly>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="Serilog" Version="2.6.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.3" />
-  </ItemGroup>
-
+ 
   <ItemGroup>
+    <PackageReference Include="Serilog.Sinks.Splunk" Version="2.5.0" />
+    <PackageReference Include="Splunk.Logging.Common" Version="1.6.0" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="Serilog" Version="2.6.0" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.1.1" />
   </ItemGroup>
-
+ 
 </Project>

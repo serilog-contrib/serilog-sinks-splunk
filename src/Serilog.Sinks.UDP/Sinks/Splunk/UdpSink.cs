@@ -27,7 +27,7 @@ using Serilog.Formatting;
 namespace Serilog.Sinks.Splunk
 {
     /// <summary>
-    /// A sink that logs to Splunk over Udp
+    /// A sink that logs to Splunk over UDP
     /// </summary>
     public class UdpSink : ILogEventSink, IDisposable
     {
@@ -35,7 +35,7 @@ namespace Serilog.Sinks.Splunk
         readonly ITextFormatter _formatter;
 
         /// <summary>
-        /// Creates an instance of the Splunk TCP Sink.
+        /// Creates an instance of the Splunk UDP Sink.
         /// </summary>
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatProvider">Optional format provider</param>
@@ -50,7 +50,7 @@ namespace Serilog.Sinks.Splunk
         }
 
         /// <summary>
-        /// Creates an instance of the Splunk TCP Sink.
+        /// Creates an instance of the Splunk UDP Sink.
         /// </summary>
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>

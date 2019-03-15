@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Serilog Contributors
+﻿// Copyright 2018 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,9 +28,6 @@ namespace Serilog
     /// </summary>
     public static class SplunkLoggingConfigurationExtensions
     {
-        internal const string DefaultOutputTemplate =
-            "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
-            
         internal const string DefaultSource = "";
         internal const string DefaultSourceType = "";
         internal const string DefaultHost = "";
@@ -48,7 +45,6 @@ namespace Serilog
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-        /// <param name="outputTemplate">The output template to be used when logging</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
@@ -66,7 +62,6 @@ namespace Serilog
             string host = DefaultHost,
             string index = DefaultIndex,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            string outputTemplate = DefaultOutputTemplate,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
@@ -75,7 +70,6 @@ namespace Serilog
             LoggingLevelSwitch levelSwitch = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
 
             var eventCollectorSink = new EventCollectorSink(
                 splunkHost,
@@ -103,7 +97,7 @@ namespace Serilog
         /// <param name="jsonFormatter">The text formatter used to render log events into a JSON format for consumption by Splunk</param>
         /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-        /// <param name="outputTemplate">The output template to be used when logging</param>
+        
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
@@ -116,7 +110,6 @@ namespace Serilog
             ITextFormatter jsonFormatter,
             string uriPath = "services/collector",
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            string outputTemplate = DefaultOutputTemplate,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
             HttpMessageHandler messageHandler = null,
@@ -124,7 +117,6 @@ namespace Serilog
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (jsonFormatter == null) throw new ArgumentNullException(nameof(jsonFormatter));
-            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
 
             var eventCollectorSink = new EventCollectorSink(
                 splunkHost,
@@ -151,7 +143,6 @@ namespace Serilog
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-        /// <param name="outputTemplate">The output template to be used when logging</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If ture, the message template will be rendered</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
@@ -171,7 +162,6 @@ namespace Serilog
             string host = DefaultHost,
             string index = DefaultIndex,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            string outputTemplate = DefaultOutputTemplate,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
@@ -180,7 +170,6 @@ namespace Serilog
             LoggingLevelSwitch levelSwitch = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
 
             var eventCollectorSink = new EventCollectorSink(
                 splunkHost,
