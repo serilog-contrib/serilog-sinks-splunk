@@ -17,7 +17,7 @@ namespace Sample
         {
             var eventsToCreate = 100;
             var runSSL = false;
-            var millisecsToWait = 30000;
+            var millisecsToWait = 60000;
 
             if (args.Length > 0)
                 eventsToCreate = int.Parse(args[0]);
@@ -30,9 +30,7 @@ namespace Sample
 
             Serilog.Debugging.SelfLog.Enable(System.Console.Out);
             Log.Information("Sample app starting up...");
-
             Log.Information("Waiting {} millisecs...", millisecsToWait);
-
             System.Threading.Thread.Sleep(millisecsToWait);
 
             UsingAppSettingsJson(eventsToCreate);
