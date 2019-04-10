@@ -1,17 +1,25 @@
-version: '2'
+version: '3'
 services:
   splunk:
     build: ./sample/splunk 
     image: serilog-splunk
+    environment:
+        SPLUNK_START_ARGS: --accept-license --answer-yes --seed-passwd changeme
+        SPLUNK_ENABLE_LISTEN: 9997
+        SPLUNK_PASSWORD: changemeplease!
     ports:
       - 8000:8000
       - 8088:8088
       - 8089:8089
-    environment:
-      SPLUNK_START_ARGS: "--accept-license --answer-yes --seed-passwd changeme"
-      SPLUNK_USER: "root"
+    networks:
+        splunkbase_docker:
   sampleconsoleapp:
     depends_on:
       - "splunk"
     build: .
     image: serilog-console-sample
+    networks:
+      splunkbase_docker:
+networks:
+  splunkbase_docker:
+

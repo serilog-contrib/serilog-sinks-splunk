@@ -6,7 +6,7 @@ dotnet restore
 # Until # 65 is addressed build only core package.  When available move to netstandard for all packages
 for path in src/**/Serilog.Sinks.Splunk.csproj; do
     dotnet build -f netstandard1.1 -c Release ${path}
-    dotnet build -f netstandard1.3 -c Release ${path}
+    dotnet build -f netstandard2.0 -c Release ${path}
 done
 
 for path in test/*.Tests/*.csproj; do
