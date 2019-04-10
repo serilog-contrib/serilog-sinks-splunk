@@ -66,7 +66,7 @@ More information about Serilog is available on the [wiki](https://github.com/ser
 
 Branch  | AppVeyor | Travis
 ------------- | ------------- |-------------
-master |  [![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al/branch/master?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk/branch/master) | ![](https://travis-ci.org/serilog/serilog-sinks-splunk.svg?branch=master) 
-dev | [![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al/branch/dev?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk/branch/dev) | ![](https://travis-ci.org/serilog/serilog-sinks-splunk.svg?branch=dev)
+master |  [![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al/branch/master?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk/branch/master) 
+dev | [![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al/branch/dev?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk/branch/dev)
 
 _Serilog is copyright &copy; 2013-2016 Serilog Contributors - Provided under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html). Needle and thread logo a derivative of work by [Kenneth Appiah](http://www.kensets.com/)._
