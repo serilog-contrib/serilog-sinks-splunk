@@ -15,7 +15,7 @@
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
