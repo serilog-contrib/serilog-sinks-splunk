@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>The Splunk UDP Sink for Serilog</Description>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,6 +15,9 @@
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
  
   <ItemGroup>
