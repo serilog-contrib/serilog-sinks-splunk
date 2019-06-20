@@ -1,3 +1,17 @@
+## 3.3.0
+- Correct issues relating to #76 and signing.
+- Bump version to 3.3 for core Sink.
+- Bump version to 1.2 for UDP Sink.
+- Bump version to 1.2 for TCP Sink.
+
+## 3.2.0
+- Remove TravisCI for Linux builds
+- Add AppVeyor for Linux Builds
+- [#76](https://github.com/serilog/serilog-sinks-splunk/issues/76)
+
+## 3.1.0
+- [#105](https://github.com/serilog/serilog-sinks-splunk/pull/105)
+
 ## 3.0.0
 - [#76](https://github.com/serilog/serilog-sinks-splunk/issues/76) Add strong naming/signing to `Serilog.Sinks.Splunk`.
 - [#88](https://github.com/serilog/serilog-sinks-splunk/issues/88) Split Sinks into separate packages for maintainability.

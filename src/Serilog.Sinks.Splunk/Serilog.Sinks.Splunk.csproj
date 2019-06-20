@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>The Splunk Sink for Serilog</Description>
-    <VersionPrefix>3.2.0</VersionPrefix>
+    <VersionPrefix>3.3.0</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
     <TargetFrameworks>net45;netstandard1.1;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,7 +15,7 @@
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
