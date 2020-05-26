@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>The Splunk UDP Sink for Serilog</Description>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.3.0</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Serilog.Sinks.Splunk.UDP</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk.UDP</PackageId>
@@ -18,15 +18,23 @@
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
- 
-  <ItemGroup>
-    <PackageReference Include="Serilog.Sinks.Splunk" Version="2.5.0" />
-    <PackageReference Include="Splunk.Logging.Common" Version="1.6.0" />
-    <Reference Include="System.Net.Http" />
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <!-- Don't reference unused System assemblies -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="Serilog" Version="2.6.0" />
-    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.1.1" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
- 
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.Sinks.Splunk" Version="3.3.0" />
+  </ItemGroup>
 </Project>

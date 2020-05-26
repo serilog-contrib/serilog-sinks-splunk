@@ -1,7 +1,4 @@
-﻿#if UDP
-
-
-// Copyright 2016 Serilog Contributors
+﻿// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,24 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
+using System;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
 
 namespace Serilog.Sinks.Splunk
 {
     /// <summary>
     /// A sink that logs to Splunk over UDP
-    /// </summary>
+    /// </summary>r
     public class UdpSink : ILogEventSink, IDisposable
     {
-        Socket _socket;
-        readonly ITextFormatter _formatter;
+        private Socket _socket;
+        private readonly ITextFormatter _formatter;
+        private bool disposedValue = false;
 
         /// <summary>
         /// Creates an instance of the Splunk UDP Sink.
@@ -68,32 +65,6 @@ namespace Serilog.Sinks.Splunk
             _socket.Connect(connectionInfo.Host, connectionInfo.Port);
         }
 
-        /// <summary>
-        /// Creates an instance of the Splunk UDP Sink
-        /// </summary>
-        /// <param name="host">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
-        /// <param name="formatProvider">Optional format provider</param>
-        /// <param name="renderTemplate">If true, the message template is rendered</param>
-        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
-        public UdpSink(string host, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
-            : this(new SplunkUdpSinkConnectionInfo(host, port), formatProvider, renderTemplate)
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the Splunk UDP Sink
-        /// </summary>
-        /// <param name="hostAddress">The Splunk Host</param>
-        /// <param name="port">The UDP port configured in Splunk</param>
-        /// <param name="formatProvider">Optional format provider</param>
-        /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        [Obsolete("Use the overload accepting a connection info object instead. This overload will be removed.", false)]
-        public UdpSink(IPAddress hostAddress, int port, IFormatProvider formatProvider = null, bool renderTemplate = true)
-            : this(new SplunkUdpSinkConnectionInfo(hostAddress, port), formatProvider, renderTemplate)
-        {
-        }
-
         private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
         {
             return new SplunkJsonFormatter(renderTemplate, formatProvider);
@@ -111,50 +82,26 @@ namespace Serilog.Sinks.Splunk
         }
 
         /// <inheritdoc/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _socket?.Close();
+                    _socket?.Dispose();
+                    _socket = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
-            _socket?.Close();
-            _socket?.Dispose();
-            _socket = null;
-        }
-    }
-
-    /// <summary>
-    /// Defines connection info used to connect against Splunk
-    /// using UDP.
-    /// </summary>
-    public class SplunkUdpSinkConnectionInfo
-    {
-        /// <summary>
-        /// Splunk host.
-        /// </summary>
-        public IPAddress Host { get; }
-
-        /// <summary>
-        /// Splunk port.
-        /// </summary>
-        public int Port { get; }
-
-        /// <summary>
-        /// Creates an instance of <see cref="SplunkUdpSinkConnectionInfo"/> used
-        /// for defining connection info for connecting using UDP against Splunk.
-        /// </summary>
-        /// <param name="host">Splunk host.</param>
-        /// <param name="port">Splunk UDP port.</param>
-        public SplunkUdpSinkConnectionInfo(string host, int port) : this(IPAddress.Parse(host), port) { }
-
-        /// <summary>
-        /// Creates an instance of <see cref="SplunkUdpSinkConnectionInfo"/> used
-        /// for defining connection info for connecting using UDP against Splunk.
-        /// </summary>
-        /// <param name="host">Splunk host.</param>
-        /// <param name="port">Splunk UDP port.</param>
-        public SplunkUdpSinkConnectionInfo(IPAddress host, int port)
-        {
-            Host = host;
-            Port = port;
+            Dispose(true);
         }
     }
 }
 
-#endif
