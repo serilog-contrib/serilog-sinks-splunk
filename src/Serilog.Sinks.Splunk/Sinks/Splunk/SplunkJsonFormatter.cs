@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Serilog.Events;
+using Serilog.Formatting;
+using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Serilog.Events;
-using Serilog.Formatting;
-using Serilog.Formatting.Json;
 
 namespace Serilog.Sinks.Splunk
 {
@@ -63,38 +63,8 @@ namespace Serilog.Sinks.Splunk
             string sourceType,
             string host,
             string index)
+            : this(renderTemplate, formatProvider, source, sourceType, host, index, null)
         {
-            _renderTemplate = renderTemplate;
-            _formatProvider = formatProvider;
-
-            var suffixWriter = new StringWriter();
-            suffixWriter.Write("}"); // Terminates "event"
-
-            if (!string.IsNullOrWhiteSpace(source))
-            {
-                suffixWriter.Write(",\"source\":");
-                JsonValueFormatter.WriteQuotedJsonString(source, suffixWriter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(sourceType))
-            {
-                suffixWriter.Write(",\"sourcetype\":");
-                JsonValueFormatter.WriteQuotedJsonString(sourceType, suffixWriter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(host))
-            {
-                suffixWriter.Write(",\"host\":");
-                JsonValueFormatter.WriteQuotedJsonString(host, suffixWriter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(index))
-            {
-                suffixWriter.Write(",\"index\":");
-                JsonValueFormatter.WriteQuotedJsonString(index, suffixWriter);
-            }
-            suffixWriter.Write('}'); // Terminates the payload
-            _suffix = suffixWriter.ToString();
         }
 
         /// <summary>
@@ -119,63 +89,65 @@ namespace Serilog.Sinks.Splunk
             _renderTemplate = renderTemplate;
             _formatProvider = formatProvider;
 
-            var suffixWriter = new StringWriter();
-            suffixWriter.Write("}"); // Terminates "event"
+            using (var suffixWriter = new StringWriter())
+            {
+                suffixWriter.Write("}"); // Terminates "event"
 
-            if (!string.IsNullOrWhiteSpace(source))
-            {
-                suffixWriter.Write(",\"source\":");
-                JsonValueFormatter.WriteQuotedJsonString(source, suffixWriter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(sourceType))
-            {
-                suffixWriter.Write(",\"sourcetype\":");
-                JsonValueFormatter.WriteQuotedJsonString(sourceType, suffixWriter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(host))
-            {
-                suffixWriter.Write(",\"host\":");
-                JsonValueFormatter.WriteQuotedJsonString(host, suffixWriter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(index))
-            {
-                suffixWriter.Write(",\"index\":");
-                JsonValueFormatter.WriteQuotedJsonString(index, suffixWriter);
-            }
-            if (customFields != null)
-            {
-                // "fields": {"club":"glee", "wins",["regionals","nationals"]}
-                suffixWriter.Write(",\"fields\": {");
-                var lastFieldIndex = customFields.CustomFieldList.Count;
-                foreach (var customField in customFields.CustomFieldList)
+                if (!string.IsNullOrWhiteSpace(source))
                 {
-                    if (customField.ValueList.Count == 1)
-                    {
-                        //only one value e.g "club":"glee",       
-                        suffixWriter.Write($"\"{customField.Name}\":");
-                        suffixWriter.Write($"\"{customField.ValueList[0]}\"");
-                    }
-                    else
-                    {
-                        //array of values e.g "wins",["regionals","nationals"]
-                        suffixWriter.Write($"\"{customField.Name}\":[");
-                        var lastArrIndex = customField.ValueList.Count;
-                        foreach (var cf in customField.ValueList)
-                        {
-                            suffixWriter.Write($"\"{cf}\"");
-                            //Different behaviour if it is the last one
-                            suffixWriter.Write(--lastArrIndex > 0 ? "," : "]");
-                        }
-                    }
-                    suffixWriter.Write(--lastFieldIndex > 0 ? "," : "}");
+                    suffixWriter.Write(",\"source\":");
+                    JsonValueFormatter.WriteQuotedJsonString(source, suffixWriter);
                 }
-               
+
+                if (!string.IsNullOrWhiteSpace(sourceType))
+                {
+                    suffixWriter.Write(",\"sourcetype\":");
+                    JsonValueFormatter.WriteQuotedJsonString(sourceType, suffixWriter);
+                }
+
+                if (!string.IsNullOrWhiteSpace(host))
+                {
+                    suffixWriter.Write(",\"host\":");
+                    JsonValueFormatter.WriteQuotedJsonString(host, suffixWriter);
+                }
+
+                if (!string.IsNullOrWhiteSpace(index))
+                {
+                    suffixWriter.Write(",\"index\":");
+                    JsonValueFormatter.WriteQuotedJsonString(index, suffixWriter);
+                }
+                if (customFields != null)
+                {
+                    // "fields": {"club":"glee", "wins",["regionals","nationals"]}
+                    suffixWriter.Write(",\"fields\": {");
+                    var lastFieldIndex = customFields.CustomFieldList.Count;
+                    foreach (var customField in customFields.CustomFieldList)
+                    {
+                        if (customField.ValueList.Count == 1)
+                        {
+                            //only one value e.g "club":"glee",       
+                            suffixWriter.Write($"\"{customField.Name}\":");
+                            suffixWriter.Write($"\"{customField.ValueList[0]}\"");
+                        }
+                        else
+                        {
+                            //array of values e.g "wins",["regionals","nationals"]
+                            suffixWriter.Write($"\"{customField.Name}\":[");
+                            var lastArrIndex = customField.ValueList.Count;
+                            foreach (var cf in customField.ValueList)
+                            {
+                                suffixWriter.Write($"\"{cf}\"");
+                                //Different behaviour if it is the last one
+                                suffixWriter.Write(--lastArrIndex > 0 ? "," : "]");
+                            }
+                        }
+                        suffixWriter.Write(--lastFieldIndex > 0 ? "," : "}");
+                    }
+
+                }
+                suffixWriter.Write('}'); // Terminates the payload
+                _suffix = suffixWriter.ToString();
             }
-            suffixWriter.Write('}'); // Terminates the payload
-            _suffix = suffixWriter.ToString();
         }
 
         /// <inheritdoc/>
