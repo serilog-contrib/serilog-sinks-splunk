@@ -24,7 +24,7 @@ namespace Serilog.Sinks.Splunk
 {
     /// <summary>
     /// A sink that logs to Splunk over UDP
-    /// </summary>r
+    /// </summary>
     public class UdpSink : ILogEventSink, IDisposable
     {
         private Socket _socket;
