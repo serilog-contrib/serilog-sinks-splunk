@@ -27,8 +27,9 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class UdpSink : ILogEventSink, IDisposable
     {
-        private Socket _socket;
+        private readonly SplunkUdpSinkConnectionInfo _connectionInfo;
         private readonly ITextFormatter _formatter;
+        private Socket _socket;
         private bool disposedValue = false;
 
         /// <summary>
@@ -37,13 +38,9 @@ namespace Serilog.Sinks.Splunk
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        public UdpSink(
-            SplunkUdpSinkConnectionInfo connectionInfo,
-            IFormatProvider formatProvider = null,
-            bool renderTemplate = true)
+        public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, IFormatProvider formatProvider = null, bool renderTemplate = true)
+            : this(connectionInfo, CreateDefaultFormatter(formatProvider, renderTemplate))
         {
-            Connect(connectionInfo);
-            _formatter = CreateDefaultFormatter(formatProvider, renderTemplate);
         }
 
         /// <summary>
@@ -51,34 +48,11 @@ namespace Serilog.Sinks.Splunk
         /// </summary>
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
-        public UdpSink(
-            SplunkUdpSinkConnectionInfo connectionInfo,
-            ITextFormatter formatter)
+        public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, ITextFormatter formatter)
         {
-            Connect(connectionInfo);
+            _connectionInfo = connectionInfo;
             _formatter = formatter;
-        }
-
-        private void Connect(SplunkUdpSinkConnectionInfo connectionInfo)
-        {
-            _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
-            _socket.Connect(connectionInfo.Host, connectionInfo.Port);
-        }
-
-        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
-        {
-            return new SplunkJsonFormatter(renderTemplate, formatProvider);
-        }
-
-        /// <inheritdoc/>
-        public void Emit(LogEvent logEvent)
-        {
-            var sb = new StringBuilder();
-
-            using (var sw = new StringWriter(sb))
-                _formatter.Format(logEvent, sw);
-
-            _socket.Send(Encoding.UTF8.GetBytes(sb.ToString()));
+            Connect();
         }
 
         /// <inheritdoc/>
@@ -88,9 +62,7 @@ namespace Serilog.Sinks.Splunk
             {
                 if (disposing)
                 {
-                    _socket?.Close();
-                    _socket?.Dispose();
-                    _socket = null;
+                    DisposeSocket();
                 }
 
                 disposedValue = true;
@@ -101,6 +73,50 @@ namespace Serilog.Sinks.Splunk
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        /// <inheritdoc/>
+        public void Emit(LogEvent logEvent)
+        {
+            byte[] data = Convert(logEvent);
+
+            try
+            {
+                _socket.Send(data);
+            }
+            catch (SocketException)
+            {
+                // Try to reconnect and log
+                DisposeSocket();
+                Connect();
+                _socket.Send(data);
+            }
+        }
+
+        private byte[] Convert(LogEvent logEvent)
+        {
+            var sb = new StringBuilder();
+            using (var sw = new StringWriter(sb))
+                _formatter.Format(logEvent, sw);
+            return Encoding.UTF8.GetBytes(sb.ToString());
+        }
+
+        private void Connect()
+        {
+            _socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
+            _socket.Connect(_connectionInfo.Host, _connectionInfo.Port);
+        }
+
+        private void DisposeSocket()
+        {
+            _socket?.Close();
+            _socket?.Dispose();
+            _socket = null;
+        }
+
+        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
+        {
+            return new SplunkJsonFormatter(renderTemplate, formatProvider);
         }
     }
 }
