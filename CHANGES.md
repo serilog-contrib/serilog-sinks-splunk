@@ -1,3 +1,8 @@
+## 3.4.0
+- [#126](https://github.com/serilog/serilog-sinks-splunk/pull/126)
+- [#122](https://github.com/serilog/serilog-sinks-splunk/pull/122)
+- [#121](https://github.com/serilog/serilog-sinks-splunk/pull/121)
+
 ## 3.3.0
 - Correct issues relating to #76 and signing.
 - Bump version to 3.3 for core Sink.
