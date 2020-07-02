@@ -20,7 +20,7 @@ for:
 deploy:
   - provider: NuGet
     api_key:
-      secure: hHbvIML/EUrC0+eQvNS0oTd0++/EJHLGUrfvcvY1LBPY4FKRgAOkkq5sWygTNHY7
+      secure: K3/810hkTO6rd2AEHVkUQAadjGmDREus9k96QHu6hxrA1/wRTuAJemHMKtVVgIvf
     skip_symbols: true
     on:
       branch: /^(master|dev)$/
