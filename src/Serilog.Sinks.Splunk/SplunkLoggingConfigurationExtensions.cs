@@ -49,6 +49,7 @@ namespace Serilog
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <returns></returns>
@@ -66,6 +67,7 @@ namespace Serilog
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
+            int? queueLimit = null,
             HttpMessageHandler messageHandler = null, 
             LoggingLevelSwitch levelSwitch = null)
         {
@@ -81,6 +83,7 @@ namespace Serilog
                 index,
                 batchIntervalInSeconds,
                 batchSizeLimit,
+                queueLimit,
                 formatProvider,
                 renderTemplate,
                 messageHandler);
@@ -97,9 +100,10 @@ namespace Serilog
         /// <param name="jsonFormatter">The text formatter used to render log events into a JSON format for consumption by Splunk</param>
         /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-        
+
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <returns></returns>
@@ -112,6 +116,7 @@ namespace Serilog
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
+            int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null)
         {
@@ -124,6 +129,7 @@ namespace Serilog
                 uriPath,
                 batchIntervalInSeconds,
                 batchSizeLimit,
+                queueLimit,
                 jsonFormatter,
                 messageHandler);
 
@@ -147,6 +153,7 @@ namespace Serilog
         /// <param name="renderTemplate">If ture, the message template will be rendered</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
@@ -166,6 +173,7 @@ namespace Serilog
             bool renderTemplate = true,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
+            int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null)
         {
@@ -182,6 +190,7 @@ namespace Serilog
                 fields,
                 batchIntervalInSeconds,
                 batchSizeLimit,
+                queueLimit,
                 formatProvider,
                 renderTemplate,
                 messageHandler
