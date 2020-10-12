@@ -31,6 +31,8 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class EventCollectorSink : PeriodicBatchingSink
     {
+        private const int NoQueueLimit = -1;
+
         private readonly string _splunkHost;
         private readonly string _uriPath;
         private readonly ITextFormatter _jsonFormatter;
@@ -56,11 +58,13 @@ namespace Serilog.Sinks.Splunk
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
             int batchIntervalInSeconds = 5,
             int batchSizeLimit = 100,
+            int? queueLimit = null,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true)
             : this(
@@ -69,6 +73,7 @@ namespace Serilog.Sinks.Splunk
                 null, null, null, null, null,
                 batchIntervalInSeconds,
                 batchSizeLimit,
+                queueLimit,
                 formatProvider,
                 renderTemplate)
         {
@@ -84,6 +89,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="index">The Splunk index to log to</param>
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
@@ -99,6 +105,7 @@ namespace Serilog.Sinks.Splunk
             string index,
             int batchIntervalInSeconds,
             int batchSizeLimit,
+            int? queueLimit,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             HttpMessageHandler messageHandler = null)
@@ -108,6 +115,7 @@ namespace Serilog.Sinks.Splunk
                 uriPath,
                 batchIntervalInSeconds,
                 batchSizeLimit,
+                queueLimit,
                 new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index),
                 messageHandler)
         {
@@ -120,6 +128,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
         /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
@@ -140,6 +149,7 @@ namespace Serilog.Sinks.Splunk
             CustomFields fields,
             int batchIntervalInSeconds,
             int batchSizeLimit,
+            int? queueLimit,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             HttpMessageHandler messageHandler = null)
@@ -150,6 +160,7 @@ namespace Serilog.Sinks.Splunk
                 uriPath,
                 batchIntervalInSeconds,
                 batchSizeLimit,
+                queueLimit,
                 new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index, fields),
                 messageHandler)
         {
@@ -163,6 +174,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="batchSizeLimit">The size of the batch when sending to the event collector</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that batching should occur</param>
+        /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="jsonFormatter">The text formatter used to render log events into a JSON format for consumption by Splunk</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         public EventCollectorSink(
@@ -171,9 +183,10 @@ namespace Serilog.Sinks.Splunk
             string uriPath,
             int batchIntervalInSeconds,
             int batchSizeLimit,
+            int? queueLimit,
             ITextFormatter jsonFormatter,
             HttpMessageHandler messageHandler = null)
-            : base(batchSizeLimit, TimeSpan.FromSeconds(batchIntervalInSeconds))
+            : base(batchSizeLimit, TimeSpan.FromSeconds(batchIntervalInSeconds), queueLimit ?? NoQueueLimit)
         {
             _uriPath = uriPath;
             _splunkHost = splunkHost;
