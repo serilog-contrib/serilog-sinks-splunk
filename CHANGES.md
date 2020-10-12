@@ -1,3 +1,6 @@
+## 3.5.0
+- [#134](https://github.com/serilog/serilog-sinks-splunk/pull/134)
+
 ## 3.4.0
 - [#126](https://github.com/serilog/serilog-sinks-splunk/pull/126)
 - [#122](https://github.com/serilog/serilog-sinks-splunk/pull/122)
