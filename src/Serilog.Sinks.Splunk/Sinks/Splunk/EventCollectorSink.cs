@@ -31,7 +31,7 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class EventCollectorSink : PeriodicBatchingSink
     {
-        private const int NoQueueLimit = -1;
+        private const int DefaultQueueLimit = 100000;
 
         private readonly string _splunkHost;
         private readonly string _uriPath;
@@ -186,7 +186,7 @@ namespace Serilog.Sinks.Splunk
             int? queueLimit,
             ITextFormatter jsonFormatter,
             HttpMessageHandler messageHandler = null)
-            : base(batchSizeLimit, TimeSpan.FromSeconds(batchIntervalInSeconds), queueLimit ?? NoQueueLimit)
+            : base(batchSizeLimit, TimeSpan.FromSeconds(batchIntervalInSeconds), queueLimit ?? DefaultQueueLimit)
         {
             _uriPath = uriPath;
             _splunkHost = splunkHost;
