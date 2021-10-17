@@ -36,20 +36,20 @@ namespace Serilog.Sinks.Splunk
         public int Port { get; }
 
         ///<summary>
-        /// The maximum number of events to post in a single batch. Defaults to: 50.
+        /// The maximum number of events to post in a single batch. Defaults to: 100.
         /// </summary>
-        public int BatchPostingLimit { get; set; }
+        public int BatchPostingLimit { get; set; } = 100;
 
 
         ///<summary>
-        /// The time to wait between checking for event batches. Defaults to 2 seconds.
+        /// The time to wait between checking for event batches. Defaults to 10 seconds.
         /// </summary>
-        public TimeSpan Period { get; set; }
+        public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(10);
 
 
         /// <summary>
         /// The maximum number of events that will be held in-memory while waiting to ship them to
-        /// Elasticsearch. Beyond this limit, events will be dropped. The default is 100,000. Has no effect on
+        /// Splunk. Beyond this limit, events will be dropped. The default is 100,000. Has no effect on
         /// durable log shipping.
         /// </summary>
         public int QueueSizeLimit

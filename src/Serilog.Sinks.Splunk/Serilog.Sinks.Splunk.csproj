@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <Description>The Splunk Sink for Serilog</Description>
-    <VersionPrefix>3.6.0</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
     <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Serilog.Sinks.Splunk</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk</PackageId>
     <PackageTags>serilog;splunk;logging;event;collector;hec</PackageTags>
-    <PackageIconUrl>http://serilog.net/images/serilog-sink-nuget.png</PackageIconUrl>
+    <icon>http://serilog.net/images/serilog-sink-nuget.png</icon>
     <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <license>http://www.apache.org/licenses/LICENSE-2.0</license>
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
@@ -19,7 +19,6 @@
     <SignAssembly>true</SignAssembly>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.10.0" />
