@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net;
 
 namespace Serilog.Sinks.Splunk
@@ -22,6 +23,8 @@ namespace Serilog.Sinks.Splunk
     /// </summary>
     public class SplunkUdpSinkConnectionInfo
     {
+        private int _queueSizeLimit;
+
         /// <summary>
         /// Splunk host.
         /// </summary>
@@ -32,6 +35,33 @@ namespace Serilog.Sinks.Splunk
         /// </summary>
         public int Port { get; }
 
+        ///<summary>
+        /// The maximum number of events to post in a single batch. Defaults to: 50.
+        /// </summary>
+        public int BatchPostingLimit { get; set; }
+
+
+        ///<summary>
+        /// The time to wait between checking for event batches. Defaults to 2 seconds.
+        /// </summary>
+        public TimeSpan Period { get; set; }
+
+
+        /// <summary>
+        /// The maximum number of events that will be held in-memory while waiting to ship them to
+        /// Elasticsearch. Beyond this limit, events will be dropped. The default is 100,000. Has no effect on
+        /// durable log shipping.
+        /// </summary>
+        public int QueueSizeLimit
+        {
+            get { return _queueSizeLimit; }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(QueueSizeLimit), "Queue size limit must be non-zero.");
+                _queueSizeLimit = value;
+            }
+        }
         /// <summary>
         /// Creates an instance of <see cref="SplunkUdpSinkConnectionInfo"/> used
         /// for defining connection info for connecting using UDP against Splunk.

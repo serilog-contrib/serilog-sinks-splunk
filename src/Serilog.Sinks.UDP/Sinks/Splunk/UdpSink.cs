@@ -16,21 +16,23 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.Splunk
 {
     /// <summary>
     /// A sink that logs to Splunk over UDP
     /// </summary>
-    public class UdpSink : ILogEventSink, IDisposable
+    public class UdpSink : PeriodicBatchingSink
     {
         private readonly SplunkUdpSinkConnectionInfo _connectionInfo;
         private readonly ITextFormatter _formatter;
         private Socket _socket;
-        private bool disposedValue = false;
 
         /// <summary>
         /// Creates an instance of the Splunk UDP Sink.
@@ -48,51 +50,15 @@ namespace Serilog.Sinks.Splunk
         /// </summary>
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
-        public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, ITextFormatter formatter)
+        public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, ITextFormatter formatter) 
+            : base(connectionInfo.BatchPostingLimit, connectionInfo.Period, connectionInfo.QueueSizeLimit)
         {
             _connectionInfo = connectionInfo;
             _formatter = formatter;
             Connect();
         }
-
-        /// <inheritdoc/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    DisposeSocket();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        /// <inheritdoc/>
-        public void Emit(LogEvent logEvent)
-        {
-            byte[] data = Convert(logEvent);
-
-            try
-            {
-                _socket.Send(data);
-            }
-            catch (SocketException)
-            {
-                // Try to reconnect and log
-                DisposeSocket();
-                Connect();
-                _socket.Send(data);
-            }
-        }
-
+        
+        
         private byte[] Convert(LogEvent logEvent)
         {
             var sb = new StringBuilder();
@@ -107,12 +73,50 @@ namespace Serilog.Sinks.Splunk
             _socket.Connect(_connectionInfo.Host, _connectionInfo.Port);
         }
 
+
+        protected override void Dispose(bool disposing)
+        {
+            DisposeSocket();
+
+            base.Dispose();
+        }
+
         private void DisposeSocket()
         {
             _socket?.Close();
             _socket?.Dispose();
             _socket = null;
         }
+
+        /// <summary>
+        /// Emit a batch of log events, running to completion synchronously.
+        /// </summary>
+        /// <param name="events">The events to emit.</param>
+        /// <remarks>
+        /// Override either <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatch(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />
+        ///  or <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatchAsync(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />,
+        /// not both.
+        /// </remarks>
+        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        {
+            foreach (var logEvent in events)
+            {
+                byte[] data = Convert(logEvent);
+
+                try
+                {
+                    _socket.Send(data);
+                }
+                catch (SocketException)
+                {
+                    // Try to reconnect and log
+                    DisposeSocket();
+                    Connect();
+                    _socket.Send(data);
+                }
+            }
+        }
+
 
         private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
         {
