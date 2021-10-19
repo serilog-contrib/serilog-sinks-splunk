@@ -11,6 +11,7 @@ done
 
 for path in test/*.Tests/*.csproj; do
     dotnet test -f netcoreapp2.1  -c Release ${path}
+    dotnet test -f netcoreapp2.0  -c Release ${path}
 done
 
 dotnet build -f net5.0 -c Release sample/Sample/Sample.csproj
