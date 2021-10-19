@@ -9,7 +9,9 @@
     <AssemblyName>Serilog.Sinks.Splunk</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk</PackageId>
     <PackageTags>serilog;splunk;logging;event;collector;hec</PackageTags>
+    <icon>http://serilog.net/images/serilog-sink-nuget.png</icon>
     <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
+    <license>http://www.apache.org/licenses/LICENSE-2.0</license>
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
