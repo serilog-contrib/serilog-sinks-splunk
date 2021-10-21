@@ -36,15 +36,15 @@ namespace Serilog.Sinks.Splunk
         public int Port { get; }
 
         ///<summary>
-        /// The maximum number of events to post in a single batch. Defaults to: 50.
+        /// The maximum number of events to post in a single batch. Defaults to: 100.
         /// </summary>
-        public int BatchPostingLimit { get; set; }
+        public int BatchPostingLimit { get; set; } = 100;
 
 
         ///<summary>
         /// The time to wait between checking for event batches. Defaults to 2 seconds.
         /// </summary>
-        public TimeSpan Period { get; set; }
+        public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(2);
 
 
         /// <summary>
