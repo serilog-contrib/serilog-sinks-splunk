@@ -49,7 +49,7 @@ namespace Serilog.Sinks.Splunk
 
         /// <summary>
         /// The maximum number of events that will be held in-memory while waiting to ship them to
-        /// Elasticsearch. Beyond this limit, events will be dropped. The default is 100,000. Has no effect on
+        /// Splunk. Beyond this limit, events will be dropped. The default is 100,000. Has no effect on
         /// durable log shipping.
         /// </summary>
         public int QueueSizeLimit
