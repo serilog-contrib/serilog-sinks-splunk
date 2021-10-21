@@ -42,9 +42,9 @@ namespace Serilog.Sinks.Splunk
 
 
         ///<summary>
-        /// The time to wait between checking for event batches. Defaults to 2 seconds.
+        /// The time to wait between checking for event batches. Defaults to 10 seconds.
         /// </summary>
-        public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(2);
+        public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(10);
 
 
         /// <summary>
