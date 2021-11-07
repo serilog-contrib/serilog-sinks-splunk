@@ -1,8 +1,8 @@
 version: '{build}'
 skip_tags: true
 image:
-  - Visual Studio 2017
-  - Ubuntu
+  - Visual Studio 2019
+  - Ubuntu2004
 configuration:
   - Release
 build_script:
@@ -14,13 +14,13 @@ for:
 -
   matrix:
     only:
-      - image: Ubuntu
+      - image: Ubuntu2004
   build_script:
   - sh build.sh
 deploy:
   - provider: NuGet
     api_key:
-      secure: K3/810hkTO6rd2AEHVkUQAadjGmDREus9k96QHu6hxrA1/wRTuAJemHMKtVVgIvf
+      secure: gjQNjT9fJBA2Bx+TCFnO0SrgjMDe3Wa99Dj0M8ADwAXeT8LIU4ECqjlzvYsapCYK
     skip_symbols: true
     on:
       branch: /^(master|dev)$/
