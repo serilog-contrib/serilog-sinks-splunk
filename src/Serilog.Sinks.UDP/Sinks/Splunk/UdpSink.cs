@@ -78,7 +78,7 @@ namespace Serilog.Sinks.Splunk
         {
             DisposeSocket();
 
-            base.Dispose();
+            base.Dispose(true);
         }
 
         private void DisposeSocket()
