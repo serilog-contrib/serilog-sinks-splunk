@@ -198,5 +198,54 @@ namespace Serilog
 
             return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
         }
+
+        /// <summary>
+        ///     Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
+        /// </summary>
+        /// <param name="configuration">The logger config</param>
+        /// <param name="splunkHost">The Splunk host that is configured with an Event Collector</param>
+        /// <param name="eventCollectorToken">The token provided to authenticate to the Splunk Event Collector</param>
+        /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
+        /// <param name="index">The Splunk index to log to</param>
+        /// <param name="source">The source of the event</param>
+        /// <param name="sourceType">The source type of the event</param>
+        /// <param name="host">The host of the event</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
+        /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
+        /// <param name="renderTemplate">If ture, the message template will be rendered</param>
+        /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
+        /// <returns></returns>
+        public static LoggerConfiguration EventCollector(
+            this LoggerAuditSinkConfiguration configuration,
+            string splunkHost,
+            string eventCollectorToken,
+            string uriPath = "services/collector",
+            string source = DefaultSource,
+            string sourceType = DefaultSourceType,
+            string host = DefaultHost,
+            string index = DefaultIndex,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            IFormatProvider formatProvider = null,
+            bool renderTemplate = true,
+            HttpMessageHandler messageHandler = null,
+            LoggingLevelSwitch levelSwitch = null)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            var eventCollectorSink = new EventCollectorAuditSink(
+                splunkHost,
+                eventCollectorToken,
+                uriPath,
+                source,
+                sourceType,
+                host,
+                index,
+                formatProvider,
+                renderTemplate,
+                messageHandler);
+
+            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
+        }
     }
 }
