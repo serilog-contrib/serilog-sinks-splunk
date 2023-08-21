@@ -18,6 +18,7 @@
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
