@@ -19,6 +19,7 @@ using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
+using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
 
 namespace Serilog
@@ -81,14 +82,12 @@ namespace Serilog
                 sourceType, 
                 host, 
                 index,
-                batchIntervalInSeconds,
-                batchSizeLimit,
-                queueLimit,
                 formatProvider,
                 renderTemplate,
                 messageHandler);
 
-            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
+            return configuration.BuildPeriodicBatchingSink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch,
+                batchIntervalInSeconds, batchSizeLimit, queueLimit);
         }
 
         /// <summary>
@@ -127,13 +126,12 @@ namespace Serilog
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
-                batchIntervalInSeconds,
-                batchSizeLimit,
-                queueLimit,
+                
                 jsonFormatter,
                 messageHandler);
 
-            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
+            return configuration.BuildPeriodicBatchingSink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch,
+                batchIntervalInSeconds, batchSizeLimit, queueLimit);
         }
 
 
@@ -188,15 +186,30 @@ namespace Serilog
                 host,
                 index,
                 fields,
-                batchIntervalInSeconds,
-                batchSizeLimit,
-                queueLimit,
                 formatProvider,
                 renderTemplate,
                 messageHandler
                 );
 
-            return configuration.Sink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch);
+            return configuration.BuildPeriodicBatchingSink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch,
+                batchIntervalInSeconds, batchSizeLimit, queueLimit);
+        }
+        
+        private static LoggerConfiguration BuildPeriodicBatchingSink(this LoggerSinkConfiguration configuration,
+            EventCollectorSink eventCollectorSink,
+            LogEventLevel restrictedToMinimumLevel,
+            LoggingLevelSwitch levelSwitch = null,
+            int batchIntervalInSeconds = 2,
+            int batchSizeLimit = 100,
+            int? queueLimit = EventCollectorSink.DefaultQueueLimit)
+        {
+            var periodicBatchingOptions = new PeriodicBatchingSinkOptions
+            {
+                Period = TimeSpan.FromSeconds(batchIntervalInSeconds), QueueLimit = queueLimit, BatchSizeLimit = batchSizeLimit
+            };
+            var periodicBatchSink = new PeriodicBatchingSink(eventCollectorSink, periodicBatchingOptions);
+
+            return configuration.Sink(periodicBatchSink, restrictedToMinimumLevel, levelSwitch);
         }
     }
 }

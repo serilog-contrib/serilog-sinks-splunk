@@ -4,7 +4,7 @@
     <Description>The Splunk Sink for Serilog</Description>
     <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
-    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net6.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Serilog.Sinks.Splunk</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk</PackageId>
@@ -18,11 +18,12 @@
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>Serilog</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="4.0.0" />
   </ItemGroup>
 
 </Project>
