@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Serilog.Core;
+using Serilog.Debugging;
+using Serilog.Events;
+using Serilog.Formatting;
+using Serilog.Sinks.PeriodicBatching;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,17 +24,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Serilog.Debugging;
-using Serilog.Events;
-using Serilog.Formatting;
-using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.Splunk
 {
     /// <summary>
     /// A sink to log to the Event Collector available in Splunk 6.3
     /// </summary>
-    public class EventCollectorSink : PeriodicBatchingSink
+    public class EventCollectorSink : ILogEventSink, IDisposable, IBatchedLogEventSink
     {
         private const int DefaultQueueLimit = 100000;
 
@@ -37,7 +38,7 @@ namespace Serilog.Sinks.Splunk
         private readonly string _uriPath;
         private readonly ITextFormatter _jsonFormatter;
         private readonly EventCollectorClient _httpClient;
-
+        private PeriodicBatchingSink _periodicBatchingSink;
 
         /// <summary>
         /// Taken from Splunk.Logging.Common
@@ -186,8 +187,8 @@ namespace Serilog.Sinks.Splunk
             int? queueLimit,
             ITextFormatter jsonFormatter,
             HttpMessageHandler messageHandler = null)
-            : base(batchSizeLimit, TimeSpan.FromSeconds(batchIntervalInSeconds), queueLimit ?? DefaultQueueLimit)
         {
+            _periodicBatchingSink = new PeriodicBatchingSink(this, new PeriodicBatchingSinkOptions { BatchSizeLimit = batchSizeLimit, Period = TimeSpan.FromSeconds(batchIntervalInSeconds), QueueLimit = queueLimit ?? DefaultQueueLimit });
             _uriPath = uriPath;
             _splunkHost = splunkHost;
             _jsonFormatter = jsonFormatter;
@@ -197,14 +198,12 @@ namespace Serilog.Sinks.Splunk
                 : new EventCollectorClient(eventCollectorToken);
         }
 
+
         /// <summary>
         ///     Emit a batch of log events, running asynchronously.
         /// </summary>
         /// <param name="events">The events to emit.</param>
-        /// <remarks>
-        ///     Override either <see cref="PeriodicBatchingSink.EmitBatch" /> or <see cref="PeriodicBatchingSink.EmitBatchAsync" />, not both.
-        /// </remarks>
-        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        public async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
             var allEvents = new StringWriter();
 
@@ -231,6 +230,39 @@ namespace Serilog.Sinks.Splunk
                     // EnsureSuccessStatusCode will throw an exception and the PeriodicBatchingSink will catch/log the exception and retry the batch.
                     response.EnsureSuccessStatusCode();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Emit a log event to the sink
+        /// </summary>
+        /// <param name="logEvent"></param>
+        public void Emit(LogEvent logEvent)
+        {
+            _periodicBatchingSink.Emit(logEvent);
+        }
+
+
+        /// <summary>
+        /// Nothing to do when the batch is empty
+        /// </summary>
+        /// <returns></returns>
+        public Task OnEmptyBatchAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            // don't recursively call Dispose()
+            if (_periodicBatchingSink != null)
+            {
+                var periodicBatchingSink = _periodicBatchingSink;
+                _periodicBatchingSink = null;
+                periodicBatchingSink.Dispose();
             }
         }
     }
