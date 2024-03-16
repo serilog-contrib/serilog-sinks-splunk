@@ -10,6 +10,7 @@ using System.IO;
 using Xunit;
 namespace Serilog.Sinks.Splunk.Tests
 {
+
     public class SplunkJsonFormatterTests
     {
         void AssertValidJson(Action<ILogger> act,
