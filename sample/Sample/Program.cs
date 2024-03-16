@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Sinks.Splunk;
-using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Sample
 {
@@ -18,7 +18,7 @@ namespace Sample
         public static void Main(string[] args)
         {
             // Bootstrap a simple logger.
-            var logger  = new LoggerConfiguration()
+            var logger = new LoggerConfiguration()
             .WriteTo.Console()
             .CreateLogger();
 
@@ -94,7 +94,6 @@ namespace Sample
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
-                .AddUserSecrets<Program>()
                 .Build();
 
             Log.Logger = new LoggerConfiguration()

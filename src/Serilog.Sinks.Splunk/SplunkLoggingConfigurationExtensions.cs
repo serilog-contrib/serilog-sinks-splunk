@@ -13,14 +13,15 @@
 // limitations under the License.
 
 
-using System;
-using System.Net.Http;
 using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
+using Serilog.Formatting.Json;
 using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
+using System;
+using System.Net.Http;
 
 namespace Serilog
 {
@@ -64,25 +65,33 @@ namespace Serilog
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
             int? queueLimit = null,
-            HttpMessageHandler messageHandler = null, 
+            HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
+            var batchingOptions = new PeriodicBatchingSinkOptions
+            {
+                BatchSizeLimit = batchSizeLimit,
+                Period = TimeSpan.FromSeconds(batchIntervalInSeconds),
+                EagerlyEmitFirstEvent = true,
+                QueueLimit = queueLimit
+            };
+
             var eventCollectorSink = new EventCollectorSink(
                 splunkHost,
-                eventCollectorToken, 
+                eventCollectorToken,
                 uriPath,
-                source, 
-                sourceType, 
-                host, 
+                source,
+                sourceType,
+                host,
                 index,
                 formatProvider,
                 renderTemplate,
                 messageHandler);
+            var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
 
-            return configuration.BuildPeriodicBatchingSink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch,
-                batchIntervalInSeconds, batchSizeLimit, queueLimit);
+            return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
         }
 
         /// <summary>
@@ -117,16 +126,25 @@ namespace Serilog
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (jsonFormatter == null) throw new ArgumentNullException(nameof(jsonFormatter));
 
+
+            var batchingOptions = new PeriodicBatchingSinkOptions
+            {
+                BatchSizeLimit = batchSizeLimit,
+                Period = TimeSpan.FromSeconds(batchIntervalInSeconds),
+                EagerlyEmitFirstEvent = true,
+                QueueLimit = queueLimit
+            };
+
             var eventCollectorSink = new EventCollectorSink(
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
-                
                 jsonFormatter,
                 messageHandler);
 
-            return configuration.BuildPeriodicBatchingSink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch,
-                batchIntervalInSeconds, batchSizeLimit, queueLimit);
+            var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
+
+            return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
         }
 
 
@@ -172,39 +190,30 @@ namespace Serilog
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            var eventCollectorSink = new EventCollectorSink(
-                splunkHost,
-                eventCollectorToken,
-                uriPath,
-                source,
-                sourceType,
-                host,
-                index,
-                fields,
-                formatProvider,
-                renderTemplate,
-                messageHandler
-                );
-
-            return configuration.BuildPeriodicBatchingSink(eventCollectorSink, restrictedToMinimumLevel, levelSwitch,
-                batchIntervalInSeconds, batchSizeLimit, queueLimit);
-        }
-        
-        private static LoggerConfiguration BuildPeriodicBatchingSink(this LoggerSinkConfiguration configuration,
-            EventCollectorSink eventCollectorSink,
-            LogEventLevel restrictedToMinimumLevel,
-            LoggingLevelSwitch levelSwitch = null,
-            int batchIntervalInSeconds = 2,
-            int batchSizeLimit = 100,
-            int? queueLimit = EventCollectorSink.DefaultQueueLimit)
-        {
-            var periodicBatchingOptions = new PeriodicBatchingSinkOptions
+            var batchingOptions = new PeriodicBatchingSinkOptions
             {
-                Period = TimeSpan.FromSeconds(batchIntervalInSeconds), QueueLimit = queueLimit, BatchSizeLimit = batchSizeLimit
+                BatchSizeLimit = batchSizeLimit,
+                Period = TimeSpan.FromSeconds(batchIntervalInSeconds),
+                EagerlyEmitFirstEvent = true,
+                QueueLimit = queueLimit
             };
-            var periodicBatchSink = new PeriodicBatchingSink(eventCollectorSink, periodicBatchingOptions);
 
-            return configuration.Sink(periodicBatchSink, restrictedToMinimumLevel, levelSwitch);
+            var eventCollectorSink = new EventCollectorSink(
+               splunkHost,
+               eventCollectorToken,
+               uriPath,
+               source,
+               sourceType,
+               host,
+               index,
+               fields,
+               formatProvider,
+               renderTemplate,
+               messageHandler);
+
+            var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
+
+            return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
         }
     }
 }

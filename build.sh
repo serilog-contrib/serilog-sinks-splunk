@@ -7,11 +7,10 @@ dotnet restore
 for path in src/**/Serilog.Sinks.Splunk.csproj; do
     dotnet build -f netstandard2.0 -c Release ${path}
     dotnet build -f netstandard2.1 -c Release ${path}
-    dotnet build -f net6.0 -c Release ${path}
 done
 
 for path in test/*.Tests/*.csproj; do
-    dotnet test -f net6.0  -c Release ${path}
+    dotnet test -f net8.0  -c Release ${path}
 done
 
-dotnet build -f net6.0 -c Release sample/Sample/Sample.csproj
+dotnet build -f net8.0 -c Release sample/Sample/Sample.csproj
