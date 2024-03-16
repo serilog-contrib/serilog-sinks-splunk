@@ -164,8 +164,11 @@ namespace Serilog.Sinks.Splunk
                 : new EventCollectorClient(eventCollectorToken);
         }
 
-        /// <inheritdoc />
-        public async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        /// <summary>
+        ///     Emit a batch of log events, running asynchronously.
+        /// </summary>
+        /// <param name="events">The events to emit.</param>
+        public virtual async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
             var allEvents = new StringWriter();
 
