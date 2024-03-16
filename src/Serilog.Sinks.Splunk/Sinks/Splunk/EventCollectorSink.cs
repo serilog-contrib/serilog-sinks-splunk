@@ -57,14 +57,14 @@ namespace Serilog.Sinks.Splunk
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
             bool renderMessage = true,
-            int subSecondDecimals = 3)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
             : this(
                 splunkHost,
                 eventCollectorToken,
@@ -72,7 +72,7 @@ namespace Serilog.Sinks.Splunk
                 formatProvider,
                 renderTemplate,
                 renderMessage,
-                subSecondDecimals: subSecondDecimals)
+                subSecondPrecision: subSecondPrecision)
         {
         }
 
@@ -90,7 +90,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -103,12 +103,12 @@ namespace Serilog.Sinks.Splunk
             bool renderTemplate = true,
             bool renderMessage = true,
             HttpMessageHandler messageHandler = null,
-            int subSecondDecimals = 3)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
             : this(
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
-                new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, subSecondDecimals: subSecondDecimals),
+                new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, subSecondPrecision: subSecondPrecision),
                 messageHandler)
         {
         }
@@ -128,7 +128,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -142,13 +142,13 @@ namespace Serilog.Sinks.Splunk
             bool renderTemplate = true,
             bool renderMessage = true,
             HttpMessageHandler messageHandler = null,
-            int subSecondDecimals = 3)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
             // TODO here is the jsonformatter creation. We must make way to test output of jsonformatter. 
             : this(
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
-                new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, fields, subSecondDecimals: subSecondDecimals),
+                new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, fields, subSecondPrecision: subSecondPrecision),
                 messageHandler)
         {
         }

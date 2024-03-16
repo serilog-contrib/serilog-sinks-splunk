@@ -31,7 +31,7 @@ namespace Serilog.Sinks.Splunk
         private static readonly JsonValueFormatter ValueFormatter = new JsonValueFormatter(typeTagName: "$type");
         private readonly string _suffix;
         private readonly bool _renderTemplate;
-        private readonly int _subSecondDecimals;
+        private readonly SubSecondPrecision _subSecondPrecision;
 
         /// <summary>
         /// Construct a <see cref="CompactSplunkJsonFormatter"/>.
@@ -41,12 +41,18 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="index">The Splunk index to log to</param>
         /// <param name="renderTemplate">If true, the template used will be rendered and written to the output as a property named MessageTemplate</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
 
-        public CompactSplunkJsonFormatter(bool renderTemplate = false, string source = null, string sourceType = null, string host = null, string index = null, int subSecondDecimals = 3)
+        public CompactSplunkJsonFormatter(
+            bool renderTemplate = false,
+            string source = null,
+            string sourceType = null,
+            string host = null,
+            string index = null,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             _renderTemplate = renderTemplate;
-            _subSecondDecimals = subSecondDecimals;
+            _subSecondPrecision = subSecondPrecision;
 
             var suffixWriter = new StringWriter();
             suffixWriter.Write("}"); // Terminates "event"
@@ -85,7 +91,7 @@ namespace Serilog.Sinks.Splunk
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Write("{\"time\":\"");
-            output.Write(logEvent.Timestamp.ToEpoch(_subSecondDecimals).ToString(CultureInfo.InvariantCulture));
+            output.Write(logEvent.Timestamp.ToEpoch(_subSecondPrecision).ToString(CultureInfo.InvariantCulture));
             output.Write("\",\"event\":{\"@l\":\"");
             output.Write(logEvent.Level);
             output.Write('"');

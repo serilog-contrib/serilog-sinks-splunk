@@ -32,7 +32,7 @@ namespace Serilog.Sinks.Splunk
 
         private readonly bool _renderTemplate;
         private readonly IFormatProvider _formatProvider;
-        private readonly int _subSecondDecimals;
+        private readonly SubSecondPrecision _subSecondPrecision;
         private readonly bool _renderMessage;
         private readonly string _suffix;
 
@@ -60,7 +60,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         /// <param name="renderMessage">Removes the "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
@@ -70,8 +70,8 @@ namespace Serilog.Sinks.Splunk
             string sourceType,
             string host,
             string index,
-            int subSecondDecimals = 3)
-            : this(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, null, subSecondDecimals: subSecondDecimals)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
+            : this(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, null, subSecondPrecision: subSecondPrecision)
         {
         }
 
@@ -85,7 +85,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="customFields">Object that describes extra splunk fields that should be indexed with event see: http://dev.splunk.com/view/event-collector/SP-CAAAFB6 </param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
@@ -96,11 +96,11 @@ namespace Serilog.Sinks.Splunk
             string host,
             string index,
             CustomFields customFields,
-            int subSecondDecimals = 3)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             _renderTemplate = renderTemplate;
             _formatProvider = formatProvider;
-            _subSecondDecimals = subSecondDecimals;
+            _subSecondPrecision = subSecondPrecision;
             _renderMessage = renderMessage;
 
             using (var suffixWriter = new StringWriter())
@@ -171,7 +171,7 @@ namespace Serilog.Sinks.Splunk
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Write("{\"time\":\"");
-            output.Write(logEvent.Timestamp.ToEpoch(_subSecondDecimals).ToString(CultureInfo.InvariantCulture));
+            output.Write(logEvent.Timestamp.ToEpoch(_subSecondPrecision).ToString(CultureInfo.InvariantCulture));
             output.Write("\",\"event\":{\"Level\":\"");
             output.Write(logEvent.Level);
             output.Write('"');

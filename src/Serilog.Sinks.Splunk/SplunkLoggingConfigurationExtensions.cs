@@ -49,7 +49,7 @@ namespace Serilog
         /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -69,7 +69,7 @@ namespace Serilog
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null,
-            int subSecondDecimals = 3)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -92,7 +92,7 @@ namespace Serilog
                 formatProvider,
                 renderTemplate,
                 renderMessage,
-                subSecondDecimals: subSecondDecimals);
+                subSecondPrecision: subSecondPrecision);
 
             var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
 
@@ -173,7 +173,7 @@ namespace Serilog
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -194,7 +194,7 @@ namespace Serilog
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null,
-            int subSecondDecimals = 3)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -219,7 +219,7 @@ namespace Serilog
                renderTemplate,
                renderMessage,
                messageHandler,
-               subSecondDecimals: subSecondDecimals
+               subSecondPrecision: subSecondPrecision
                );
 
 
