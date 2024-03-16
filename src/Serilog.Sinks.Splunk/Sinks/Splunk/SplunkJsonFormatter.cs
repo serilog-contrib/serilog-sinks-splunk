@@ -32,6 +32,7 @@ namespace Serilog.Sinks.Splunk
 
         private readonly bool _renderTemplate;
         private readonly IFormatProvider _formatProvider;
+        private readonly int _subSecondDecimals;
         private readonly string _suffix;
 
         /// <inheritdoc />
@@ -56,14 +57,16 @@ namespace Serilog.Sinks.Splunk
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
+        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
             IFormatProvider formatProvider,
             string source,
             string sourceType,
             string host,
-            string index)
-            : this(renderTemplate, formatProvider, source, sourceType, host, index, null)
+            string index,
+            int subSecondDecimals = 3)
+            : this(renderTemplate, formatProvider, source, sourceType, host, index, null, subSecondDecimals)
         {
         }
 
@@ -77,6 +80,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="customFields">Object that describes extra splunk fields that should be indexed with event see: http://dev.splunk.com/view/event-collector/SP-CAAAFB6 </param>
+        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
             IFormatProvider formatProvider,
@@ -84,10 +88,12 @@ namespace Serilog.Sinks.Splunk
             string sourceType,
             string host,
             string index,
-            CustomFields customFields)
+            CustomFields customFields,
+            int subSecondDecimals = 3)
         {
             _renderTemplate = renderTemplate;
             _formatProvider = formatProvider;
+            _subSecondDecimals = subSecondDecimals;
 
             using (var suffixWriter = new StringWriter())
             {
@@ -157,7 +163,7 @@ namespace Serilog.Sinks.Splunk
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Write("{\"time\":\"");
-            output.Write(logEvent.Timestamp.ToEpoch().ToString(CultureInfo.InvariantCulture));
+            output.Write(logEvent.Timestamp.ToEpoch(_subSecondDecimals).ToString(CultureInfo.InvariantCulture));
             output.Write("\",\"event\":{\"Level\":\"");
             output.Write(logEvent.Level);
             output.Write('"');

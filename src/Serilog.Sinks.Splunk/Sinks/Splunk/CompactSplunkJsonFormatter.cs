@@ -31,6 +31,7 @@ namespace Serilog.Sinks.Splunk
         private static readonly JsonValueFormatter ValueFormatter = new JsonValueFormatter(typeTagName: "$type");
         private readonly string _suffix;
         private readonly bool _renderTemplate;
+        private readonly int _subSecondDecimals;
 
         /// <summary>
         /// Construct a <see cref="CompactSplunkJsonFormatter"/>.
@@ -40,9 +41,13 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="index">The Splunk index to log to</param>
         /// <param name="renderTemplate">If true, the template used will be rendered and written to the output as a property named MessageTemplate</param>
-        public CompactSplunkJsonFormatter(bool renderTemplate = false, string source = null, string sourceType = null, string host = null, string index = null)
+        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
+
+        public CompactSplunkJsonFormatter(bool renderTemplate = false, string source = null, string sourceType = null, string host = null, string index = null, int subSecondDecimals = 3)
         {
             _renderTemplate = renderTemplate;
+            _subSecondDecimals = subSecondDecimals;
+
             var suffixWriter = new StringWriter();
             suffixWriter.Write("}"); // Terminates "event"
 
@@ -80,7 +85,7 @@ namespace Serilog.Sinks.Splunk
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Write("{\"time\":\"");
-            output.Write(logEvent.Timestamp.ToEpoch().ToString(CultureInfo.InvariantCulture));
+            output.Write(logEvent.Timestamp.ToEpoch(_subSecondDecimals).ToString(CultureInfo.InvariantCulture));
             output.Write("\",\"event\":{\"@l\":\"");
             output.Write(logEvent.Level);
             output.Write('"');

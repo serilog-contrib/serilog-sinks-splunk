@@ -17,7 +17,6 @@ using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
-using Serilog.Formatting.Json;
 using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
 using System;
@@ -49,6 +48,7 @@ namespace Serilog
         /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
+        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -66,7 +66,8 @@ namespace Serilog
             int batchSizeLimit = 100,
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
-            LoggingLevelSwitch levelSwitch = null)
+            LoggingLevelSwitch levelSwitch = null,
+            int subSecondDecimals = 3)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -88,7 +89,9 @@ namespace Serilog
                 index,
                 formatProvider,
                 renderTemplate,
-                messageHandler);
+                messageHandler,
+                subSecondDecimals: subSecondDecimals);
+
             var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
 
             return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
@@ -168,6 +171,7 @@ namespace Serilog
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
+        /// <param name="subSecondDecimals">Timestamp sub-second precision</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -186,7 +190,8 @@ namespace Serilog
             int batchSizeLimit = 100,
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
-            LoggingLevelSwitch levelSwitch = null)
+            LoggingLevelSwitch levelSwitch = null,
+            int subSecondDecimals = 3)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -209,7 +214,10 @@ namespace Serilog
                fields,
                formatProvider,
                renderTemplate,
-               messageHandler);
+               messageHandler,
+               subSecondDecimals: subSecondDecimals
+               );
+
 
             var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
 
