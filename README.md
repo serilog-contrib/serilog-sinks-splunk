@@ -32,7 +32,7 @@ To start using the Splunk Event Collector (Splunk 6.3 and above), logging can be
 
 ```csharp
 var log = new LoggerConfiguration()
-    .WriteTo.EventCollector("https://mysplunk:8088/services/collector", "myeventcollectortoken")
+    .WriteTo.EventCollector("https://mysplunk:8088/services/collector/event", "myeventcollectortoken")
     .CreateLogger();
 ```
 
@@ -50,6 +50,7 @@ If using `appsettings.json` for configuration the following example illustrates 
                 "Name": "EventCollector",
                 "Args": {
                     "splunkHost": "http://splunk:8088",
+                    "uriPath": "services/collector/event",
                     "eventCollectorToken": "00112233-4455-6677-8899-AABBCCDDEEFF"
                 }
             }

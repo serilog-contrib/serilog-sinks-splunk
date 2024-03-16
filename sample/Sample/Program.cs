@@ -4,58 +4,97 @@ using System.IO;
 using Serilog;
 using Serilog.Sinks.Splunk;
 using Microsoft.Extensions.Configuration;
+using System;
+
 namespace Sample
 {
     public class Program
     {
-        const string SPLUNK_FULL_ENDPOINT = "http://splunk:8088/services/collector"; // Full splunk url 
-        const string SPLUNK_ENDPOINT = "http://splunk:8088"; //  Your splunk url  
+        const string SPLUNK_FULL_ENDPOINT = "http://splunk:8088/services/collector/event"; // Full splunk url 
+        const string SPLUNK_ENDPOINT = "http://splunk:8088"; // Your splunk url  
         const string SPLUNK_HEC_TOKEN = "00112233-4455-6677-8899-AABBCCDDEEFF"; // Your HEC token. See http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
-        public static string EventCollectorToken = SPLUNK_HEC_TOKEN; 
+        public static string EventCollectorToken = SPLUNK_HEC_TOKEN;
 
         public static void Main(string[] args)
         {
-            var eventsToCreate = 100;
-            var runSSL = false;
-            var millisecsToWait = 60000;
+            // Bootstrap a simple logger.
+            var logger  = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
 
-            if (args.Length > 0)
-                eventsToCreate = int.Parse(args[0]);
-
-            if (args.Length == 2)
-                runSSL = bool.Parse(args[1]);
-
-            if (args.Length == 3)
-                millisecsToWait = int.Parse(args[2]);
-
-            Serilog.Debugging.SelfLog.Enable(System.Console.Out);
-            Log.Information("Sample app starting up...");
-            Log.Information("Waiting {} millisecs...", millisecsToWait);
-            System.Threading.Thread.Sleep(millisecsToWait);
-
-            UsingAppSettingsJson(eventsToCreate);
-            UsingHostOnly(eventsToCreate);
-            UsingHostOnly(eventsToCreate);
-            UsingFullUri(eventsToCreate);
-            OverridingSource(eventsToCreate);
-            OverridingSourceType(eventsToCreate);
-            OverridingHost(eventsToCreate);
-            WithNoTemplate(eventsToCreate);
-            WithCompactSplunkFormatter(eventsToCreate);
-
-            if (runSSL)
+            try
             {
-                UsingSSL(eventsToCreate);
-            }
-            AddCustomFields(eventsToCreate);
+                logger.Information("Sample app starting up...");
+                logger.Information("Startup arguments \"{Arguments}\".", args);
 
-            Log.Information("Done....");
+                var eventsToCreate = 100;
+                var runSSL = false;
+                var millisecsToWait = 60000;
+
+                if (args.Length > 0)
+                    eventsToCreate = int.Parse(args[0]);
+
+                if (args.Length == 2)
+                    runSSL = bool.Parse(args[1]);
+
+                if (args.Length == 3)
+                    millisecsToWait = int.Parse(args[2]);
+
+                Serilog.Debugging.SelfLog.Enable(msg =>
+                {
+                    Console.WriteLine(msg);
+                    throw new Exception("Failed to write to Serilog.", new Exception(msg));
+                });
+
+                logger.Information("Waiting {MillisecondsToWait} millisecs...", millisecsToWait);
+                System.Threading.Thread.Sleep(millisecsToWait);
+
+                logger.Information("Creating logger {MethodName}.", nameof(UsingAppSettingsJson));
+                UsingAppSettingsJson(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(UsingHostOnly));
+                UsingHostOnly(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(UsingFullUri));
+                UsingFullUri(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSource));
+                OverridingSource(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSourceType));
+                OverridingSourceType(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingHost));
+                OverridingHost(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(WithNoTemplate));
+                WithNoTemplate(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(WithCompactSplunkFormatter));
+                WithCompactSplunkFormatter(eventsToCreate);
+
+                if (runSSL)
+                {
+                    logger.Information("Creating logger {MethodName}.", nameof(UsingSSL));
+                    UsingSSL(eventsToCreate);
+                }
+
+                logger.Information("Creating logger {MethodName}.", nameof(AddCustomFields));
+                AddCustomFields(eventsToCreate);
+            }
+            finally
+            {
+                logger.Information("Done...");
+                Log.CloseAndFlush();
+            }
         }
+
         public static void UsingAppSettingsJson(int eventsToCreate)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
+                .AddUserSecrets<Program>()
                 .Build();
 
             Log.Logger = new LoggerConfiguration()
@@ -263,7 +302,7 @@ namespace Sample
                     , host: System.Environment.MachineName
                     , source: "BackPackTestServerChannel"
                     , sourceType: "_json"
-                    ,fields: metaData)
+                    , fields: metaData)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "AddCustomFields")
                 .CreateLogger();
@@ -277,5 +316,5 @@ namespace Sample
         }
     }
 
-   
+
 }

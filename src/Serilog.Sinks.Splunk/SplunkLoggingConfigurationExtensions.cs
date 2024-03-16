@@ -28,11 +28,6 @@ namespace Serilog
     /// </summary>
     public static class SplunkLoggingConfigurationExtensions
     {
-        internal const string DefaultSource = "";
-        internal const string DefaultSourceType = "";
-        internal const string DefaultHost = "";
-        internal const string DefaultIndex = "";
-
         /// <summary>
         ///     Adds a sink that writes log events as to a Splunk instance via the HTTP Event Collector.
         /// </summary>
@@ -57,11 +52,11 @@ namespace Serilog
             this LoggerSinkConfiguration configuration,
             string splunkHost,
             string eventCollectorToken,
-            string uriPath = "services/collector",
-            string source = DefaultSource,
-            string sourceType = DefaultSourceType,
-            string host = DefaultHost,
-            string index = DefaultIndex,
+            string uriPath = ConfigurationDefaults.DefaultEventCollectorPath,
+            string source = ConfigurationDefaults.DefaultSource,
+            string sourceType = ConfigurationDefaults.DefaultSourceType,
+            string host = ConfigurationDefaults.DefaultHost,
+            string index = ConfigurationDefaults.DefaultIndex,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
@@ -112,7 +107,7 @@ namespace Serilog
             string splunkHost,
             string eventCollectorToken,
             ITextFormatter jsonFormatter,
-            string uriPath = "services/collector",
+            string uriPath = ConfigurationDefaults.DefaultEventCollectorPath,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
@@ -163,11 +158,11 @@ namespace Serilog
             string splunkHost,
             string eventCollectorToken,
             CustomFields fields,
-            string uriPath = "services/collector",
-            string source = DefaultSource,
-            string sourceType = DefaultSourceType,
-            string host = DefaultHost,
-            string index = DefaultIndex,
+            string uriPath = ConfigurationDefaults.DefaultEventCollectorPath,
+            string source = ConfigurationDefaults.DefaultSource,
+            string sourceType = ConfigurationDefaults.DefaultSourceType,
+            string host = ConfigurationDefaults.DefaultHost,
+            string index = ConfigurationDefaults.DefaultIndex,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
