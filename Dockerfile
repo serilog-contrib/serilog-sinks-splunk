@@ -1,10 +1,10 @@
-FROM microsoft/dotnet:2.1-sdk AS build
-ADD . / 
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+COPY . / 
 WORKDIR /sample/Sample
 RUN dotnet restore
-RUN dotnet publish -c Release -o out -f netcoreapp2.0
+RUN dotnet publish -c Release -o out -f net6.0
 
-FROM microsoft/dotnet:2.1-runtime AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:6.0 AS runtime
 WORKDIR /sample/Sample
 COPY --from=build /sample/Sample/out ./
 ENTRYPOINT ["dotnet", "Sample.dll"]

@@ -1,2 +1,2 @@
-FROM splunk/splunk:9.1
+FROM splunk/splunk:latest
 ADD etc ${SPLUNK_HOME}/etc
