@@ -36,7 +36,11 @@ namespace Serilog.Sinks.Splunk
 
         private void SetHeaders(string eventCollectorToken)
         {
-            DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AUTH_SCHEME, eventCollectorToken);
+            // Reminder: If the event collector url is redirected, all authentication headers will be removed.
+            // See: https://github.com/dotnet/runtime/blob/ccfe21882e4a2206ce49cd5b32d3eb3cab3e530f/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L53
+
+            DefaultRequestHeaders.Authorization ??= new AuthenticationHeaderValue(AUTH_SCHEME, eventCollectorToken);
+            
             if (!this.DefaultRequestHeaders.Contains(SPLUNK_REQUEST_CHANNEL))
             {
                 this.DefaultRequestHeaders.Add(SPLUNK_REQUEST_CHANNEL, Guid.NewGuid().ToString());
