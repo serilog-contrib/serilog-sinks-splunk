@@ -1,2 +1,2 @@
 FROM splunk/splunk:latest
-ADD etc ${SPLUNK_HOME}/etc
+ADD sample/splunk/etc ${SPLUNK_HOME}/etc

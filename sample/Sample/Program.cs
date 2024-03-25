@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sample
 {
@@ -15,7 +16,7 @@ namespace Sample
         const string SPLUNK_HEC_TOKEN = "00112233-4455-6677-8899-AABBCCDDEEFF"; // Your HEC token. See http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
         public static string EventCollectorToken = SPLUNK_HEC_TOKEN;
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // Bootstrap a simple logger.
             var logger = new LoggerConfiguration()
@@ -27,9 +28,9 @@ namespace Sample
                 logger.Information("Sample app starting up...");
                 logger.Information("Startup arguments \"{Arguments}\".", args);
 
-                var eventsToCreate = 100;
+                var eventsToCreate = 10;
                 var runSSL = false;
-                var millisecsToWait = 60000;
+                var secToWait = 30;
 
                 if (args.Length > 0)
                     eventsToCreate = int.Parse(args[0]);
@@ -38,7 +39,7 @@ namespace Sample
                     runSSL = bool.Parse(args[1]);
 
                 if (args.Length == 3)
-                    millisecsToWait = int.Parse(args[2]);
+                    secToWait = int.Parse(args[2]);
 
                 Serilog.Debugging.SelfLog.Enable(msg =>
                 {
@@ -46,8 +47,17 @@ namespace Sample
                     throw new Exception("Failed to write to Serilog.", new Exception(msg));
                 });
 
-                logger.Information("Waiting {MillisecondsToWait} millisecs...", millisecsToWait);
-                System.Threading.Thread.Sleep(millisecsToWait);
+
+                while (secToWait-- > 0)
+                {
+                    logger.Information("Waiting {secToWait} seconds...", secToWait);
+                    await Task.Delay(1000);
+                }
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionMicroseconds));
+                OverridingSubsecondPrecisionMicroseconds(eventsToCreate);
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionNanoseconds));
+                OverridingSubsecondPrecisionNanoseconds(eventsToCreate);
 
                 logger.Information("Creating logger {MethodName}.", nameof(UsingAppSettingsJson));
                 UsingAppSettingsJson(eventsToCreate);
@@ -126,6 +136,50 @@ namespace Sample
             foreach (var i in Enumerable.Range(0, eventsToCreate))
             {
                 Log.Information("{Counter}{Message}", i, " Running vanilla loop with CompactSplunkJsonFormatter");
+            }
+
+            Log.CloseAndFlush();
+        }
+
+        public static void OverridingSubsecondPrecisionMicroseconds(int eventsToCreate)
+        {
+            // Override Source
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.EventCollector(
+                    SPLUNK_ENDPOINT,
+                    Program.EventCollectorToken,
+                    subSecondPrecision: SubSecondPrecision.Microseconds)
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Source Override")
+                .CreateLogger();
+
+            foreach (var i in Enumerable.Range(0, eventsToCreate))
+            {
+                Log.Information("Running source override loop {Counter} subseconds: {subsecondPrecision}", i, SubSecondPrecision.Microseconds.ToString());
+            }
+
+            Log.CloseAndFlush();
+        }
+
+        public static void OverridingSubsecondPrecisionNanoseconds(int eventsToCreate)
+        {
+            // Override Source
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.EventCollector(
+                    SPLUNK_ENDPOINT,
+                    Program.EventCollectorToken,
+                    subSecondPrecision: SubSecondPrecision.Nanoseconds)
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Source Override")
+                .CreateLogger();
+
+            foreach (var i in Enumerable.Range(0, eventsToCreate))
+            {
+                Log.Information("Running source override loop {Counter} subseconds: {subsecondPrecision}", i, SubSecondPrecision.Nanoseconds.ToString());
             }
 
             Log.CloseAndFlush();
@@ -229,7 +283,7 @@ namespace Sample
                     SPLUNK_ENDPOINT,
                     Program.EventCollectorToken)
                 .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample", "ViaEventCollector")
-                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla No services/collector in uri")
+                .Enrich.WithProperty("Serilog.Sinks.Splunk.Sample.TestType", "Vanilla No services/collector/event in uri")
                 .CreateLogger();
 
             foreach (var i in Enumerable.Range(0, eventsToCreate))
