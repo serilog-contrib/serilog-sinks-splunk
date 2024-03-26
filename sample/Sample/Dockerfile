@@ -14,7 +14,6 @@ COPY ["src/Serilog.Sinks.TCP/Serilog.Sinks.Splunk.TCP.csproj", "src/Serilog.Sink
 COPY ["src/Serilog.Sinks.UDP/Serilog.Sinks.Splunk.UDP.csproj", "src/Serilog.Sinks.UDP/"]
 COPY ["test/Serilog.Sinks.Splunk.Tests/Serilog.Sinks.Splunk.Tests.csproj", "test/Serilog.Sinks.Splunk.Tests/"]
 COPY ["docker-compose.dcproj", "./"]
-COPY ["nuget.config", "./"]
 COPY ["serilog-sinks-splunk.sln", "./"]
 RUN dotnet restore "serilog-sinks-splunk.sln"
 

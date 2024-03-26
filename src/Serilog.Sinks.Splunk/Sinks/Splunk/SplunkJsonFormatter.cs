@@ -171,7 +171,7 @@ namespace Serilog.Sinks.Splunk
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Write("{\"time\":\"");
-            output.Write(logEvent.Timestamp.ToEpoch(_subSecondPrecision).ToString(CultureInfo.InvariantCulture));
+            output.Write(logEvent.Timestamp.ToEpoch(_subSecondPrecision));
             output.Write("\",\"event\":{\"Level\":\"");
             output.Write(logEvent.Level);
             output.Write('"');
