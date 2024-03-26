@@ -17,7 +17,6 @@ using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
-using Serilog.Formatting.Json;
 using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
 using System;
@@ -44,11 +43,13 @@ namespace Serilog
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="queueLimit">Maximum number of events in the queue</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -62,11 +63,13 @@ namespace Serilog
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
+            bool renderMessage = true,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
-            LoggingLevelSwitch levelSwitch = null)
+            LoggingLevelSwitch levelSwitch = null,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -88,7 +91,9 @@ namespace Serilog
                 index,
                 formatProvider,
                 renderTemplate,
-                messageHandler);
+                renderMessage,
+                subSecondPrecision: subSecondPrecision);
+
             var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
 
             return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
@@ -103,7 +108,6 @@ namespace Serilog
         /// <param name="jsonFormatter">The text formatter used to render log events into a JSON format for consumption by Splunk</param>
         /// <param name="uriPath">Change the default endpoint of the Event Collector e.g. services/collector/event</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="queueLimit">Maximum number of events in the queue</param>
@@ -168,6 +172,8 @@ namespace Serilog
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -182,11 +188,13 @@ namespace Serilog
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
+            bool renderMessage = true,
             int batchIntervalInSeconds = 2,
             int batchSizeLimit = 100,
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
-            LoggingLevelSwitch levelSwitch = null)
+            LoggingLevelSwitch levelSwitch = null,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -209,7 +217,11 @@ namespace Serilog
                fields,
                formatProvider,
                renderTemplate,
-               messageHandler);
+               renderMessage,
+               messageHandler,
+               subSecondPrecision: subSecondPrecision
+               );
+
 
             var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
 

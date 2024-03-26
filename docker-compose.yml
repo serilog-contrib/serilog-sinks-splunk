@@ -1,25 +1,22 @@
 version: '3'
 services:
   splunk:
-    build: ./sample/splunk 
-    image: serilog-splunk
+    container_name: splunk
+    build:
+      context: .
+      dockerfile: sample/splunk/Dockerfile
+    volumes:
+      - "./sample/splunk/default.yml:/tmp/defaults/default.yml"
     environment:
-        SPLUNK_START_ARGS: --accept-license --answer-yes --seed-passwd changeme
-        SPLUNK_ENABLE_LISTEN: 9997
-        SPLUNK_PASSWORD: changemeplease!
-    ports:
-      - 8000:8000
-      - 8088:8088
-      - 8089:8089
-    networks:
-        splunkbase_docker:
+      SPLUNK_START_ARGS: --accept-license --answer-yes --seed-passwd changeme
+      SPLUNK_ENABLE_LISTEN: 9997
+      SPLUNK_PASSWORD: changemeplease!
+      SPLUNK_HEC_TOKEN: 00112233-4455-6677-8899-AABBCCDDEEFF
+
   sampleconsoleapp:
+    container_name: sample
     depends_on:
       - "splunk"
-    build: .
-    image: serilog-console-sample
-    networks:
-      splunkbase_docker:
-networks:
-  splunkbase_docker:
-
+    build:
+      context: .
+      dockerfile: sample/Sample/Dockerfile

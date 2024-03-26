@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{B9B13339-749C-4098-8845-780ED4FA488A}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Build.ps1 = Build.ps1
 		CHANGES.md = CHANGES.md
 		README.md = README.md
@@ -19,15 +20,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{1C75E4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B9451AD8-09B9-4C09-A152-FBAE24806614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk", "src\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj", "{32CF915C-3ECD-496C-8FDB-1214581274A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Splunk", "src\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj", "{32CF915C-3ECD-496C-8FDB-1214581274A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.Tests", "test\Serilog.Sinks.Splunk.Tests\Serilog.Sinks.Splunk.Tests.csproj", "{3C2D8E01-5580-426A-BDD9-EC59CD98E618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Splunk.Tests", "test\Serilog.Sinks.Splunk.Tests\Serilog.Sinks.Splunk.Tests.csproj", "{3C2D8E01-5580-426A-BDD9-EC59CD98E618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "sample\Sample\Sample.csproj", "{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "sample\Sample\Sample.csproj", "{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.TCP", "src\Serilog.Sinks.TCP\Serilog.Sinks.Splunk.TCP.csproj", "{F74FCFD0-536B-4311-AA66-0BD16112D895}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Splunk.TCP", "src\Serilog.Sinks.TCP\Serilog.Sinks.Splunk.TCP.csproj", "{F74FCFD0-536B-4311-AA66-0BD16112D895}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Splunk.UDP", "src\Serilog.Sinks.UDP\Serilog.Sinks.Splunk.UDP.csproj", "{FE1504A6-5444-4B87-819C-E6F477662B7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Splunk.UDP", "src\Serilog.Sinks.UDP\Serilog.Sinks.Splunk.UDP.csproj", "{FE1504A6-5444-4B87-819C-E6F477662B7F}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1B9DEFA3-D600-45FA-93A5-79006076FB5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "splunk", "splunk", "{21EEF50A-C0FC-4406-97A1-8F5F499AE2FC}"
+	ProjectSection(SolutionItems) = preProject
+		sample\splunk\Dockerfile = sample\splunk\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A9F9CB1C-35C7-4878-97B7-673F5D4BC64A}"
 	ProjectSection(SolutionItems) = preProject
@@ -60,6 +68,10 @@ Global
 		{FE1504A6-5444-4B87-819C-E6F477662B7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE1504A6-5444-4B87-819C-E6F477662B7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE1504A6-5444-4B87-819C-E6F477662B7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B9DEFA3-D600-45FA-93A5-79006076FB5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B9DEFA3-D600-45FA-93A5-79006076FB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B9DEFA3-D600-45FA-93A5-79006076FB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B9DEFA3-D600-45FA-93A5-79006076FB5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,5 +82,9 @@ Global
 		{4A4E361D-8BBE-4DDD-9E6C-53960C2B5F5B} = {1C75E4A9-4CB1-497C-AD17-B438882051A1}
 		{F74FCFD0-536B-4311-AA66-0BD16112D895} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
 		{FE1504A6-5444-4B87-819C-E6F477662B7F} = {7A774CBB-A6E9-4854-B4DB-4CF860B0C1C5}
+		{21EEF50A-C0FC-4406-97A1-8F5F499AE2FC} = {1C75E4A9-4CB1-497C-AD17-B438882051A1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7BFF439-D18D-4124-A36F-15CFB8E84BCC}
 	EndGlobalSection
 EndGlobal

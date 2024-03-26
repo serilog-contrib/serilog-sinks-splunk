@@ -32,6 +32,8 @@ namespace Serilog.Sinks.Splunk
 
         private readonly bool _renderTemplate;
         private readonly IFormatProvider _formatProvider;
+        private readonly SubSecondPrecision _subSecondPrecision;
+        private readonly bool _renderMessage;
         private readonly string _suffix;
 
         /// <inheritdoc />
@@ -40,10 +42,12 @@ namespace Serilog.Sinks.Splunk
         /// </summary>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the template used will be rendered and written to the output as a property named MessageTemplate</param>
+        /// <param name="renderMessage">Removes the "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
+            bool renderMessage,
             IFormatProvider formatProvider)
-            : this(renderTemplate, formatProvider, null, null, null, null)
+            : this(renderTemplate, renderMessage, formatProvider, null, null, null, null)
         {
         }
 
@@ -56,14 +60,18 @@ namespace Serilog.Sinks.Splunk
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
+        /// <param name="renderMessage">Removes the "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
+            bool renderMessage,
             IFormatProvider formatProvider,
             string source,
             string sourceType,
             string host,
-            string index)
-            : this(renderTemplate, formatProvider, source, sourceType, host, index, null)
+            string index,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
+            : this(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, null, subSecondPrecision: subSecondPrecision)
         {
         }
 
@@ -77,17 +85,23 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="customFields">Object that describes extra splunk fields that should be indexed with event see: http://dev.splunk.com/view/event-collector/SP-CAAAFB6 </param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
+            bool renderMessage,
             IFormatProvider formatProvider,
             string source,
             string sourceType,
             string host,
             string index,
-            CustomFields customFields)
+            CustomFields customFields,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             _renderTemplate = renderTemplate;
             _formatProvider = formatProvider;
+            _subSecondPrecision = subSecondPrecision;
+            _renderMessage = renderMessage;
 
             using (var suffixWriter = new StringWriter())
             {
@@ -157,7 +171,7 @@ namespace Serilog.Sinks.Splunk
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Write("{\"time\":\"");
-            output.Write(logEvent.Timestamp.ToEpoch().ToString(CultureInfo.InvariantCulture));
+            output.Write(logEvent.Timestamp.ToEpoch(_subSecondPrecision));
             output.Write("\",\"event\":{\"Level\":\"");
             output.Write(logEvent.Level);
             output.Write('"');
@@ -168,8 +182,11 @@ namespace Serilog.Sinks.Splunk
                 JsonValueFormatter.WriteQuotedJsonString(logEvent.MessageTemplate.Text, output);
             }
 
-            output.Write(",\"RenderedMessage\":");
-            JsonValueFormatter.WriteQuotedJsonString(logEvent.RenderMessage(_formatProvider), output);
+            if (_renderMessage)
+            {
+                output.Write(",\"RenderedMessage\":");
+                JsonValueFormatter.WriteQuotedJsonString(logEvent.RenderMessage(_formatProvider), output);
+            }
 
             if (logEvent.Exception != null)
             {
