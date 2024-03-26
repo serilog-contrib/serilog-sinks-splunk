@@ -54,43 +54,44 @@ namespace Sample
                     await Task.Delay(1000);
                 }
 
-               // logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionMicroseconds));
-               // OverridingSubsecondPrecisionMicroseconds(eventsToCreate);
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionMicroseconds));
+                OverridingSubsecondPrecisionMicroseconds(eventsToCreate);
+
                 logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionNanoseconds));
                 OverridingSubsecondPrecisionNanoseconds(eventsToCreate);
 
-               //logger.Information("Creating logger {MethodName}.", nameof(UsingAppSettingsJson));
-               //UsingAppSettingsJson(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(UsingHostOnly));
-               //UsingHostOnly(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(UsingFullUri));
-               //UsingFullUri(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(OverridingSource));
-               //OverridingSource(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(OverridingSourceType));
-               //OverridingSourceType(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(OverridingHost));
-               //OverridingHost(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(WithNoTemplate));
-               //WithNoTemplate(eventsToCreate);
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(WithCompactSplunkFormatter));
-               //WithCompactSplunkFormatter(eventsToCreate);
-               //
-               //if (runSSL)
-               //{
-               //    logger.Information("Creating logger {MethodName}.", nameof(UsingSSL));
-               //    UsingSSL(eventsToCreate);
-               //}
-               //
-               //logger.Information("Creating logger {MethodName}.", nameof(AddCustomFields));
-               //AddCustomFields(eventsToCreate);
+                logger.Information("Creating logger {MethodName}.", nameof(UsingAppSettingsJson));
+                UsingAppSettingsJson(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(UsingHostOnly));
+                UsingHostOnly(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(UsingFullUri));
+                UsingFullUri(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSource));
+                OverridingSource(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingSourceType));
+                OverridingSourceType(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(OverridingHost));
+                OverridingHost(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(WithNoTemplate));
+                WithNoTemplate(eventsToCreate);
+
+                logger.Information("Creating logger {MethodName}.", nameof(WithCompactSplunkFormatter));
+                WithCompactSplunkFormatter(eventsToCreate);
+
+                if (runSSL)
+                {
+                    logger.Information("Creating logger {MethodName}.", nameof(UsingSSL));
+                    UsingSSL(eventsToCreate);
+                }
+
+                logger.Information("Creating logger {MethodName}.", nameof(AddCustomFields));
+                AddCustomFields(eventsToCreate);
             }
             finally
             {
