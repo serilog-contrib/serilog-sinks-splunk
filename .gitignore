@@ -240,5 +240,4 @@ _Pvt_Extensions
 sample/Sample/out/
 
 .DS_Store
-.gitignore
-
+.idea
