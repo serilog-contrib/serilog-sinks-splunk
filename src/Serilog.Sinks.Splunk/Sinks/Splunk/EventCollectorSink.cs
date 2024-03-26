@@ -57,7 +57,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -90,7 +90,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -128,7 +128,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
-        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,

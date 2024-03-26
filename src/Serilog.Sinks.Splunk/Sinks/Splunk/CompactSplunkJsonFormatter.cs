@@ -41,7 +41,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="index">The Splunk index to log to</param>
         /// <param name="renderTemplate">If true, the template used will be rendered and written to the output as a property named MessageTemplate</param>
-        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
 
         public CompactSplunkJsonFormatter(
             bool renderTemplate = false,

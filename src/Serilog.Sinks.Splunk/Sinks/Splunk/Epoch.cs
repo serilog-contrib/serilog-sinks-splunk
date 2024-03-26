@@ -27,7 +27,7 @@ namespace Serilog.Sinks.Splunk
         /// Converts a DateTimeOffset value to epoch time with specified sub-second precision.
         /// </summary>
         /// <param name="value">The DateTimeOffset value to convert.</param>
-        /// <param name="subSecondPrecision">The precision of sub-second time measurements.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision.</param>
         /// <returns>The epoch time representation of the DateTimeOffset value.</returns>
         public static double ToEpoch(this DateTimeOffset value, SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {

@@ -60,7 +60,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="source">The source of the event</param>
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
-        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         /// <param name="renderMessage">Removes the "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
@@ -85,7 +85,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="customFields">Object that describes extra splunk fields that should be indexed with event see: http://dev.splunk.com/view/event-collector/SP-CAAAFB6 </param>
-        /// <param name="subSecondPrecision">Timestamp sub-second precision</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
