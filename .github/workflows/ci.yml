@@ -9,7 +9,7 @@ on:
     branches: [ "dev", "master" ]
       
 env:
-  CI_BUILD_NUMBER_BASE: ${{ github.run_number }}
+  CI_BUILD_NUMBER: ${{ github.run_number }}
   CI_TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
 
 jobs:
@@ -23,9 +23,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      - name: Compute build number
-        run: |
-          echo "CI_BUILD_NUMBER=$(($CI_BUILD_NUMBER_BASE+200))" >> $GITHUB_ENV
       - name: Build and Publish
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: true
