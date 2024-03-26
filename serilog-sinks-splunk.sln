@@ -8,13 +8,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{B9B13339-749C-4098-8845-780ED4FA488A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		.travis.yml = .travis.yml
-		appveyor.yml = appveyor.yml
 		Build.ps1 = Build.ps1
-		build.sh = build.sh
 		CHANGES.md = CHANGES.md
 		README.md = README.md
 		assets\Serilog.snk = assets\Serilog.snk
+		global.json = global.json
+		Setup.ps1 = Setup.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{1C75E4A9-4CB1-497C-AD17-B438882051A1}"
@@ -36,6 +35,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "splunk", "splunk", "{21EEF50A-C0FC-4406-97A1-8F5F499AE2FC}"
 	ProjectSection(SolutionItems) = preProject
 		sample\splunk\Dockerfile = sample\splunk\Dockerfile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A9F9CB1C-35C7-4878-97B7-673F5D4BC64A}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
 	EndProjectSection
 EndProject
 Global
