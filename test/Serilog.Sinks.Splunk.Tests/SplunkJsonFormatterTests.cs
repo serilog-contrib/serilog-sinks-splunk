@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xunit;
-using Serilog.Sinks.Splunk.Tests.Support;
 using Serilog.Events;
 using Serilog.Parsing;
+using Serilog.Sinks.Splunk.Tests.Support;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
-using Newtonsoft.Json;
+using System.IO;
+using Xunit;
 namespace Serilog.Sinks.Splunk.Tests
 {
+
     public class SplunkJsonFormatterTests
     {
-        void AssertValidJson(Action<ILogger> act, 
+        void AssertValidJson(Action<ILogger> act,
             string source = "",
-            string sourceType= "",
-            string host= "",
-            string index= "",
-            CustomFields fields=null)
+            string sourceType = "",
+            string host = "",
+            string index = "",
+            CustomFields fields = null)
         {
             StringWriter outputRendered = new StringWriter(), output = new StringWriter();
             var log = new LoggerConfiguration()
-                .WriteTo.Sink(new TextWriterSink(output, new SplunkJsonFormatter(false, null, source, sourceType, host, index)))
-                .WriteTo.Sink(new TextWriterSink(outputRendered, new SplunkJsonFormatter(true, null, source, sourceType, host, index)))
+                .WriteTo.Sink(new TextWriterSink(output, new SplunkJsonFormatter(false, true, null, source, sourceType, host, index)))
+                .WriteTo.Sink(new TextWriterSink(outputRendered, new SplunkJsonFormatter(true, true, null, source, sourceType, host, index)))
                 .CreateLogger();
 
             act(log);
@@ -67,7 +68,7 @@ namespace Serilog.Sinks.Splunk.Tests
         {
             AssertValidJson(log => log.Information("One {Property}", 42), source: "A Test Source");
         }
-        
+
         [Fact]
         public void AMinimalEventWithSourceTypeIsValidJson()
         {
@@ -122,7 +123,7 @@ namespace Serilog.Sinks.Splunk.Tests
             var timeStamp = DateTimeOffset.Now;
             // var timeStampUnix = (Math.Round(timeStamp.ToUnixTimeMilliseconds() / 1000.0, 3)).ToString("##.###", CultureInfo.InvariantCulture); //req dotnet 4.6.2
             var timeStampUnix = ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString("##.###", CultureInfo.InvariantCulture);
-            var sut = new SplunkJsonFormatter(renderTemplate: true, formatProvider: null, source: "BackPackTestServerChannel", sourceType: "_json", host: "Wanda", index: "Main", customFields: metaData);
+            var sut = new SplunkJsonFormatter(renderTemplate: true, renderMessage: true, formatProvider: null, source: "BackPackTestServerChannel", sourceType: "_json", host: "Wanda", index: "Main", customFields: metaData);
             try
             {
                 var willnotwork = a / b;
@@ -189,6 +190,6 @@ namespace Serilog.Sinks.Splunk.Tests
             public TestCustomFields Fields { get; set; }
 
         }
-         #endregion
+        #endregion
     }
 }

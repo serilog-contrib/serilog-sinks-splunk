@@ -1,4 +1,4 @@
-// Copyright 2016 Serilog Contributors
+﻿// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Serilog.Debugging;
+using Serilog.Events;
+using Serilog.Formatting;
+using Serilog.Sinks.PeriodicBatching;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,10 +23,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Serilog.Debugging;
-using Serilog.Events;
-using Serilog.Formatting;
-using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.Splunk
 {
@@ -56,17 +56,23 @@ namespace Serilog.Sinks.Splunk
         /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true)
+            bool renderTemplate = true,
+            bool renderMessage = true,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
             : this(
                 splunkHost,
                 eventCollectorToken,
                 null, null, null, null, null,
                 formatProvider,
-                renderTemplate)
+                renderTemplate,
+                renderMessage,
+                subSecondPrecision: subSecondPrecision)
         {
         }
 
@@ -83,6 +89,8 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -93,13 +101,14 @@ namespace Serilog.Sinks.Splunk
             string index,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
-            HttpMessageHandler messageHandler = null)
+            bool renderMessage = true,
+            HttpMessageHandler messageHandler = null,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
             : this(
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
-                
-                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index),
+                new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, subSecondPrecision: subSecondPrecision),
                 messageHandler)
         {
         }
@@ -118,6 +127,8 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
             string eventCollectorToken,
@@ -129,13 +140,15 @@ namespace Serilog.Sinks.Splunk
             CustomFields fields,
             IFormatProvider formatProvider = null,
             bool renderTemplate = true,
-            HttpMessageHandler messageHandler = null)
+            bool renderMessage = true,
+            HttpMessageHandler messageHandler = null,
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
             // TODO here is the jsonformatter creation. We must make way to test output of jsonformatter. 
             : this(
                 splunkHost,
                 eventCollectorToken,
                 uriPath,
-                new SplunkJsonFormatter(renderTemplate, formatProvider, source, sourceType, host, index, fields),
+                new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider, source, sourceType, host, index, fields, subSecondPrecision: subSecondPrecision),
                 messageHandler)
         {
         }

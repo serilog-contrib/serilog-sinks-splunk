@@ -1,0 +1,7 @@
+splunk:
+  hec:
+    enable: True
+    ssl: false
+    port: 8088
+    # hec.token is used only for ingestion (receiving Splunk events)
+    token: 00112233-4455-6677-8899-AABBCCDDEEFF

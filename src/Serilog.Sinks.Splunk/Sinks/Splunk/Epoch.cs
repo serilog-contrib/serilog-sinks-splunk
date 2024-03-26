@@ -1,4 +1,4 @@
-// Copyright 2016 Serilog Contributors
+﻿// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,20 +15,49 @@
 namespace Serilog.Sinks.Splunk
 {
     using System;
+    using System.Globalization;
 
-    internal static class EpochExtensions
+    /// <summary>
+    /// Provides extension methods for DateTimeOffset to convert to epoch time.
+    /// </summary>
+    public static class EpochExtensions
     {
-        private static DateTimeOffset Epoch = new DateTimeOffset(1970,1,1,0,0,0,TimeSpan.Zero);
+        private static DateTimeOffset Epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        const string MillisecondFormat = "#.000";
+        const string MicrosecondFormat = "#.000000";
+        const string NanosecondFormat = "#.000000000";
 
-        public static double ToEpoch(this DateTimeOffset value)
+        /// <summary>
+        /// Converts a DateTimeOffset value to epoch time with specified sub-second precision.
+        /// </summary>
+        /// <param name="value">The DateTimeOffset value to convert.</param>
+        /// <param name="subSecondPrecision">Timestamp sub-second precision.</param>
+        /// <returns>The epoch time representation of the DateTimeOffset value.</returns>
+        public static string ToEpoch(this DateTimeOffset value, SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
         {
             // From Splunk HTTP Collector Protocol
             // The default time format is epoch time format, in the format <sec>.<ms>. 
             // For example, 1433188255.500 indicates 1433188255 seconds and 500 milliseconds after epoch, 
             // or Monday, June 1, 2015, at 7:50:55 PM GMT.
-            // See: http://dev.splunk.com/view/SP-CAAAE6P
+            // See: https://docs.splunk.com/Documentation/Splunk/9.2.0/SearchReference/Commontimeformatvariables
 
-            return Math.Round((value - Epoch).TotalSeconds, 3, MidpointRounding.AwayFromZero);
+            var totalSeconds = ToSeconds(value.Ticks - Epoch.Ticks);
+            var format = subSecondPrecision switch {
+                SubSecondPrecision.Nanoseconds => NanosecondFormat,
+                SubSecondPrecision.Microseconds => MicrosecondFormat,
+                _ => MillisecondFormat,
+            };
+
+            return Math.Round(totalSeconds, (int)subSecondPrecision, MidpointRounding.AwayFromZero).ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        private static decimal ToSeconds(long ticks)
+        {
+            long wholeSecondPortion = (ticks / TimeSpan.TicksPerSecond) * TimeSpan.TicksPerSecond;
+            long subsecondPortion = ticks - wholeSecondPortion;
+            decimal wholeSeconds = wholeSecondPortion / (decimal)TimeSpan.TicksPerSecond;
+            decimal subseconds = subsecondPortion / (decimal)TimeSpan.TicksPerSecond;
+            return wholeSeconds + subseconds;
         }
     }
 }
