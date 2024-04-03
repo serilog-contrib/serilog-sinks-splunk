@@ -65,7 +65,7 @@ foreach ($test in Get-ChildItem test/*.Tests) {
 Pop-Location
 
 if ($env:NUGET_API_KEY `
-    -and (("tag" -eq $env:GITHUB_REF_NAME -and $NULL -ne $prefix) `
+    -and (($env:GITHUB_REF_TYPE -eq "tag" -and $NULL -ne $prefix) `
       -or ($NULL -ne $suffix -and ($env:CI_TARGET_BRANCH -eq "dev" -or $env:CI_TARGET_BRANCH -eq "master")))) {
     # GitHub Actions will only supply this to branch builds and not PRs. We publish
     # builds from any branch this action targets (i.e. master and dev).
@@ -81,6 +81,6 @@ if ($env:NUGET_API_KEY `
     if ($null -eq $env:NUGET_API_KEY) {
       Write-Output "build: Skipping Nuget publish, API key null"
     } else {
-      Write-Output "build: Skipping Nuget publish reftype: $env:GITHUB_REF_TYPE"
+      Write-Output "build: Skipping Nuget publish reftype: $env:GITHUB_REF_TYPE, branch: $env:CI_TARGET_BRANCH"
     }
 }
