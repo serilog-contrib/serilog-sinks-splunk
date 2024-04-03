@@ -78,5 +78,9 @@ if ($env:NUGET_API_KEY `
         if($LASTEXITCODE -ne 0) { throw "Publishing failed" }
     }
 } else {
-    Write-Output "build: Skipping Nuget publish"
+    if ($null -eq $env:NUGET_API_KEY) {
+      Write-Output "build: Skipping Nuget publish, API key null"
+    } else {
+      Write-Output "build: Skipping Nuget publish reftype: $env:GITHUB_REF_TYPE
+    }
 }
