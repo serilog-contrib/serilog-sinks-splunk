@@ -30,3 +30,8 @@ jobs:
         shell: pwsh
         run: |
           ./Build.ps1
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "artifacts/*.nupkg"
+          generateReleaseNotes: true
