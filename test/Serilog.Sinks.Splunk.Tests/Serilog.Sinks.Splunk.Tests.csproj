@@ -4,8 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Serilog.Sinks.Splunk.Tests</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
- 
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

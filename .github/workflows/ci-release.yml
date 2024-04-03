@@ -4,14 +4,13 @@ name: CI
 
 on:
   push:
-    branches: [ "dev", "master" ]
-  pull_request:
-    branches: [ "dev", "master" ]
+    tags:
+      - '*'
 
 env:
   CI_BUILD_NUMBER: ${{ github.run_number }}
   CI_TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
-  #CI_COMMIT_TAG: ""
+  CI_COMMIT_TAG: ${{ github.ref_name }}
 
 jobs:
   build:
