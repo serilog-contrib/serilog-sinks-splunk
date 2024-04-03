@@ -33,11 +33,12 @@ namespace Serilog
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the message template is rendered</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <returns></returns>
         public static LoggerConfiguration SplunkViaTcp(this LoggerSinkConfiguration loggerConfiguration, SplunkTcpSinkConnectionInfo connectionInfo,
-            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum, IFormatProvider formatProvider = null, bool renderTemplate = true)
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum, IFormatProvider formatProvider = null, bool renderTemplate = true, bool renderMessage = true)
         {
-            var sink = new TcpSink(connectionInfo, formatProvider, renderTemplate);
+            var sink = new TcpSink(connectionInfo, formatProvider, renderTemplate, renderMessage);
 
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }

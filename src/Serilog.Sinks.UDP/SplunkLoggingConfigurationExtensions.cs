@@ -15,6 +15,7 @@
 using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting;
+using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
 using System;
 
@@ -33,17 +34,29 @@ namespace Serilog
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the message template is rendered</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <returns></returns>
         public static LoggerConfiguration SplunkViaUdp(
             this LoggerSinkConfiguration loggerConfiguration,
             SplunkUdpSinkConnectionInfo connectionInfo,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             IFormatProvider formatProvider = null,
-            bool renderTemplate = true)
+            bool renderTemplate = true,
+            bool renderMessage = true)
         {
-            var sink = new UdpSink(connectionInfo, formatProvider, renderTemplate);
+            var batchingOptions = new PeriodicBatchingSinkOptions
+            {
+                BatchSizeLimit = connectionInfo.BatchPostingLimit,
+                Period = connectionInfo.Period,
+                EagerlyEmitFirstEvent = true,
+                QueueLimit = connectionInfo.QueueSizeLimit
+            };
 
-            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
+            var sink = new UdpSink(connectionInfo, formatProvider, renderTemplate, renderMessage);
+
+            var batchingSink = new PeriodicBatchingSink(sink, batchingOptions);
+
+            return loggerConfiguration.Sink(batchingSink, restrictedToMinimumLevel);
         }
 
         /// <summary>
@@ -60,9 +73,19 @@ namespace Serilog
             ITextFormatter formatter,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum)
         {
+            var batchingOptions = new PeriodicBatchingSinkOptions
+            {
+                BatchSizeLimit = connectionInfo.BatchPostingLimit,
+                Period = connectionInfo.Period,
+                EagerlyEmitFirstEvent = true,
+                QueueLimit = connectionInfo.QueueSizeLimit
+            };
+
             var sink = new UdpSink(connectionInfo, formatter);
-            
-            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
+
+            var batchingSink = new PeriodicBatchingSink(sink, batchingOptions);
+
+            return loggerConfiguration.Sink(batchingSink, restrictedToMinimumLevel);
         }
     }
 }

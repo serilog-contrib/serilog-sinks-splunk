@@ -39,8 +39,9 @@ namespace Serilog.Sinks.Splunk
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        public TcpSink(SplunkTcpSinkConnectionInfo connectionInfo, IFormatProvider formatProvider = null, bool renderTemplate = true)
-            : this(connectionInfo, CreateDefaultFormatter(formatProvider, renderTemplate))
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
+        public TcpSink(SplunkTcpSinkConnectionInfo connectionInfo, IFormatProvider formatProvider = null, bool renderTemplate = true, bool renderMessage = true)
+            : this(connectionInfo, CreateDefaultFormatter(formatProvider, renderTemplate, renderMessage))
         {
         }
 
@@ -94,9 +95,9 @@ namespace Serilog.Sinks.Splunk
             return new TcpSocketWriter(connectionInfo.Host, connectionInfo.Port, reconnectionPolicy, connectionInfo.MaxQueueSize);
         }
 
-        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
+        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate, bool renderMessage = true)
         {
-            return new SplunkJsonFormatter(renderTemplate, formatProvider);
+            return new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider);
         }
     }
 }
