@@ -35,10 +35,10 @@ foreach ($src in Get-ChildItem src/*) {
 
     if ($prefix) {
         # release build
-        & dotnet pack -c Release -o ../../artifacts --version-prefix=$prefix
+        & dotnet pack -c Release -o ../../artifacts /p:VersionPrefix="$prefix"
     } elseif ($suffix) {
         # prerelease build
-        & dotnet pack -c Release -o ../../artifacts --version-suffix=$suffix
+        & dotnet pack -c Release -o ../../artifacts /p:VersionSuffix="$suffix"
     } else {
         # local build
         & dotnet pack -c Release -o ../../artifacts
