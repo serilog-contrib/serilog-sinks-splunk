@@ -43,7 +43,7 @@ namespace Serilog
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <param name="batchIntervalInSeconds">The interval in seconds that the queue should be instpected for batching</param>
         /// <param name="batchSizeLimit">The size of the batch</param>
         /// <param name="queueLimit">Maximum number of events in the queue</param>
@@ -92,6 +92,7 @@ namespace Serilog
                 formatProvider,
                 renderTemplate,
                 renderMessage,
+                messageHandler: messageHandler,
                 subSecondPrecision: subSecondPrecision);
 
             var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
@@ -172,7 +173,7 @@ namespace Serilog
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
-        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(

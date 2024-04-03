@@ -86,7 +86,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="host">The host of the event</param>
         /// <param name="customFields">Object that describes extra splunk fields that should be indexed with event see: http://dev.splunk.com/view/event-collector/SP-CAAAFB6 </param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
-        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         public SplunkJsonFormatter(
             bool renderTemplate,
             bool renderMessage,

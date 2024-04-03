@@ -28,7 +28,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// A sink that logs to Splunk over UDP
     /// </summary>
-    public class UdpSink : PeriodicBatchingSink
+    public class UdpSink : IBatchedLogEventSink
     {
         private readonly SplunkUdpSinkConnectionInfo _connectionInfo;
         private readonly ITextFormatter _formatter;
@@ -40,8 +40,9 @@ namespace Serilog.Sinks.Splunk
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatProvider">Optional format provider</param>
         /// <param name="renderTemplate">If true, the message template will be rendered</param>
-        public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, IFormatProvider formatProvider = null, bool renderTemplate = true)
-            : this(connectionInfo, CreateDefaultFormatter(formatProvider, renderTemplate))
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
+        public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, IFormatProvider formatProvider = null, bool renderTemplate = true, bool renderMessage = true)
+            : this(connectionInfo, CreateDefaultFormatter(formatProvider, renderTemplate, renderMessage))
         {
         }
 
@@ -51,7 +52,6 @@ namespace Serilog.Sinks.Splunk
         /// <param name="connectionInfo">Connection info used for connecting against Splunk.</param>
         /// <param name="formatter">Custom formatter to use if you e.g. do not want to use the JsonFormatter.</param>
         public UdpSink(SplunkUdpSinkConnectionInfo connectionInfo, ITextFormatter formatter) 
-            : base(connectionInfo.BatchPostingLimit, connectionInfo.Period, connectionInfo.QueueSizeLimit)
         {
             _connectionInfo = connectionInfo;
             _formatter = formatter;
@@ -74,11 +74,9 @@ namespace Serilog.Sinks.Splunk
         }
 
 
-        protected override void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             DisposeSocket();
-
-            base.Dispose(true);
         }
 
         private void DisposeSocket()
@@ -91,15 +89,15 @@ namespace Serilog.Sinks.Splunk
         /// <summary>
         /// Emit a batch of log events, running to completion synchronously.
         /// </summary>
-        /// <param name="events">The events to emit.</param>
+        /// <param name="batch">The events to emit.</param>
         /// <remarks>
         /// Override either <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatch(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />
         ///  or <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatchAsync(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />,
         /// not both.
         /// </remarks>
-        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
         {
-            foreach (var logEvent in events)
+            foreach (var logEvent in batch)
             {
                 byte[] data = Convert(logEvent);
 
@@ -118,10 +116,13 @@ namespace Serilog.Sinks.Splunk
         }
 
 
-        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate)
+        private static SplunkJsonFormatter CreateDefaultFormatter(IFormatProvider formatProvider, bool renderTemplate, bool renderMessage)
         {
-            return new SplunkJsonFormatter(renderTemplate, formatProvider);
+            return new SplunkJsonFormatter(renderTemplate, renderMessage, formatProvider);
         }
+
+        /// <inheritdoc />
+        public Task OnEmptyBatchAsync() => Task.CompletedTask;
     }
 }
 

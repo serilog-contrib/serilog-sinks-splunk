@@ -56,7 +56,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="eventCollectorToken">The token to use when authenticating with the event collector</param>
         /// <param name="formatProvider">The format provider used when rendering the message</param>
         /// <param name="renderTemplate">Whether to render the message template</param>
-        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
@@ -89,7 +89,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
-        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
@@ -127,7 +127,7 @@ namespace Serilog.Sinks.Splunk
         /// <param name="sourceType">The source type of the event</param>
         /// <param name="host">The host of the event</param>
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
-        /// <param name="renderMessage">Include "RenderedMessage" parameter from output JSON message.</param>
+        /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
         public EventCollectorSink(
             string splunkHost,
