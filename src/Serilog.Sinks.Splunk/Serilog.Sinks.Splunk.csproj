@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>The Splunk Sink for Serilog</Description>
-    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionPrefix>4.0.1</VersionPrefix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
     <TargetFrameworks>netstandard2.1;netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

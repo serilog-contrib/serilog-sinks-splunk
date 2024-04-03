@@ -5,7 +5,7 @@
 If you discover a security vulnerability in this project, please follow these steps to report it:
 
 1. **Do not** create a public GitHub issue for the vulnerability.
-2. Send an email to [security@eeeparker.dev](mailto:security@eeeparker.dev) with a detailed description of the vulnerability.
+2. Send an email to [security@eeparker.dev](mailto:security@eeparker.dev) with a detailed description of the vulnerability.
 3. Include any relevant information, such as steps to reproduce the vulnerability or proof-of-concept code.
 4. Provide your contact information so that we can follow up with you.
 
@@ -37,4 +37,4 @@ We take security seriously and have implemented the following measures to protec
 
 ## Contact
 
-If you have any questions or concerns regarding the security of this project, please contact us at [security@eeeparker.dev](mailto:security@eeparker.dev).
+If you have any questions or concerns regarding the security of this project, please contact us at [security@eeparker.dev](mailto:security@eeparker.dev).
