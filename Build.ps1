@@ -66,7 +66,9 @@ foreach ($test in Get-ChildItem test/*.Tests) {
 
 Pop-Location
 
-if ($env:NUGET_API_KEY -and ($NULL -ne $suffix -or $NULL -ne $prefix)) {
+if ($env:NUGET_API_KEY `
+    -and ($NULL -ne $suffix -or $NULL -ne $prefix) `
+    -and ($env:CI_TARGET_BRANCH -eq "dev" -or $env:CI_TARGET_BRANCH -eq "master")) {
     # GitHub Actions will only supply this to branch builds and not PRs. We publish
     # builds from any branch this action targets (i.e. master and dev).
 
