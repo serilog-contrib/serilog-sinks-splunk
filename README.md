@@ -1,7 +1,8 @@
 # Serilog.Sinks.Splunk
 
-[![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk) ![NuGet Version](https://buildstats.info/nuget/Serilog.Sinks.Splunk) 
- [![Join the chat at https://gitter.im/serilog/serilog](https://img.shields.io/gitter/room/serilog/serilog.svg)](https://gitter.im/serilog/serilog)
+![Build Status](https://github.com/serilog-contrib/serilog-sinks-splunk/actions/workflows/ci.yml/badge.svg?branch=dev)
+[![NuGet Version](https://buildstats.info/nuget/Serilog.Sinks.Splunk)](https://www.nuget.org/packages/Serilog.Sinks.Splunk)
+[![Join the chat at https://gitter.im/serilog/serilog](https://img.shields.io/gitter/room/serilog/serilog.svg)](https://gitter.im/serilog/serilog)
  
 A Serilog sink that writes events to the [Splunk](https://splunk.com). Supports .NET 4.5+, .NET Core, and platforms compatible with the [.NET Platform Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) `net45`, `netstandard1.1`, `netstandard2.0`.
 
@@ -63,11 +64,5 @@ If using `appsettings.json` for configuration the following example illustrates 
 ```
 
 More information about Serilog is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
-### Build status
 
-Branch  | AppVeyor 
-------------- | ------------- 
-master |  [![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al/branch/master?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk/branch/master) 
-dev | [![Build status](https://ci.appveyor.com/api/projects/status/yt40wg34t8oj61al/branch/dev?svg=true)](https://ci.appveyor.com/project/serilog/serilog-sinks-splunk/branch/dev)
-
-_Serilog is copyright &copy; 2013-2016 Serilog Contributors - Provided under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html). Needle and thread logo a derivative of work by [Kenneth Appiah](http://www.kensets.com/)._
+_Serilog is copyright &copy; 2013-2024 Serilog Contributors - Provided under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html). Needle and thread logo a derivative of work by [Kenneth Appiah](http://www.kensets.com/)._
