@@ -19,14 +19,12 @@ $revision = $NULL -ne $env:CI_BUILD_NUMBER ? "{0:00000}" -f [Convert]::ToInt32("
 
 # add a suffix if this is not a tag build
 $suffix = $NULL -ne $env:CI_COMMIT_TAG ? "" : "$($branch.Substring(0, [Math]::Min(10,$branch.Length)) -replace '([^a-zA-Z0-9\-]*)', '')-$revision"
-$prefix = $NULL -ne $env:CI_COMMIT_TAG ? $env:CI_COMMIT_TAG : $NULL
+$prefix = $env:CI_COMMIT_TAG
 
-Write-Output $brach
-Write-Output $revision
-Write-Output $suffix
-
-Write-Output "build: Package version suffix is $suffix"
-
+Write-Output "build: Branch: $brach"
+Write-Output "build: Revision: $revision"
+Write-Output "build: VersionPrefix: $prefix"
+Write-Output "build: VersionSuffix: $suffix"
 
 foreach ($src in Get-ChildItem src/*) {
     Push-Location $src
@@ -67,8 +65,8 @@ foreach ($test in Get-ChildItem test/*.Tests) {
 Pop-Location
 
 if ($env:NUGET_API_KEY `
-    -and ($NULL -ne $suffix -or $NULL -ne $prefix) `
-    -and ($env:CI_TARGET_BRANCH -eq "dev" -or $env:CI_TARGET_BRANCH -eq "master")) {
+    -and (("tag" -eq $env:GITHUB_REF_NAME -and $NULL -ne $prefix) `
+      -or ($NULL -ne $suffix -and ($env:CI_TARGET_BRANCH -eq "dev" -or $env:CI_TARGET_BRANCH -eq "master")))) {
     # GitHub Actions will only supply this to branch builds and not PRs. We publish
     # builds from any branch this action targets (i.e. master and dev).
 
@@ -79,4 +77,6 @@ if ($env:NUGET_API_KEY `
         & dotnet nuget push -k $env:NUGET_API_KEY -s https://api.nuget.org/v3/index.json "$nupkg" --no-symbols
         if($LASTEXITCODE -ne 0) { throw "Publishing failed" }
     }
+} else {
+    Write-Output "build: Skipping Nuget publish"
 }

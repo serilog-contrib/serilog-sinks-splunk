@@ -1,6 +1,6 @@
 # If this file is renamed, the incrementing run attempt number will be reset.
 
-name: CI
+name: Release
 
 on:
   push:
