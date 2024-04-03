@@ -37,4 +37,4 @@ We take security seriously and have implemented the following measures to protec
 
 ## Contact
 
-If you have any questions or concerns regarding the security of this project, please contact us at [security@example.com](mailto:security@eeparker.dev).
+If you have any questions or concerns regarding the security of this project, please contact us at [security@eeeparker.dev](mailto:security@eeparker.dev).
