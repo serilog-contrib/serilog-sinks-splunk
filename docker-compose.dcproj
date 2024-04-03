@@ -5,6 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>1b9defa3-d600-45fa-93a5-79006076fb5c</ProjectGuid>
     <DockerComposeProjectName>serilogsinkssplunk</DockerComposeProjectName>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <None Include="deploy/**/*" />
@@ -14,4 +15,7 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
+  <Target Name="pack">
+    <Message Text="Not packable. This exists to prevent compile warnings."></Message>
+  </Target>
 </Project>
