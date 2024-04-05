@@ -10,9 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{B9B133
 		.editorconfig = .editorconfig
 		Build.ps1 = Build.ps1
 		CHANGES.md = CHANGES.md
+		src\common.props = src\common.props
+		global.json = global.json
 		README.md = README.md
 		assets\Serilog.snk = assets\Serilog.snk
-		global.json = global.json
 		Setup.ps1 = Setup.ps1
 	EndProjectSection
 EndProject
