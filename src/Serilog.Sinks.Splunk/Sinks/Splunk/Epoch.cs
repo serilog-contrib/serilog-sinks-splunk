@@ -41,7 +41,7 @@ namespace Serilog.Sinks.Splunk
             // or Monday, June 1, 2015, at 7:50:55 PM GMT.
             // See: https://docs.splunk.com/Documentation/Splunk/9.2.0/SearchReference/Commontimeformatvariables
 
-            var totalSeconds = ToSeconds(value.Ticks - Epoch.Ticks);
+            var totalSeconds = ToSeconds(value.ToUniversalTime().Ticks - Epoch.Ticks);
             var format = subSecondPrecision switch {
                 SubSecondPrecision.Nanoseconds => NanosecondFormat,
                 SubSecondPrecision.Microseconds => MicrosecondFormat,

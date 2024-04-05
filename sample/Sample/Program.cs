@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.Splunk;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,11 @@ namespace Sample
                     logger.Information("Waiting {secToWait} seconds...", secToWait);
                     await Task.Delay(1000);
                 }
+
+                logger.Information("Creating logger {MethodName}.", nameof(ReproduceGitHubIssue183));
+                ReproduceGitHubIssue183();
+
+                return;
 
                 logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionMicroseconds));
                 OverridingSubsecondPrecisionMicroseconds(eventsToCreate);
@@ -364,6 +370,28 @@ namespace Sample
             foreach (var i in Enumerable.Range(0, eventsToCreate))
             {
                 Log.Information("AddCustomFields {Counter}", i);
+            }
+
+            Log.CloseAndFlush();
+        }
+
+        public static void ReproduceGitHubIssue183()
+        {
+            // Override Source
+            var loggerConfig = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.EventCollector(
+                    SPLUNK_ENDPOINT,
+                    Program.EventCollectorToken,
+                    restrictedToMinimumLevel: LogEventLevel.Debug);
+
+            using (var logger = loggerConfig.CreateLogger())
+            {
+                Log.Logger = logger;
+
+                logger.Information("Information message {@param}", new { Property1 = 1, Property2 = 2 });
+                logger.Warning("Warning message {@param}", "Hello this is a string");
+                logger.Error(new Exception("Bang"), "Error message");
             }
 
             Log.CloseAndFlush();
