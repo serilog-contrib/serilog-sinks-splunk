@@ -12,12 +12,7 @@
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <IsPackable>true</IsPackable>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-
-  <ItemGroup>
-      <None Include="../../README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.0" />

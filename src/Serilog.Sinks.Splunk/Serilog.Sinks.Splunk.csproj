@@ -14,13 +14,8 @@
     <SignAssembly>true</SignAssembly>
     <RootNamespace>Serilog</RootNamespace>
     <IsPackable>true</IsPackable>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-
-  <ItemGroup>
-      <None Include="../../README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.1.1" />
