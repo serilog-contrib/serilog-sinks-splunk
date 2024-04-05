@@ -26,7 +26,7 @@ Write-Output "build: Revision: $revision"
 Write-Output "build: VersionPrefix: $prefix"
 Write-Output "build: VersionSuffix: $suffix"
 
-foreach ($src in Get-ChildItem src/*) {
+foreach ($src in Get-ChildItem src/* -Directory) {
     Push-Location $src
 
 	Write-Output "build: Packaging project in $src"
