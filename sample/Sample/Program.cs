@@ -58,8 +58,6 @@ namespace Sample
                 logger.Information("Creating logger {MethodName}.", nameof(ReproduceGitHubIssue183));
                 ReproduceGitHubIssue183();
 
-                return;
-
                 logger.Information("Creating logger {MethodName}.", nameof(OverridingSubsecondPrecisionMicroseconds));
                 OverridingSubsecondPrecisionMicroseconds(eventsToCreate);
 

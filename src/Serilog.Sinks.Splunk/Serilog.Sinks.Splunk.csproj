@@ -1,33 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../common.props"/>
+  
   <PropertyGroup>
     <Description>The Splunk Sink for Serilog</Description>
-    <VersionPrefix>4.0.1</VersionPrefix>
-    <Authors>Matthew Erbs, Serilog Contributors</Authors>
     <TargetFrameworks>netstandard2.1;netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Serilog.Sinks.Splunk</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk</PackageId>
     <PackageTags>serilog;splunk;logging;event;collector;hec</PackageTags>
-    <icon>http://serilog.net/images/serilog-sink-nuget.png</icon>
-    <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
-    <license>http://www.apache.org/licenses/LICENSE-2.0</license>
-    <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>Serilog</RootNamespace>
-	  <LangVersion>latest</LangVersion>
     <IsPackable>true</IsPackable>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-
-  <ItemGroup>
-      <None Include="../../README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.1.1" />
