@@ -16,6 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.2" />
   </ItemGroup>
 </Project>
