@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <Description>The Splunk TCP Sink for Serilog</Description>
-    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <AssemblyName>Serilog.Sinks.Splunk.TCP</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk.TCP</PackageId>
     <PackageTags>serilog;splunk;logging;tcp</PackageTags>
