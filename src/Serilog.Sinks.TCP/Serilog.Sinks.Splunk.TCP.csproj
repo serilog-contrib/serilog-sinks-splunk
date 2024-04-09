@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../common.props"/>
+  <Import Project="../common.props" />
 
   <PropertyGroup>
     <Description>The Splunk TCP Sink for Serilog</Description>
@@ -9,14 +9,10 @@
     <PackageId>Serilog.Sinks.Splunk.TCP</PackageId>
     <PackageTags>serilog;splunk;logging;tcp</PackageTags>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <SignAssembly>False</SignAssembly>
+    <PublicSign Condition=" '$(Configuration)' == 'Debug' ">true</PublicSign>
+    <SignAssembly>true</SignAssembly>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Splunk.Logging.Common.Core" Version="1.0.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj" />

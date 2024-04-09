@@ -9,7 +9,7 @@
     <AssemblyName>Serilog.Sinks.Splunk.UDP</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk.UDP</PackageId>
     <PackageTags>serilog;splunk;logging;udp</PackageTags>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PublicSign Condition=" '$(Configuration)' == 'Debug' ">true</PublicSign>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <IsPackable>true</IsPackable>

@@ -10,7 +10,7 @@
     <PackageId>Serilog.Sinks.Splunk</PackageId>
     <PackageTags>serilog;splunk;logging;event;collector;hec</PackageTags>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PublicSign Condition=" '$(Configuration)' == 'Debug' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <RootNamespace>Serilog</RootNamespace>
     <IsPackable>true</IsPackable>
