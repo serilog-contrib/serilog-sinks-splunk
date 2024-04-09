@@ -5,16 +5,18 @@
     <VersionSuffix Condition="$(VersionSuffix) == '' and '$(Configuration)' == 'Debug' ">debug</VersionSuffix>
     <Authors>Matthew Erbs, Serilog Contributors</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <icon>http://serilog.net/images/serilog-sink-nuget.png</icon>
     <PackageProjectUrl>https://github.com/serilog/serilog-sinks-splunk</PackageProjectUrl>
-    <license>http://www.apache.org/licenses/LICENSE-2.0</license>
     <RepositoryUrl>https://github.com/serilog/serilog-sinks-splunk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <LangVersion>latest</LangVersion>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>serilog-sink-nuget.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="../../serilog-sink-nuget.png" Pack="true" PackagePath=""/>
   </ItemGroup>
+
 </Project>
+
