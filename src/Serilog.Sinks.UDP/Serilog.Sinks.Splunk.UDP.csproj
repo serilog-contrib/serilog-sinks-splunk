@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../common.props" />
-  
+
   <PropertyGroup>
     <Description>The Splunk UDP Sink for Serilog</Description>
-    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Serilog.Sinks.Splunk.UDP</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk.UDP</PackageId>
     <PackageTags>serilog;splunk;logging;udp</PackageTags>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PublicSign Condition=" '$(Configuration)' == 'Debug' ">true</PublicSign>
     <AssemblyOriginatorKeyFile>../../assets/Serilog.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.0" />
+    <ProjectReference Include="..\Serilog.Sinks.Splunk\Serilog.Sinks.Splunk.csproj" />
   </ItemGroup>
 </Project>
