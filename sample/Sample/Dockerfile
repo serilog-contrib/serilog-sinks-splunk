@@ -1,5 +1,5 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.4-alpine3.19 AS base
 WORKDIR /app
 EXPOSE 8080
 
@@ -12,6 +12,7 @@ COPY ["sample/Sample/Sample.csproj", "sample/Sample/"]
 COPY ["src/Serilog.Sinks.Splunk/Serilog.Sinks.Splunk.csproj", "src/Serilog.Sinks.Splunk/"]
 COPY ["src/Serilog.Sinks.TCP/Serilog.Sinks.Splunk.TCP.csproj", "src/Serilog.Sinks.TCP/"]
 COPY ["src/Serilog.Sinks.UDP/Serilog.Sinks.Splunk.UDP.csproj", "src/Serilog.Sinks.UDP/"]
+COPY ["test/Serilog.Sinks.Splunk.TCP.Tests/Serilog.Sinks.Splunk.TCP.Tests.csproj", "test/Serilog.Sinks.Splunk.TCP.Tests/"]
 COPY ["test/Serilog.Sinks.Splunk.Tests/Serilog.Sinks.Splunk.Tests.csproj", "test/Serilog.Sinks.Splunk.Tests/"]
 COPY ["docker-compose.dcproj", "./"]
 COPY ["serilog-sinks-splunk.sln", "./"]

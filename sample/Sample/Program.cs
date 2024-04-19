@@ -1,9 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Extensions;
 using Serilog.Sinks.Splunk;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +59,10 @@ namespace Sample
                     logger.Information("Waiting {secToWait} seconds...", secToWait);
                     await Task.Delay(1000);
                 }
+
+
+                logger.Information("Creating logger {MethodName}.", nameof(ReproduceGitHubIssue195));
+                ReproduceGitHubIssue195();
 
                 logger.Information("Creating logger {MethodName}.", nameof(ReproduceGitHubIssue183));
                 ReproduceGitHubIssue183();
@@ -390,6 +399,49 @@ namespace Sample
                 logger.Information("Information message {@param}", new { Property1 = 1, Property2 = 2 });
                 logger.Warning("Warning message {@param}", "Hello this is a string");
                 logger.Error(new Exception("Bang"), "Error message");
+            }
+
+            Log.CloseAndFlush();
+        }
+
+        public static void ReproduceGitHubIssue195()
+        {
+            var serviceCollection = new ServiceCollection()
+                .AddLogging(builder => builder.AddSerilog(dispose: true));
+
+            serviceCollection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            var services = serviceCollection.BuildServiceProvider();
+
+            // Override Source
+            var loggerConfig = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .Enrich.WithCorrelationId(addValueIfHeaderAbsence: true)
+                .MinimumLevel.Verbose()
+                .WriteTo.EventCollector(
+                    SPLUNK_ENDPOINT,
+                    Program.EventCollectorToken,
+                    restrictedToMinimumLevel: LogEventLevel.Debug);
+
+            using (var logger = loggerConfig.CreateLogger())
+            {
+                var http = services.GetRequiredService<IHttpContextAccessor>();
+
+                http.HttpContext = new DefaultHttpContext();
+
+
+                using var activity = new Activity("TraceIDTest");
+                activity.Start();
+                Activity.Current = activity;
+                http.HttpContext.TraceIdentifier = activity.Id;
+
+                Log.Logger = logger;
+
+                logger.Information("TraceID Information message {@param}", new { Property1 = 1, Property2 = 2 });
+                logger.Warning("TraceID Warning message {@param}", "Hello this is a string");
+                logger.Error(new Exception("Bang"), "TraceID Error message");
+                activity.Stop();
             }
 
             Log.CloseAndFlush();
