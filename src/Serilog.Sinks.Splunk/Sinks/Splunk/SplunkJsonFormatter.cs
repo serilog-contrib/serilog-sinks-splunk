@@ -135,6 +135,7 @@ namespace Serilog.Sinks.Splunk
                     // "fields": {"club":"glee", "wins",["regionals","nationals"]}
                     suffixWriter.Write(",\"fields\": {");
                     var lastFieldIndex = customFields.CustomFieldList.Count;
+
                     foreach (var customField in customFields.CustomFieldList)
                     {
                         if (customField.ValueList.Count == 1)
@@ -192,6 +193,18 @@ namespace Serilog.Sinks.Splunk
             {
                 output.Write(",\"Exception\":");
                 JsonValueFormatter.WriteQuotedJsonString(logEvent.Exception.ToString(), output);
+            }
+
+            if (logEvent.TraceId != null)
+            {
+                output.Write(",\"TraceId\":");
+                JsonValueFormatter.WriteQuotedJsonString(logEvent.TraceId.ToString()!, output);
+            }
+
+            if (logEvent.SpanId != null)
+            {
+                output.Write(",\"SpanId\":");
+                JsonValueFormatter.WriteQuotedJsonString(logEvent.SpanId.ToString()!, output);
             }
 
             if (logEvent.Properties.Count != 0)

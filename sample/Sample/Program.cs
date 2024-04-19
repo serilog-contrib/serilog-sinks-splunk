@@ -8,6 +8,7 @@ using Serilog.Extensions;
 using Serilog.Sinks.Splunk;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -428,13 +429,19 @@ namespace Sample
                 var http = services.GetRequiredService<IHttpContextAccessor>();
 
                 http.HttpContext = new DefaultHttpContext();
-                
+
+
+                using var activity = new Activity("TraceIDTest");
+                activity.Start();
+                Activity.Current = activity;
+                http.HttpContext.TraceIdentifier = activity.Id;
 
                 Log.Logger = logger;
 
-                logger.Information("Information message {@param}", new { Property1 = 1, Property2 = 2 });
-                logger.Warning("Warning message {@param}", "Hello this is a string");
-                logger.Error(new Exception("Bang"), "Error message");
+                logger.Information("TraceID Information message {@param}", new { Property1 = 1, Property2 = 2 });
+                logger.Warning("TraceID Warning message {@param}", "Hello this is a string");
+                logger.Error(new Exception("Bang"), "TraceID Error message");
+                activity.Stop();
             }
 
             Log.CloseAndFlush();
