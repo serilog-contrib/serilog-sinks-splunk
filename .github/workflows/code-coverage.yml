@@ -8,6 +8,9 @@ on:
     branches:
       - '*'
 
+permissions:
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
