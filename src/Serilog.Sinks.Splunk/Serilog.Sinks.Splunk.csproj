@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="4.1.1" />
   </ItemGroup>
 
 </Project>
