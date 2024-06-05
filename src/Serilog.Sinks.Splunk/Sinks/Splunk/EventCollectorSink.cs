@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting;
-using Serilog.Sinks.PeriodicBatching;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,15 +177,15 @@ namespace Serilog.Sinks.Splunk
                 : new EventCollectorClient(eventCollectorToken);
         }
 
-        /// <summary>
-        ///     Emit a batch of log events, running asynchronously.
-        /// </summary>
-        /// <param name="events">The events to emit.</param>
-        public virtual async Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        /// <inheritdoc />
+        public virtual Task OnEmptyBatchAsync() => Task.CompletedTask;
+
+        /// <inheritdoc />
+        public virtual async Task EmitBatchAsync(IReadOnlyCollection<LogEvent> batch)
         {
             var allEvents = new StringWriter();
 
-            foreach (var logEvent in events)
+            foreach (var logEvent in batch)
             {
                 _jsonFormatter.Format(logEvent, allEvents);
             }
@@ -210,8 +210,5 @@ namespace Serilog.Sinks.Splunk
                 }
             }
         }
-
-        /// <inheritdoc />
-        public Task OnEmptyBatchAsync() => Task.CompletedTask;
     }
 }

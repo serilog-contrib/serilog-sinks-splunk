@@ -17,7 +17,6 @@ using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
-using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
 using System;
 using System.Net.Http;
@@ -73,10 +72,10 @@ namespace Serilog
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            var batchingOptions = new PeriodicBatchingSinkOptions
+            var batchingOptions = new BatchingOptions
             {
                 BatchSizeLimit = batchSizeLimit,
-                Period = TimeSpan.FromSeconds(batchIntervalInSeconds),
+                BufferingTimeLimit = TimeSpan.FromSeconds(batchIntervalInSeconds),
                 EagerlyEmitFirstEvent = true,
                 QueueLimit = queueLimit
             };
@@ -95,9 +94,7 @@ namespace Serilog
                 messageHandler: messageHandler,
                 subSecondPrecision: subSecondPrecision);
 
-            var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
-
-            return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
+            return configuration.Sink(eventCollectorSink, batchingOptions, restrictedToMinimumLevel, levelSwitch);
         }
 
         /// <summary>
@@ -132,10 +129,10 @@ namespace Serilog
             if (jsonFormatter == null) throw new ArgumentNullException(nameof(jsonFormatter));
 
 
-            var batchingOptions = new PeriodicBatchingSinkOptions
+            var batchingOptions = new BatchingOptions
             {
                 BatchSizeLimit = batchSizeLimit,
-                Period = TimeSpan.FromSeconds(batchIntervalInSeconds),
+                BufferingTimeLimit = TimeSpan.FromSeconds(batchIntervalInSeconds),
                 EagerlyEmitFirstEvent = true,
                 QueueLimit = queueLimit
             };
@@ -147,9 +144,7 @@ namespace Serilog
                 jsonFormatter,
                 messageHandler);
 
-            var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
-
-            return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
+            return configuration.Sink(eventCollectorSink, batchingOptions, restrictedToMinimumLevel, levelSwitch);
         }
 
 
@@ -199,10 +194,10 @@ namespace Serilog
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            var batchingOptions = new PeriodicBatchingSinkOptions
+            var batchingOptions = new BatchingOptions
             {
                 BatchSizeLimit = batchSizeLimit,
-                Period = TimeSpan.FromSeconds(batchIntervalInSeconds),
+                BufferingTimeLimit = TimeSpan.FromSeconds(batchIntervalInSeconds),
                 EagerlyEmitFirstEvent = true,
                 QueueLimit = queueLimit
             };
@@ -223,10 +218,7 @@ namespace Serilog
                subSecondPrecision: subSecondPrecision
                );
 
-
-            var batchingSink = new PeriodicBatchingSink(eventCollectorSink, batchingOptions);
-
-            return configuration.Sink(batchingSink, restrictedToMinimumLevel, levelSwitch);
+            return configuration.Sink(eventCollectorSink, batchingOptions, restrictedToMinimumLevel, levelSwitch);
         }
     }
 }
