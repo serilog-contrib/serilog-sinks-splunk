@@ -1,4 +1,4 @@
-// Copyright 2016 Serilog Contributors
+﻿// Copyright 2016 Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ namespace Serilog.Sinks.Splunk
     {
         internal EventCollectorRequest(string splunkHost, string jsonPayLoad, string uri = ConfigurationDefaults.DefaultEventCollectorPath)
         {
-            var hostUrl = splunkHost.Contains(ConfigurationDefaults.DefaultEventCollectorPath)
+            var hostUrl = splunkHost.Contains(ConfigurationDefaults.DefaultEventCollectorPath) ||
+                          splunkHost.Contains(ConfigurationDefaults.DefaultCollectorPath)
                 ? splunkHost
                 : $"{splunkHost.TrimEnd('/')}/{uri.TrimStart('/').TrimEnd('/')}";
            
