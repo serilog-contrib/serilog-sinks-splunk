@@ -23,8 +23,7 @@ namespace Serilog.Sinks.Splunk
     {
         internal EventCollectorRequest(string splunkHost, string jsonPayLoad, string uri = ConfigurationDefaults.DefaultEventCollectorPath)
         {
-            var hostUrl = splunkHost.Contains(ConfigurationDefaults.DefaultEventCollectorPath) ||
-                          splunkHost.Contains(ConfigurationDefaults.DefaultCollectorPath)
+            var hostUrl = splunkHost.Contains(ConfigurationDefaults.DefaultCollectorPath)
                 ? splunkHost
                 : $"{splunkHost.TrimEnd('/')}/{uri.TrimStart('/').TrimEnd('/')}";
            
