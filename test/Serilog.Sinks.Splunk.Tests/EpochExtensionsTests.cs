@@ -1,6 +1,4 @@
-﻿using Serilog.Sinks.Splunk;
-using System;
-using System.Diagnostics;
+﻿using System;
 using Xunit;
 
 namespace Serilog.Sinks.Splunk.Tests

@@ -17,7 +17,6 @@ using Serilog.Formatting;
 using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 
 namespace Serilog.Sinks.Splunk

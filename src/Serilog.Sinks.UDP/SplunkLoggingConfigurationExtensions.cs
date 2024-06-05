@@ -15,7 +15,6 @@
 using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting;
-using Serilog.Sinks.PeriodicBatching;
 using Serilog.Sinks.Splunk;
 using System;
 
@@ -44,19 +43,17 @@ namespace Serilog
             bool renderTemplate = true,
             bool renderMessage = true)
         {
-            var batchingOptions = new PeriodicBatchingSinkOptions
+            var batchingOptions = new BatchingOptions
             {
                 BatchSizeLimit = connectionInfo.BatchPostingLimit,
-                Period = connectionInfo.Period,
+                BufferingTimeLimit = connectionInfo.Period,
                 EagerlyEmitFirstEvent = true,
                 QueueLimit = connectionInfo.QueueSizeLimit
             };
 
             var sink = new UdpSink(connectionInfo, formatProvider, renderTemplate, renderMessage);
 
-            var batchingSink = new PeriodicBatchingSink(sink, batchingOptions);
-
-            return loggerConfiguration.Sink(batchingSink, restrictedToMinimumLevel);
+            return loggerConfiguration.Sink(sink, batchingOptions, restrictedToMinimumLevel);
         }
 
         /// <summary>
@@ -73,19 +70,17 @@ namespace Serilog
             ITextFormatter formatter,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum)
         {
-            var batchingOptions = new PeriodicBatchingSinkOptions
+            var batchingOptions = new BatchingOptions
             {
                 BatchSizeLimit = connectionInfo.BatchPostingLimit,
-                Period = connectionInfo.Period,
+                BufferingTimeLimit = connectionInfo.Period,
                 EagerlyEmitFirstEvent = true,
                 QueueLimit = connectionInfo.QueueSizeLimit
             };
 
             var sink = new UdpSink(connectionInfo, formatter);
 
-            var batchingSink = new PeriodicBatchingSink(sink, batchingOptions);
-
-            return loggerConfiguration.Sink(batchingSink, restrictedToMinimumLevel);
+            return loggerConfiguration.Sink(sink, batchingOptions, restrictedToMinimumLevel);
         }
     }
 }

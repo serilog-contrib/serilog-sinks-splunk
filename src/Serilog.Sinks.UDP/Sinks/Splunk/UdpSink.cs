@@ -21,7 +21,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.Splunk
 {
@@ -95,7 +94,7 @@ namespace Serilog.Sinks.Splunk
         ///  or <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatchAsync(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />,
         /// not both.
         /// </remarks>
-        public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
+        public async Task EmitBatchAsync(IReadOnlyCollection<LogEvent> batch)
         {
             foreach (var logEvent in batch)
             {
