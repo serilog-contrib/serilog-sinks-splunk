@@ -1,0 +1,24 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.2.0">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sample\Sample.csproj" SetTargetFramework="TargetFramework=net10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\splunk\default.yml" Link="splunk\default.yml" />
+    <None Include="..\splunk\etc\system\local\inputs.conf" Link="splunk\etc\system\local\inputs.conf" />
+    <None Include="..\splunk\etc\system\local\props.conf" Link="splunk\etc\system\local\props.conf" />
+    <None Include="..\splunk\etc\system\local\server.conf" Link="splunk\etc\system\local\server.conf" />
+    <None Include="..\splunk\etc\system\local\web.conf" Link="splunk\etc\system\local\web.conf" />
+    <None Include="..\splunk\etc\apps\splunk_httpinput\local\inputs.conf" Link="splunk\etc\apps\splunk_httpinput\local\inputs.conf" />
+  </ItemGroup>
+
+</Project>

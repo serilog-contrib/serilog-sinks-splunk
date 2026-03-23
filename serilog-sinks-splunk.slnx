@@ -11,10 +11,8 @@
     <File Path="src/common.props" />
   </Folder>
   <Folder Name="/sample/">
+    <Project Path="sample/Sample.AppHost/Sample.AppHost.csproj" />
     <Project Path="sample/Sample/Sample.csproj" />
-  </Folder>
-  <Folder Name="/sample/splunk/">
-    <File Path="sample/splunk/Dockerfile" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Serilog.Sinks.Splunk/Serilog.Sinks.Splunk.csproj" />
@@ -24,7 +22,4 @@
   <Folder Name="/test/">
     <Project Path="test/Serilog.Sinks.Splunk.Tests/Serilog.Sinks.Splunk.Tests.csproj" />
   </Folder>
-  <Project Path="docker-compose.dcproj">
-    <Build />
-  </Project>
 </Solution>

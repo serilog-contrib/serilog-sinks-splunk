@@ -17,9 +17,9 @@ namespace Sample
 {
     public class Program
     {
-        const string SPLUNK_FULL_ENDPOINT = "http://splunk:8088/services/collector/event"; // Full splunk url 
-        const string SPLUNK_ENDPOINT = "http://splunk:8088"; // Your splunk url  
-        const string SPLUNK_HEC_TOKEN = "00112233-4455-6677-8899-AABBCCDDEEFF"; // Your HEC token. See http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
+        static readonly string SPLUNK_ENDPOINT = Environment.GetEnvironmentVariable("SPLUNK_HEC_ENDPOINT") ?? "http://localhost:8088"; // Your splunk url
+        static readonly string SPLUNK_FULL_ENDPOINT = $"{SPLUNK_ENDPOINT}/services/collector/event"; // Full splunk url
+        static readonly string SPLUNK_HEC_TOKEN = Environment.GetEnvironmentVariable("SPLUNK_HEC_TOKEN") ?? "00112233-4455-6677-8899-AABBCCDDEEFF"; // Your HEC token. See http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
         public static string EventCollectorToken = SPLUNK_HEC_TOKEN;
 
         public static async Task Main(string[] args)

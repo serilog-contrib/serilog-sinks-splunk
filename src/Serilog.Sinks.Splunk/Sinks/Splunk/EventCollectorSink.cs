@@ -184,7 +184,7 @@ namespace Serilog.Sinks.Splunk
         public virtual async Task EmitBatchAsync(IReadOnlyCollection<LogEvent> batch)
         {
             var allEvents = new StringWriter();
-
+            
             foreach (var logEvent in batch)
             {
                 _jsonFormatter.Format(logEvent, allEvents);
