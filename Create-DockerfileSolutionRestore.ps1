@@ -1,5 +1,5 @@
 param (
-  [string]$solution = "serilog-sinks-splunk.sln"
+  [string]$solution = "serilog-sinks-splunk.slnx"
 )
 
 $outfile = "DockerfileSolutionRestore.txt"

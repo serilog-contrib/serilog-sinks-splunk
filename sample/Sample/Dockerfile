@@ -15,8 +15,8 @@ COPY ["src/Serilog.Sinks.UDP/Serilog.Sinks.Splunk.UDP.csproj", "src/Serilog.Sink
 COPY ["test/Serilog.Sinks.Splunk.TCP.Tests/Serilog.Sinks.Splunk.TCP.Tests.csproj", "test/Serilog.Sinks.Splunk.TCP.Tests/"]
 COPY ["test/Serilog.Sinks.Splunk.Tests/Serilog.Sinks.Splunk.Tests.csproj", "test/Serilog.Sinks.Splunk.Tests/"]
 COPY ["docker-compose.dcproj", "./"]
-COPY ["serilog-sinks-splunk.sln", "./"]
-RUN dotnet restore "serilog-sinks-splunk.sln"
+COPY ["serilog-sinks-splunk.slnx", "./"]
+RUN dotnet restore "serilog-sinks-splunk.slnx"
 
 COPY . .
 WORKDIR "/src/sample/Sample/"

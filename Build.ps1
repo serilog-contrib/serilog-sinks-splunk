@@ -12,7 +12,7 @@ if(Test-Path .\artifacts) {
 	Remove-Item ./artifacts -Force -Recurse
 }
 
-& dotnet restore .\serilog-sinks-splunk.sln --no-cache
+& dotnet restore .\serilog-sinks-splunk.slnx --no-cache
 
 $branch = $NULL -ne $env:CI_TARGET_BRANCH ?  $env:CI_TARGET_BRANCH : (git symbolic-ref --short -q HEAD)
 $revision = $NULL -ne $env:CI_BUILD_NUMBER ? "{0:00000}" -f [Convert]::ToInt32("0" + $env:CI_BUILD_NUMBER, 10) : "local"
@@ -21,7 +21,7 @@ $revision = $NULL -ne $env:CI_BUILD_NUMBER ? "{0:00000}" -f [Convert]::ToInt32("
 $suffix = $NULL -ne $env:CI_COMMIT_TAG ? "" : "$($branch.Substring(0, [Math]::Min(10,$branch.Length)) -replace '([^a-zA-Z0-9\-]*)', '')-$revision"
 $prefix = $env:CI_COMMIT_TAG
 
-Write-Output "build: Branch: $brach"
+Write-Output "build: Branch: $branch"
 Write-Output "build: Revision: $revision"
 Write-Output "build: VersionPrefix: $prefix"
 Write-Output "build: VersionSuffix: $suffix"
@@ -47,7 +47,7 @@ foreach ($src in Get-ChildItem src/* -Directory) {
 }
 
 Write-Output "build: Checking complete solution builds"
-& dotnet build .\serilog-sinks-splunk.sln -c Release
+& dotnet build .\serilog-sinks-splunk.slnx -c Release
 if($LASTEXITCODE -ne 0) { throw "Solution build failed" }
 
 

@@ -4,7 +4,7 @@
   
   <PropertyGroup>
     <Description>The Splunk Sink for Serilog</Description>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Serilog.Sinks.Splunk</AssemblyName>
     <PackageId>Serilog.Sinks.Splunk</PackageId>

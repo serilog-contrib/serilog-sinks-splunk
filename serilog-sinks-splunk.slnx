@@ -1,0 +1,30 @@
+<Solution>
+  <Folder Name="/.github/">
+    <File Path=".github/workflows/ci.yml" />
+  </Folder>
+  <Folder Name="/assets/">
+    <File Path=".editorconfig" />
+    <File Path="assets/Serilog.snk" />
+    <File Path="Build.ps1" />
+    <File Path="CHANGES.md" />
+    <File Path="README.md" />
+    <File Path="src/common.props" />
+  </Folder>
+  <Folder Name="/sample/">
+    <Project Path="sample/Sample/Sample.csproj" />
+  </Folder>
+  <Folder Name="/sample/splunk/">
+    <File Path="sample/splunk/Dockerfile" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Serilog.Sinks.Splunk/Serilog.Sinks.Splunk.csproj" />
+    <Project Path="src/Serilog.Sinks.TCP/Serilog.Sinks.Splunk.TCP.csproj" />
+    <Project Path="src/Serilog.Sinks.UDP/Serilog.Sinks.Splunk.UDP.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Serilog.Sinks.Splunk.Tests/Serilog.Sinks.Splunk.Tests.csproj" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>
