@@ -366,7 +366,7 @@ namespace Sample
                 .WriteTo.EventCollector(
                     splunkHost: SPLUNK_ENDPOINT
                     , eventCollectorToken: SPLUNK_HEC_TOKEN
-                    , host: System.Environment.MachineName
+                    , includeHost: true
                     , source: "BackPackTestServerChannel"
                     , sourceType: "_json"
                     , fields: metaData)
