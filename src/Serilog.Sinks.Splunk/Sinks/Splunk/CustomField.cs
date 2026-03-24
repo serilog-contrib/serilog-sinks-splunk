@@ -14,6 +14,14 @@ namespace Serilog.Sinks.Splunk
         /// </summary>
         public List<string> ValueList { get; set; }
         /// <summary>
+        /// Default constructor for deserialization from configuration (e.g. appsettings.json).
+        /// </summary>
+        public CustomField()
+        {
+            ValueList = new List<string>();
+        }
+
+        /// <summary>
         /// constructor for a simple fieldname and a value both are strings
         /// </summary>
         /// <param name="name">Name of filed to be indexed by Splunk. Eg Role,Version,Channel</param>
