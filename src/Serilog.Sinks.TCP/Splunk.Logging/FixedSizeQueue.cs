@@ -77,6 +77,6 @@ namespace Splunk.Logging
         }
 
 
-        public decimal Count { get { return _collection.Count; } }
+        public int Count { get { return _collection.Count; } }
     }
 }
