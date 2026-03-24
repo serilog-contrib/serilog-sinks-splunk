@@ -2,7 +2,7 @@
 
 ![Build Status](https://github.com/serilog-contrib/serilog-sinks-splunk/actions/workflows/ci.yml/badge.svg?branch=dev)
 [![NuGet Version](https://img.shields.io/nuget/v/Serilog.Sinks.Splunk.svg)](https://www.nuget.org/packages/Serilog.Sinks.Splunk)
-[![Join the chat at https://gitter.im/serilog/serilog](https://img.shields.io/gitter/room/serilog/serilog.svg)](https://gitter.im/serilog/serilog)
+[![GitHub Discussions](https://img.shields.io/github/discussions/serilog-contrib/serilog-sinks-splunk)](https://github.com/serilog-contrib/serilog-sinks-splunk/discussions)
  
 A Serilog sink that writes events to the [Splunk](https://splunk.com). Supports .NET 8+, .NET 9, .NET 10, and platforms compatible with the [.NET Platform Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) `netstandard2.0`, `netstandard2.1`.
 
