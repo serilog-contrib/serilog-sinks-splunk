@@ -12,6 +12,7 @@
     <PublicSign Condition=" '$(Configuration)' == 'Debug' ">true</PublicSign>
     <SignAssembly>true</SignAssembly>
     <IsPackable>true</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

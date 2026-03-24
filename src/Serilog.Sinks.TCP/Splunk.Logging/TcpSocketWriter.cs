@@ -64,8 +64,7 @@ namespace Splunk.Logging
         /// <param name="port">TCP port to use on the target host.</param>
         /// <param name="policy">A TcpConnectionPolicy object defining reconnect behavior.</param>
         /// <param name="maxQueueSize">The maximum number of log entries to queue before starting to drop entries.</param>
-        /// <param name="progress">An IProgress object that reports when the queue of entries to be written reaches empty or there is
-        /// a reconnection failure. This is used for testing purposes only.</param>
+        /// <param name="connect">An optional function to establish a socket connection. If null, a default implementation is used.</param>
         public TcpSocketWriter(IPAddress host, int port, ITcpReconnectionPolicy policy,
             int maxQueueSize, Func<IPAddress, int, Socket> connect = null)
         {
@@ -179,6 +178,7 @@ namespace Splunk.Logging
             threadReady.Task.Wait();
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             // The following operations are idempotent. Issue a cancellation to tell the

@@ -34,6 +34,7 @@ namespace Splunk.Logging
     {
         private int ceiling = 10 * 60; // 10 minutes in seconds
 
+        /// <inheritdoc/>
         public Socket Connect(Func<IPAddress, int, Socket> connect, IPAddress host, int port, CancellationToken cancellationToken)
         {
             int delay = 1; // in seconds

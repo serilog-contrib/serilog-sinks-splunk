@@ -56,8 +56,10 @@ namespace Splunk.Logging
         /// connnection, or is cancelled by the cancellationToken, at which point
         /// it returns null.
         /// </remarks>
-        /// <param name="connect">A zero-parameter function that tries once to 
+        /// <param name="connect">A zero-parameter function that tries once to
         /// establish a connection.</param>
+        /// <param name="host">The IP address of the host to connect to.</param>
+        /// <param name="port">The TCP port to connect to.</param>
         /// <param name="cancellationToken">A token used to cancel the reconnect
         /// attempt when the invoking logger is disposed.</param>
         /// <returns>A connected TCP socket.</returns>

@@ -73,6 +73,10 @@ namespace Serilog.Sinks.Splunk
         }
 
 
+        /// <summary>
+        /// Releases resources used by the sink.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose, false if called from a finalizer.</param>
         protected void Dispose(bool disposing)
         {
             DisposeSocket();
