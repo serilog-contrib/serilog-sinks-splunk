@@ -4,7 +4,7 @@
 [![NuGet Version](https://buildstats.info/nuget/Serilog.Sinks.Splunk)](https://www.nuget.org/packages/Serilog.Sinks.Splunk)
 [![Join the chat at https://gitter.im/serilog/serilog](https://img.shields.io/gitter/room/serilog/serilog.svg)](https://gitter.im/serilog/serilog)
  
-A Serilog sink that writes events to the [Splunk](https://splunk.com). Supports .NET 4.5+, .NET Core, and platforms compatible with the [.NET Platform Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) `net45`, `netstandard1.1`, `netstandard2.0`.
+A Serilog sink that writes events to the [Splunk](https://splunk.com). Supports .NET 8+, .NET 9, .NET 10, and platforms compatible with the [.NET Platform Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) `netstandard2.0`, `netstandard2.1`.
 
 [![Package Logo](https://serilog.net/images/serilog-sink-nuget.png)](https://nuget.org/packages/serilog.sinks.splunk)
 
@@ -65,4 +65,4 @@ If using `appsettings.json` for configuration the following example illustrates 
 
 More information about Serilog is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
 
-_Serilog is copyright &copy; 2013-2024 Serilog Contributors - Provided under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html). Needle and thread logo a derivative of work by [Kenneth Appiah](http://www.kensets.com/)._
+_Serilog is copyright &copy; 2013-2026 Serilog Contributors - Provided under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html). Needle and thread logo a derivative of work by [Kenneth Appiah](http://www.kensets.com/)._

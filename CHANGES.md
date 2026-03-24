@@ -1,3 +1,34 @@
+## 5.2.0
+- Add .NET 10 support
+- Migrate samples to .NET Aspire
+- Update CI to GitHub Actions with .NET 9/10 SDKs
+- Bump Serilog to 4.2.0
+
+## 5.1.0
+- Add .NET 9.0 support
+- Bump Serilog from 4.0.2 to 4.1.0
+- Dependency updates for Microsoft.Extensions.Hosting and Configuration
+
+## 5.0.1
+- [#189](https://github.com/serilog/serilog-sinks-splunk/pull/189) Fix PackageIconUrl deprecation
+- [#184](https://github.com/serilog/serilog-sinks-splunk/pull/184) UDP and TCP sink fixes for [#155](https://github.com/serilog/serilog-sinks-splunk/issues/155)
+
+## 5.0.0
+- [#185](https://github.com/serilog/serilog-sinks-splunk/pull/185) Fix for no logs issue [#183](https://github.com/serilog/serilog-sinks-splunk/issues/183)
+- [#181](https://github.com/serilog/serilog-sinks-splunk/pull/181) Updates for UDP and TCP sinks
+- [#186](https://github.com/serilog/serilog-sinks-splunk/pull/186) Common props for version and NuGet package info
+
+## 4.0.0
+- *BREAKING* Upgrade to Serilog 4.0.0 and Serilog.Sinks.PeriodicBatching 4.x using `IBatchedLogEventSink`
+- [#211](https://github.com/serilog/serilog-sinks-splunk/pull/211) Fix for [#205](https://github.com/serilog/serilog-sinks-splunk/issues/205) - allow collector path in host URL
+- [#172](https://github.com/serilog/serilog-sinks-splunk/pull/172) Sub-second decimal precision for timestamps
+- [#171](https://github.com/serilog/serilog-sinks-splunk/pull/171) .NET 8.0 updates
+- [#166](https://github.com/serilog/serilog-sinks-splunk/pull/166) Splunk 9.1 and .NET 6 support
+- [#174](https://github.com/serilog/serilog-sinks-splunk/pull/174) Migrate CI to GitHub Actions
+- Add TraceId and SpanId to JSON output
+- Add code coverage reporting
+- Drop `netstandard1.1` and `net45` target frameworks
+
 ## 3.6.0
 - [#138](https://github.com/serilog/serilog-sinks-splunk/pull/138)
 
