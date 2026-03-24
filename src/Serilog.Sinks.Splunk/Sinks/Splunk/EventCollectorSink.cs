@@ -29,7 +29,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// A sink to log to the Event Collector available in Splunk 6.3
     /// </summary>
-    public class EventCollectorSink : IBatchedLogEventSink
+    public class EventCollectorSink : IBatchedLogEventSink, IDisposable
     {
         internal const int DefaultQueueLimit = 100000;
 
@@ -37,6 +37,7 @@ namespace Serilog.Sinks.Splunk
         private readonly string _uriPath;
         private readonly ITextFormatter _jsonFormatter;
         private readonly EventCollectorClient _httpClient;
+        private bool _disposed;
 
 
         /// <summary>
@@ -183,15 +184,15 @@ namespace Serilog.Sinks.Splunk
         /// <inheritdoc />
         public virtual async Task EmitBatchAsync(IReadOnlyCollection<LogEvent> batch)
         {
-            var allEvents = new StringWriter();
-            
+            using var allEvents = new StringWriter();
+
             foreach (var logEvent in batch)
             {
                 _jsonFormatter.Format(logEvent, allEvents);
             }
 
-            var request = new EventCollectorRequest(_splunkHost, allEvents.ToString(), _uriPath);
-            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            using var request = new EventCollectorRequest(_splunkHost, allEvents.ToString(), _uriPath);
+            using var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -209,6 +210,29 @@ namespace Serilog.Sinks.Splunk
                     response.EnsureSuccessStatusCode();
                 }
             }
+        }
+
+        /// <summary>
+        /// Releases resources used by the sink.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose, false if called from a finalizer.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _httpClient?.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
