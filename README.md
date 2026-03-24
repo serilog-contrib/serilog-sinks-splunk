@@ -63,6 +63,34 @@ If using `appsettings.json` for configuration the following example illustrates 
 }
 ```
 
+### Automatic host name
+
+Use the `includeHost` option to automatically set the Splunk `host` metadata field to the machine name. This is opt-in and defaults to `false`.
+
+```csharp
+var log = new LoggerConfiguration()
+    .WriteTo.EventCollector(
+        "https://mysplunk:8088",
+        "myeventcollectortoken",
+        includeHost: true)
+    .CreateLogger();
+```
+
+Or via `appsettings.json`:
+
+```javascript
+{
+    "Name": "EventCollector",
+    "Args": {
+        "splunkHost": "http://splunk:8088",
+        "eventCollectorToken": "00112233-4455-6677-8899-AABBCCDDEEFF",
+        "includeHost": true
+    }
+}
+```
+
+If `host` is explicitly set, it takes precedence over `includeHost`.
+
 More information about Serilog is available on the [wiki](https://github.com/serilog/serilog-sinks-splunk/wiki).
 
 _Serilog is copyright &copy; 2013-2026 Serilog Contributors - Provided under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html). Needle and thread logo a derivative of work by [Kenneth Appiah](http://www.kensets.com/)._

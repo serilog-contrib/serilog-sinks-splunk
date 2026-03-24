@@ -6,6 +6,11 @@
 - [#165](https://github.com/serilog-contrib/serilog-sinks-splunk/issues/165) Add `includeHost` option to automatically set the host metadata field from the machine name
 - [#159](https://github.com/serilog-contrib/serilog-sinks-splunk/issues/159) Add default constructor to `CustomField` for configuration deserialization
 - Fix JSON injection in custom fields serialization
+- Add `IDisposable` to `EventCollectorSink` for proper HTTP resource cleanup
+- Add `IDisposable` to `UdpSink` for proper socket cleanup
+- Fix URL path detection in `EventCollectorRequest` to avoid false hostname matches
+- Fix `FixedSizeQueue.Count` return type from `decimal` to `int`
+- Enable `TreatWarningsAsErrors` on TCP and UDP projects
 
 ## 5.1.0
 - Add .NET 9.0 support
