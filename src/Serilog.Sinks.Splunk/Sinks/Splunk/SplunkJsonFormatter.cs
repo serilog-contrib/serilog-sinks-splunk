@@ -139,18 +139,20 @@ namespace Serilog.Sinks.Splunk
                     {
                         if (customField.ValueList.Count == 1)
                         {
-                            //only one value e.g "club":"glee",       
-                            suffixWriter.Write($"\"{customField.Name}\":");
-                            suffixWriter.Write($"\"{customField.ValueList[0]}\"");
+                            //only one value e.g "club":"glee",
+                            JsonValueFormatter.WriteQuotedJsonString(customField.Name, suffixWriter);
+                            suffixWriter.Write(':');
+                            JsonValueFormatter.WriteQuotedJsonString(customField.ValueList[0], suffixWriter);
                         }
                         else
                         {
                             //array of values e.g "wins",["regionals","nationals"]
-                            suffixWriter.Write($"\"{customField.Name}\":[");
+                            JsonValueFormatter.WriteQuotedJsonString(customField.Name, suffixWriter);
+                            suffixWriter.Write(":[");
                             var lastArrIndex = customField.ValueList.Count;
                             foreach (var cf in customField.ValueList)
                             {
-                                suffixWriter.Write($"\"{cf}\"");
+                                JsonValueFormatter.WriteQuotedJsonString(cf, suffixWriter);
                                 //Different behaviour if it is the last one
                                 suffixWriter.Write(--lastArrIndex > 0 ? "," : "]");
                             }

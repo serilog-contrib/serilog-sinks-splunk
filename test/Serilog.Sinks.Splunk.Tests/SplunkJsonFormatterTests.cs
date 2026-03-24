@@ -162,6 +162,103 @@ namespace Serilog.Sinks.Splunk.Tests
             Assert.True(String.Equals(testEventResult.Fields.Role[1], "Service"), "CustomField Role array 1 correct after format for Splunkjsonformatter");
             Assert.True(String.Equals(testEventResult.Fields.Role[2], "Rest"), "CustomField Role array 2 correct after format for Splunkjsonformatter");
         }
+        [Fact]
+        public void CustomFieldsWithSpecialCharactersProduceValidJson()
+        {
+            // Arrange - field names and values containing characters that would break
+            // JSON if not properly escaped: quotes, backslashes, newlines
+            var metaData = new CustomFields(new List<CustomField>
+            {
+                new CustomField("field\"with\"quotes", "value\"with\"quotes"),
+                new CustomField("field\\with\\backslashes", "value\\with\\backslashes"),
+                new CustomField("field\nwith\nnewlines", "value\nwith\nnewlines"),
+                new CustomField("field\twith\ttabs", "value\twith\ttabs"),
+                new CustomField("normalField", "normalValue"),
+                new CustomField("arrayField", new List<string> { "val\"1", "val\\2", "val\n3" })
+            });
+
+            var formatter = new SplunkJsonFormatter(
+                renderTemplate: true,
+                renderMessage: true,
+                formatProvider: null,
+                source: "testSource",
+                sourceType: "_json",
+                host: "testHost",
+                index: "testIndex",
+                customFields: metaData);
+
+            var logEvent = new LogEvent(
+                timestamp: DateTimeOffset.UtcNow,
+                level: LogEventLevel.Information,
+                exception: null,
+                messageTemplate: new MessageTemplate("Test message", new List<MessageTemplateToken>()),
+                properties: new LogEventProperty[] { });
+
+            var output = new StringWriter();
+
+            // Act
+            formatter.Format(logEvent, output);
+            var resultJson = output.ToString();
+
+            // Assert - must parse as valid JSON
+            var parsed = JObject.Parse(resultJson);
+
+            // Verify the fields section exists and values round-trip correctly
+            Assert.NotNull(parsed["fields"]);
+            Assert.Equal("value\"with\"quotes", parsed["fields"]["field\"with\"quotes"]?.ToString());
+            Assert.Equal("value\\with\\backslashes", parsed["fields"]["field\\with\\backslashes"]?.ToString());
+            Assert.Equal("value\nwith\nnewlines", parsed["fields"]["field\nwith\nnewlines"]?.ToString());
+            Assert.Equal("normalValue", parsed["fields"]["normalField"]?.ToString());
+
+            // Verify array field round-trips
+            var arrayValues = parsed["fields"]["arrayField"];
+            Assert.NotNull(arrayValues);
+            Assert.Equal("val\"1", arrayValues[0]?.ToString());
+            Assert.Equal("val\\2", arrayValues[1]?.ToString());
+            Assert.Equal("val\n3", arrayValues[2]?.ToString());
+        }
+
+        [Fact]
+        public void CustomFieldsWithEmptyAndUnicodeValuesProduceValidJson()
+        {
+            var metaData = new CustomFields(new List<CustomField>
+            {
+                new CustomField("emptyValue", ""),
+                new CustomField("unicodeField", "\u00e9\u00e8\u00ea\u00eb"),
+                new CustomField("emojiField", "\ud83d\ude00\ud83d\ude01"),
+                new CustomField("htmlLike", "<script>alert('xss')</script>"),
+                new CustomField("multiArray", new List<string> { "", "normal", "<b>bold</b>" })
+            });
+
+            var formatter = new SplunkJsonFormatter(
+                renderTemplate: false,
+                renderMessage: true,
+                formatProvider: null,
+                source: "test",
+                sourceType: "_json",
+                host: "host",
+                index: "idx",
+                customFields: metaData);
+
+            var logEvent = new LogEvent(
+                timestamp: DateTimeOffset.UtcNow,
+                level: LogEventLevel.Debug,
+                exception: null,
+                messageTemplate: new MessageTemplate("Test", new List<MessageTemplateToken>()),
+                properties: new LogEventProperty[] { });
+
+            var output = new StringWriter();
+            formatter.Format(logEvent, output);
+            var resultJson = output.ToString();
+
+            // Must parse without error
+            var parsed = JObject.Parse(resultJson);
+            Assert.NotNull(parsed["fields"]);
+            Assert.Equal("", parsed["fields"]["emptyValue"]?.ToString());
+            Assert.Equal("\u00e9\u00e8\u00ea\u00eb", parsed["fields"]["unicodeField"]?.ToString());
+            Assert.Equal("<script>alert('xss')</script>", parsed["fields"]["htmlLike"]?.ToString());
+        }
+
         #region Test_CustomFields_Jsonformatter_for_Splunk_Sink_Help_Classes
         // http://json2csharp.com/#
         // https://github.com/JamesNK/Newtonsoft.Json
