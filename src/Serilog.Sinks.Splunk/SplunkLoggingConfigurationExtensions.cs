@@ -49,6 +49,7 @@ namespace Serilog
         /// <param name="messageHandler">The handler used to send HTTP requests</param>
         /// <param name="levelSwitch">A switch allowing the pass-through minimum level to be changed at runtime.</param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
+        /// <param name="includeHost">If true and host is not explicitly set, automatically uses the machine name as the host value.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -68,9 +69,13 @@ namespace Serilog
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null,
-            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds,
+            bool includeHost = false)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            if (includeHost && string.IsNullOrWhiteSpace(host))
+                host = Environment.MachineName;
 
             var batchingOptions = new BatchingOptions
             {
@@ -170,6 +175,7 @@ namespace Serilog
         /// <param name="fields">Customfields that will be indexed in splunk with this event</param>
         /// <param name="renderMessage">Include "RenderedMessage" parameter in output JSON message.</param>
         /// <param name="subSecondPrecision">Timestamp sub-second precision. Splunk props.conf setup is required.</param>
+        /// <param name="includeHost">If true and host is not explicitly set, automatically uses the machine name as the host value.</param>
         /// <returns></returns>
         public static LoggerConfiguration EventCollector(
             this LoggerSinkConfiguration configuration,
@@ -190,9 +196,13 @@ namespace Serilog
             int? queueLimit = null,
             HttpMessageHandler messageHandler = null,
             LoggingLevelSwitch levelSwitch = null,
-            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds)
+            SubSecondPrecision subSecondPrecision = SubSecondPrecision.Milliseconds,
+            bool includeHost = false)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            if (includeHost && string.IsNullOrWhiteSpace(host))
+                host = Environment.MachineName;
 
             var batchingOptions = new BatchingOptions
             {

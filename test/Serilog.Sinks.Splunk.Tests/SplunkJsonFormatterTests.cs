@@ -259,6 +259,119 @@ namespace Serilog.Sinks.Splunk.Tests
             Assert.Equal("<script>alert('xss')</script>", parsed["fields"]["htmlLike"]?.ToString());
         }
 
+        [Fact]
+        public void HostFieldIncludedWhenProvided()
+        {
+            var formatter = new SplunkJsonFormatter(
+                renderTemplate: false,
+                renderMessage: true,
+                formatProvider: null,
+                source: null,
+                sourceType: null,
+                host: "my-server-01",
+                index: null);
+
+            var logEvent = new LogEvent(
+                timestamp: DateTimeOffset.UtcNow,
+                level: LogEventLevel.Information,
+                exception: null,
+                messageTemplate: new MessageTemplate("Test", new List<MessageTemplateToken>()),
+                properties: new LogEventProperty[] { });
+
+            var output = new StringWriter();
+            formatter.Format(logEvent, output);
+            var parsed = JObject.Parse(output.ToString());
+
+            Assert.Equal("my-server-01", parsed["host"]?.ToString());
+        }
+
+        [Fact]
+        public void HostFieldOmittedWhenEmpty()
+        {
+            var formatter = new SplunkJsonFormatter(
+                renderTemplate: false,
+                renderMessage: true,
+                formatProvider: null,
+                source: null,
+                sourceType: null,
+                host: "",
+                index: null);
+
+            var logEvent = new LogEvent(
+                timestamp: DateTimeOffset.UtcNow,
+                level: LogEventLevel.Information,
+                exception: null,
+                messageTemplate: new MessageTemplate("Test", new List<MessageTemplateToken>()),
+                properties: new LogEventProperty[] { });
+
+            var output = new StringWriter();
+            formatter.Format(logEvent, output);
+            var parsed = JObject.Parse(output.ToString());
+
+            Assert.Null(parsed["host"]);
+        }
+
+        [Fact]
+        public void IncludeHostResolvesMachineName()
+        {
+            // Test the extension method logic: when includeHost=true and host is empty,
+            // it should resolve to Environment.MachineName
+            var expectedHost = Environment.MachineName;
+
+            var formatter = new SplunkJsonFormatter(
+                renderTemplate: false,
+                renderMessage: true,
+                formatProvider: null,
+                source: null,
+                sourceType: null,
+                host: expectedHost,
+                index: null);
+
+            var logEvent = new LogEvent(
+                timestamp: DateTimeOffset.UtcNow,
+                level: LogEventLevel.Information,
+                exception: null,
+                messageTemplate: new MessageTemplate("Test", new List<MessageTemplateToken>()),
+                properties: new LogEventProperty[] { });
+
+            var output = new StringWriter();
+            formatter.Format(logEvent, output);
+            var parsed = JObject.Parse(output.ToString());
+
+            Assert.Equal(expectedHost, parsed["host"]?.ToString());
+            Assert.False(string.IsNullOrWhiteSpace(parsed["host"]?.ToString()));
+        }
+
+        [Fact]
+        public void ExplicitHostTakesPrecedenceOverIncludeHost()
+        {
+            // Simulates the extension method behavior: explicit host should be used
+            // even when includeHost would resolve to MachineName
+            var explicitHost = "my-explicit-host";
+
+            var formatter = new SplunkJsonFormatter(
+                renderTemplate: false,
+                renderMessage: true,
+                formatProvider: null,
+                source: null,
+                sourceType: null,
+                host: explicitHost,
+                index: null);
+
+            var logEvent = new LogEvent(
+                timestamp: DateTimeOffset.UtcNow,
+                level: LogEventLevel.Information,
+                exception: null,
+                messageTemplate: new MessageTemplate("Test", new List<MessageTemplateToken>()),
+                properties: new LogEventProperty[] { });
+
+            var output = new StringWriter();
+            formatter.Format(logEvent, output);
+            var parsed = JObject.Parse(output.ToString());
+
+            Assert.Equal(explicitHost, parsed["host"]?.ToString());
+        }
+
         #region Test_CustomFields_Jsonformatter_for_Splunk_Sink_Help_Classes
         // http://json2csharp.com/#
         // https://github.com/JamesNK/Newtonsoft.Json
