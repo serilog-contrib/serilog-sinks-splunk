@@ -27,7 +27,7 @@ namespace Serilog.Sinks.Splunk
     /// <summary>
     /// A sink that logs to Splunk over UDP
     /// </summary>
-    public class UdpSink : IBatchedLogEventSink
+    public class UdpSink : IBatchedLogEventSink, IDisposable
     {
         private readonly SplunkUdpSinkConnectionInfo _connectionInfo;
         private readonly ITextFormatter _formatter;
@@ -77,9 +77,19 @@ namespace Serilog.Sinks.Splunk
         /// Releases resources used by the sink.
         /// </summary>
         /// <param name="disposing">True if called from Dispose, false if called from a finalizer.</param>
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            DisposeSocket();
+            if (disposing)
+            {
+                DisposeSocket();
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         private void DisposeSocket()
