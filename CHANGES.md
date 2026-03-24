@@ -1,8 +1,11 @@
 ## 5.2.0
 - Add .NET 10 support
 - Migrate samples to .NET Aspire
-- Update CI to GitHub Actions with .NET 9/10 SDKs
+- Update CI to GitHub Actions with .NET 8/9/10 SDKs
 - Bump Serilog to 4.2.0
+- [#165](https://github.com/serilog-contrib/serilog-sinks-splunk/issues/165) Add `includeHost` option to automatically set the host metadata field from the machine name
+- [#159](https://github.com/serilog-contrib/serilog-sinks-splunk/issues/159) Add default constructor to `CustomField` for configuration deserialization
+- Fix JSON injection in custom fields serialization
 
 ## 5.1.0
 - Add .NET 9.0 support
